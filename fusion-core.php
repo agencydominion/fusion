@@ -1277,7 +1277,7 @@ class FusionCore	{
 				$input .= '<input type="text" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') . ($param['encode_base64'] == true ? ' encode-base64' : '') . ($param['encode_url'] == true ? ' encode-url' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. $param['placeholder'] .'"' : '') .'>';				
 				break;
 			case 'textarea':
-				if ($param['content_field'] == true && ($param['encode_base64'] == true || $param['encode_url'] == true)) {
+				if ($param['encode_base64'] == true || $param['encode_url'] == true) {
 					$param_value = $param_value;
 				} elseif ($param['content_field'] == true && empty($param['encode_base64']) && empty($param['encode_url'])) {
 					$param_value = esc_textarea(fsn_unautop($param_value));
