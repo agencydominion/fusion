@@ -671,7 +671,12 @@ function fsnInitUIevents(instance) {
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
 						newParamValue = '';
 					}
-					if (newParamValue != '') {								
+					if (newParamValue != '') {
+						if (jQuery(this).hasClass('encode-base64')) {
+							newParamValue = btoa(newParamValue);
+						} else if (jQuery(this).hasClass('encode-url')) {
+							newParamValue = encodeURIComponent(newParamValue);
+						}
 						currentContent.attr(dataAttribute, newParamValue);
 					} else {
 						currentContent.removeAttr(dataAttribute);
@@ -751,7 +756,12 @@ function fsnInitUIevents(instance) {
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
 						newParamValue = '';
 					}
-					if (newParamValue != '') {								
+					if (newParamValue != '') {
+						if (jQuery(this).hasClass('encode-base64')) {
+							newParamValue = btoa(newParamValue);
+						} else if (jQuery(this).hasClass('encode-url')) {
+							newParamValue = encodeURIComponent(newParamValue);
+						}
 						currentContent.attr(dataAttribute, newParamValue);
 					} else {
 						currentContent.removeAttr(dataAttribute);
@@ -831,7 +841,12 @@ function fsnInitUIevents(instance) {
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
 						newParamValue = '';
 					}
-					if (newParamValue != '') {								
+					if (newParamValue != '') {
+						if (jQuery(this).hasClass('encode-base64')) {
+							newParamValue = btoa(newParamValue);
+						} else if (jQuery(this).hasClass('encode-url')) {
+							newParamValue = encodeURIComponent(newParamValue);
+						}
 						currentContent.attr(dataAttribute, newParamValue);
 					} else {
 						currentContent.removeAttr(dataAttribute);
@@ -912,7 +927,12 @@ function fsnInitUIevents(instance) {
 						var tabNavItem = currentContent.closest('.tabs-wrapper').find('.nav-tabs a[href="#'+ tabID +'"]');
 						tabNavItem.text(newParamValue);
 					}
-					if (newParamValue != '') {								
+					if (newParamValue != '') {
+						if (jQuery(this).hasClass('encode-base64')) {
+							newParamValue = btoa(newParamValue);
+						} else if (jQuery(this).hasClass('encode-url')) {
+							newParamValue = encodeURIComponent(newParamValue);
+						}
 						currentContent.attr(dataAttribute, newParamValue);
 					} else {
 						currentContent.removeAttr(dataAttribute);
@@ -2202,6 +2222,11 @@ function customListItemShortcodes() {
 			}
 								
 			if (newParamValue != '') {
+				if (jQuery(this).hasClass('encode-base64')) {
+					newParamValue = btoa(newParamValue);
+				} else if (jQuery(this).hasClass('encode-url')) {
+					newParamValue = encodeURIComponent(newParamValue);
+				}
 				newParamValue = fsnCustomEntitiesEncode(newParamValue);	
 				shortcodesString += ' '+ paramName +'="'+ newParamValue +'"';
 				
