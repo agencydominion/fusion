@@ -1,0 +1,1565 @@
+<?php
+/**
+ * @package Fusion
+ */
+/**
+ * Plugin Name: Fusion : Plugin
+ * Plugin URI: http://agencydominion.com
+ * Description: Create layouts for your page content in a rich visual editor.
+ * Version: 1.0.1
+ * Author: Agency Dominion
+ * Author URI: http://agencydominion.com
+ * License: GPL2
+ */
+ 
+/**
+ * Fusion class.
+ *
+ * Class for initializing an instance of Fusion.
+ *
+ * @since 1.0.0
+ */
+
+class FusionCore	{
+	public function __construct() {
+					
+		// Initialize the language files
+		load_plugin_textdomain( 'fusion', false, plugin_dir_url( __FILE__ ) . 'languages' );
+		
+		// Add views update schedule on plugin activation
+		register_activation_hook( __FILE__, array($this, 'settings_defaults') );
+		
+		// Enqueue admin scripts and styles
+		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts_styles'));
+		
+		// Enqueue front end scripts and styles
+		add_action('wp_enqueue_scripts', array($this, 'front_enqueue_scripts_styles'));
+		
+		// Add Mobile Detection script
+		add_action('init', array($this, 'include_mobile_detect_function'));
+		
+		// Populate All Items global
+		add_action('init', array($this, 'init_all_items_global'), 11);
+		
+		// Delete All Items global transient on post save
+		add_action('save_post', array($this, 'delete_all_items_global'), 10, 2);
+		
+		// Register Param Sections
+		add_action('init', array($this, 'register_param_sections'));
+		
+		// Populate Style Params global
+		add_action('init', array($this, 'init_style_global'));
+		
+		// Output Style
+		add_action('wp_footer', array($this, 'output_style'), 11);
+		
+		// Add shortcodes
+		add_shortcode('fsn_row', array($this, 'row_shortcode'));
+		add_shortcode('fsn_row_inner', array($this, 'row_shortcode'));
+		add_shortcode('fsn_column', array($this, 'column_shortcode'));
+		add_shortcode('fsn_column_inner', array($this, 'column_shortcode'));
+		
+		// Replace Custom HTML entities
+		add_filter('the_content', array($this, 'decode_custom_entities'), 12); //after shortcode parsing
+		
+		// Initialize the editor
+		add_action('edit_form_after_title', array($this, 'render_editor'));
+		
+		// Initialize Screen Options
+		add_action('load-post.php', array($this, 'add_screen_options'));
+		
+		// Filter Image Sizes
+		add_filter('fsn_selectable_image_sizes', array($this, 'selectable_image_sizes'));
+		
+		// Initialize AJAX modals
+		add_action( 'wp_ajax_add_element_modal', array($this, 'render_add_element_modal'));
+		add_action( 'wp_ajax_edit_row_modal', array($this, 'render_edit_row_modal'));
+		add_action( 'wp_ajax_edit_column_modal', array($this, 'render_edit_column_modal'));
+		
+		// Update media previews
+		add_action( 'wp_ajax_update_image_preview', array($this, 'update_image_preview') );
+		add_action( 'wp_ajax_update_video_preview', array($this, 'update_video_preview') );
+		
+		//add hi-res image size
+		if ( function_exists( 'add_image_size' ) ) { 
+			add_image_size('hi-res', 2560, 9999);
+			add_image_size('mobile', 640, 9999);
+		}
+		
+	}
+	
+	/**
+	 * Set default settings
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	
+	public function settings_defaults() {
+		$options = get_option('fsn_options');
+		//set default post types
+		if (empty($options['fsn_post_types'])) {
+			$options['fsn_post_types'] = array('post','page','template','component');
+			update_option('fsn_options', $options);
+		}
+		//enable front end bootstrap
+		if (empty($options['fsn_bootstrap_enable'])) {
+			$options['fsn_bootstrap_enable'] = 'on';
+			update_option('fsn_options', $options);
+		}
+		//enable fluid containers
+		if (empty($options['fsn_bootstrap_fluid'])) {
+			$options['fsn_bootstrap_fluid'] = 'on';
+			update_option('fsn_options', $options);
+		}
+	}
+	
+	/**
+	 * Enqueue JavaScript and CSS on Admin pages.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $hook_suffix The current admin page.
+	 */
+	 
+	public function admin_enqueue_scripts_styles($hook_suffix) {
+		global $post;
+		
+		$options = get_option('fsn_options');
+		$user_admin_color = get_user_option( 'admin_color' );
+		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+		
+		// Editor scripts and styles
+		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) {
+			//bootstrap
+			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.3.5', true );
+			//google material icons
+			wp_enqueue_style( 'material_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons' );
+			//plugin
+			wp_enqueue_script( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-admin.js', array('jquery'), '1.0.0', true );
+			wp_enqueue_style( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core-admin.css', false, '1.0.0' );
+			if ($user_admin_color != 'fresh') {
+				wp_enqueue_style( 'fsn_core_admin_color_scheme', plugin_dir_url( __FILE__ ) . 'includes/css/colors/'. $user_admin_color .'/colors.css', false, '1.0.0' );
+			}
+			//jQuery UI
+			wp_enqueue_style( 'jquery-ui-custom', plugin_dir_url( __FILE__ ) . 'includes/css/jquery-ui-1.11.4.custom/jquery-ui.min.css', false, '1.11.4' );
+			wp_enqueue_script('jquery-ui-sortable');
+			wp_enqueue_script('jquery-ui-resizable');
+			wp_enqueue_script('jquery-ui-tooltip');
+			//WordPress Color Picker
+			wp_enqueue_script( 'wp-color-picker' );
+			wp_enqueue_style( 'wp-color-picker' );
+		}
+		//chosen
+		wp_enqueue_script('chosen', plugin_dir_url( __FILE__ ) . 'includes/utilities/chosen/chosen.jquery.min.js', array('jquery'), '1.1.0', true);
+		wp_enqueue_style('chosen', plugin_dir_url( __FILE__ ) . 'includes/utilities/chosen/chosen.min.css');
+	}
+	
+	/**
+	 * Enqueue JavaScript and CSS on Front End pages.
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	 
+	public function front_enqueue_scripts_styles() {
+		//bootstrap
+		$options = get_option('fsn_options');
+		$bootstrap_enable = !empty($options['fsn_bootstrap_enable']) ? $options['fsn_bootstrap_enable'] : '';
+		if (!empty($bootstrap_enable)) {
+			wp_enqueue_script( 'bootstrap', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/front/js/bootstrap.min.js', false, '3.3.5', true );
+			wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/front/css/bootstrap.min.css', false, '3.3.5' );
+			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.0.0' );
+		}
+		//google material icons
+		wp_enqueue_style( 'material_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons' );
+		//modernizr
+		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-2.8.3-respond-1.4.2.min.js', false, '2.8.3');
+		//imagesLoaded
+		wp_enqueue_script('images_loaded', plugin_dir_url( __FILE__ ) .'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
+		//plugin
+		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.0.0', true );
+		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.0.0' );
+		
+		//setup front end script for use with AJAX
+		wp_localize_script( 'fsn_core', 'fsnAjax', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'pluginurl' =>  plugin_dir_url( __FILE__ )
+			)
+		);
+	}
+	
+	/**
+	 * Add Mobile Detect Script
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	
+	public function include_mobile_detect_function() {
+		include 'includes/utilities/mobile-detect/Mobile_Detect.php';
+	}
+	
+	/**
+	 * Populate All Items global
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	
+	public function init_all_items_global() {
+		if (is_admin()) {
+			global $fsn_all_items, $wpdb;
+			$fsn_all_items_transient = get_transient('fsn_all_items');
+			if ($fsn_all_items_transient === false) {
+				//get registered post types
+				$post_types = get_post_types();		
+				unset($post_types['attachment']);
+				unset($post_types['revision']);
+				unset($post_types['nav_menu_item']);
+				
+				$post_types = apply_filters('fsn_all_items_global_post_types', $post_types);
+				
+				$post_types_query = "'".implode($post_types,"','")."'";
+				
+				$posts_table_name = $wpdb->prefix . 'posts';
+				$all_items_query = "SELECT ID, post_title, post_type FROM $posts_table_name WHERE 1=1 AND post_type IN ($post_types_query) AND post_status = ('publish') ORDER BY post_title ASC";
+				$all_items_results = $wpdb->get_results($all_items_query);
+				
+				foreach ($all_items_results as $all_items_result) {
+					$fsn_all_items[] = array(
+						'id' => $all_items_result->ID,
+						'post_title' => $all_items_result->post_title,
+						'post_type' => $all_items_result->post_type
+					);
+			    }
+				set_transient('fsn_all_items', $fsn_all_items, 3600 * 24);
+			} else {
+				$fsn_all_items = $fsn_all_items_transient;
+			}
+		}
+	}
+	
+	/**
+	 * Delete All Items transient when the post is saved.
+	 *
+	 * @param int $post_id The ID of the post being saved.
+	 */
+	 
+	public function delete_all_items_global($post_id) {
+		delete_transient('fsn_all_items');
+	}
+
+	/**
+	 * Register Param sections
+	 *
+	 * Register the sections in which element params can be added
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	
+	public function register_param_sections() {
+		global $fsn_param_sections;
+		$fsn_param_sections = array(
+			array(
+				'id' => 'general',
+				'name' => 'General'
+			),
+			array(
+				'id' => 'advanced',
+				'name' => 'Advanced'
+			),
+			array(
+				'id' => 'style',
+				'name' => 'Style'
+			)
+		);
+		$fsn_param_sections = apply_filters('fsn_param_sections', $fsn_param_sections);
+	}
+	
+	/**
+	 * Populate Style params global
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	
+	public function init_style_global() {
+		if (is_admin()) {
+			global $fsn_style_params;
+			$fsn_style_params = array(
+				array(
+					'type' => 'box',
+					'param_name' => 'margin',
+					'label' => __('Margins', 'fusion'),
+					'help' => __('e.g. 15px', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'box',
+					'param_name' => 'margin_xs',
+					'label' => __('Mobile Margins', 'fusion'),
+					'help' => __('e.g. 15px', 'fusion'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'margin_xs_custom',
+						'not_empty' => true
+					)
+				),
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'margin_xs_custom',
+					'label' => __('Customize Mobile Margins', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'box',
+					'param_name' => 'padding',
+					'label' => __('Padding', 'fusion'),
+					'help' => __('e.g. 15px', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'box',
+					'param_name' => 'padding_xs',
+					'label' => __('Mobile Padding', 'fusion'),
+					'help' => __('e.g. 15px', 'fusion'),
+					'section' => 'style',
+					'dependency' => array(
+						'param_name' => 'padding_xs_custom',
+						'not_empty' => true
+					)
+				),
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'padding_xs_custom',
+					'label' => __('Customize Mobile Padding', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'radio',
+					'options' => array(
+						'' => __('Inherit', 'fusion'),
+						'left' => __('Left', 'fusion'),
+						'center' => __('Center', 'fusion'),
+						'right' => __('Right', 'fusion')
+					),
+					'param_name' => 'text_align',
+					'label' => __('Text Align', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'radio',
+					'options' => array(
+						'' => __('Inherit', 'fusion'),
+						'left' => __('Left', 'fusion'),
+						'center' => __('Center', 'fusion'),
+						'right' => __('Right', 'fusion')
+					),
+					'param_name' => 'text_align_xs',
+					'label' => __('Mobile Text Align', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'font_size',
+					'label' => __('Font Size', 'fusion'),
+					'help' => __('e.g. 15px', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'colorpicker',
+					'param_name' => 'color',
+					'label' => __('Text Color', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'colorpicker',
+					'param_name' => 'background_color',
+					'label' => __('Background Color', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'background_color_opacity',
+					'label' => __('Background Color Opacity', 'fusion'),
+					'help' => __('Value between 0 and 1.', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'hidden_xs',
+					'label' => __('Hide on Mobile', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'visible_xs',
+					'label' => __('Hide on Desktop and Tablet', 'fusion'),
+					'section' => 'style'
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'user_classes',
+					'label' => __('CSS Classes', 'fusion'),
+					'help' => __('Separate multiple classes with a space.', 'fusion'),
+					'section' => 'style'
+				)
+			);
+		}
+	}
+	
+	/**
+	 * Output Style
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	 
+	public function output_style() {
+		global $fsn_style_output;
+		echo '<style>';
+			foreach($fsn_style_output as $key => $value) {
+				if (!empty($value)) {
+					$selector = '.'. $key;
+					echo $selector . ' {';
+						if (!empty($value['margin'])) {
+							$margin = json_decode($value['margin'], true);
+							echo !empty($margin['top']) ? 'margin-top:'. $margin['top'] .';' : '';
+							echo !empty($margin['right']) ? 'margin-right:'. $margin['right'] .';' : '';
+							echo !empty($margin['bottom']) ? 'margin-bottom:'. $margin['bottom'] .';' : '';
+							echo !empty($margin['left']) ? 'margin-left:'. $margin['left'] .';' : '';
+						}
+						if (!empty($value['padding'])) {
+							$padding = json_decode($value['padding'], true);
+							echo !empty($padding['top']) ? 'padding-top:'. $padding['top'] .';' : '';
+							echo !empty($padding['right']) ? 'padding-right:'. $padding['right'] .';' : '';
+							echo !empty($padding['bottom']) ? 'padding-bottom:'. $padding['bottom'] .';' : '';
+							echo !empty($padding['left']) ? 'padding-left:'. $padding['left'] .';' : '';
+						}
+						if (!empty($value['text_align'])) {
+							$text_align = $value['text_align'];
+							echo 'text-align:'. $text_align .';';
+						}
+						if (!empty($value['font_size'])) {
+							$font_size = $value['font_size'];
+							echo 'font-size:'. $font_size .';';
+						}
+						if (!empty($value['color'])) {
+							$color = $value['color'];
+							echo 'color:'. $color .';';
+						}
+						if (!empty($value['background_color'])) {
+							$background_color = $value['background_color'];
+							if (!empty($value['background_color_opacity'])) {
+								$background_color_opacity = $value['background_color_opacity'];
+								$rgb = fsn_hex2rgb($background_color);
+								echo 'background-color:'. $background_color .';';
+								echo 'background-color:rgba('. $rgb[0] .','. $rgb[1] .','. $rgb[2] .','. $background_color_opacity .');';
+							} else {
+								echo 'background-color:'. $background_color .';';
+							}
+						}
+					echo '}';
+					if ( (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) || (!empty($value['padding_xs_custom']) && !empty($value['padding_xs']) || !empty($value['text_align_xs'])) ) {
+						$selector = '.'. $key;
+						echo '@media (max-width: 767px) {'. $selector . '{';
+							if (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) {
+								$margin_xs = json_decode($value['margin_xs'], true);
+								echo !empty($margin_xs['top']) ? 'margin-top:'. $margin_xs['top'] .';' : '';
+								echo !empty($margin_xs['right']) ? 'margin-right:'. $margin_xs['right'] .';' : '';
+								echo !empty($margin_xs['bottom']) ? 'margin-bottom:'. $margin_xs['bottom'] .';' : '';
+								echo !empty($margin_xs['left']) ? 'margin-left:'. $margin_xs['left'] .';' : '';
+							}
+							if (!empty($value['padding_xs_custom']) && !empty($value['padding_xs'])) {
+								$padding_xs = json_decode($value['padding_xs'], true);
+								echo !empty($padding_xs['top']) ? 'padding-top:'. $padding_xs['top'] .';' : '';
+								echo !empty($padding_xs['right']) ? 'padding-right:'. $padding_xs['right'] .';' : '';
+								echo !empty($padding_xs['bottom']) ? 'padding-bottom:'. $padding_xs['bottom'] .';' : '';
+								echo !empty($padding_xs['left']) ? 'padding-left:'. $padding_xs['left'] .';' : '';
+							}
+							if (!empty($value['text_align_xs'])) {
+								$text_align = $value['text_align_xs'];
+								echo 'text-align:'. $text_align .';';
+							}
+						echo '}}';
+					}
+				}
+			}
+		echo '</style>';
+	}
+	
+	/**
+	 * The Row shortcode.
+	 *
+	 * Output a row into the content area. Rows contain columns which contain content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $attr Attributes attributed to the shortcode.
+	 * @param string $content Optional. Shortcode content.
+	 * @return string
+	 */
+	
+	public function row_shortcode($atts, $content = null) {
+				
+		extract( shortcode_atts( array(
+			'row_style' => '',
+			'row_function' => '',
+			'row_width' => '',
+			'seamless' => '',
+			'background_image' => '',
+			'background_repeat' => 'repeat',
+			'background_position' => 'left top',
+			'background_position_custom' => '',
+			'background_attachment' => 'scroll',
+			'background_size' => 'auto',
+			'id' => false
+		), $atts ) );
+		
+		//if running AJAX, get action being run
+		if (defined('DOING_AJAX') || DOING_AJAX) {
+			if (!empty($_POST['action'])) {
+				$ajax_action = $_POST['action'];
+			}
+		}
+		
+		//build output
+		if ( is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX || (!empty($ajax_action) && $ajax_action == 'load_template' || $ajax_action == 'components_modal')) ) {
+			$shortcode_atts_data = '';
+			if (!empty($atts)) {
+				foreach($atts as $key => $value) {
+					$att_name = str_replace('_','-', $key);
+					$shortcode_atts_data .= ' data-'. $att_name .'="'. $value .'"';	
+				}
+			}
+			$output = '';
+			$output .= '<div class="row-container clearfix">';
+				$output .= '<div class="row-header">';
+					$output .= '<div class="row-controls">';
+						$output .= '<span class="row-controls-toggle" title="Row Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+						$output .= '<div class="row-controls-dropdown collapsed">';
+							$output .= '<a href="#" class="edit-row">'. __('Edit', 'fusion') .'</a>';
+							$output .= '<a href="#" class="duplicate-row">'. __('Duplicate', 'fusion') .'</a>';
+							$output .= '<a href="#" class="delete-row">'. __('Delete', 'fusion') .'</a>';
+						$output .= '</div>';
+						$output .= '<a href="#" class="control-icon edit-row" title="Edit Row"><i class="material-icons md-18">&#xE3C9;</i></a>';
+					$output .= '</div>';
+					$output .= '<a href="#" class="fsn-add-row" title="Add Row"><i class="material-icons md-18">&#xE147;</i></a>';
+				$output .= '</div>';
+				$output .= '<div class="row-wrapper">';
+					$output .= '<div class="row"'. $shortcode_atts_data .'>'. do_shortcode($content) .'</div>';
+				$output .= '</div>';
+			$output .= '</div>';
+			
+		} else {
+			
+			//build style
+			$style = '';
+			
+			//background image
+			if (!empty($background_image)) {
+				$image_attrs = wp_get_attachment_image_src($background_image, 'hi-res');
+				$style .= 'background-image:url('. $image_attrs[0] .');';
+			}
+			//background repeat
+			if (!empty($background_repeat)) {
+				$style .= 'background-repeat:'. $background_repeat .';';
+			}
+			//background position
+			if (!empty($background_position)) {
+				if ($background_position == 'custom' && !empty($background_position_custom)) {
+					$style .= 'background-position:'. $background_position_custom .';';	
+				} else {
+					$style .= 'background-position:'. $background_position .';';	
+				}
+			}
+			//background attachment
+			if (!empty($background_attachment)) {
+				$style .= 'background-attachment:'. $background_attachment .';';
+			}
+			//background size
+			if (!empty($background_size)) {
+				$style .= 'background-size:'. $background_size .';';
+			}
+			
+			//filter for modifying style
+			$style = apply_filters('fsn_row_style', $style, $atts);			
+			
+			//build classes
+			$classes_array = array();
+			
+			//row style
+			if (!empty($row_style)) {
+				$classes_array[] = $row_style;
+			}
+			
+			//row function
+			if (!empty($row_function)) {
+				$classes_array[] = $row_function;
+			}
+			
+			//seamless rows
+			if (!empty($seamless)) {
+				$classes_array[] = 'seamless';
+			}
+			
+			//filter for adding classes
+			$classes_array = apply_filters('fsn_row_classes', $classes_array, $atts);
+			
+			if (!empty($classes_array)) {
+				$classes = implode(' ', $classes_array);
+			}
+		
+			$output = '';
+			
+			//open row container
+			if (empty($row_width)) {	
+				$output .= '<div '. (!empty($id) ? 'id="'. $id .'" ' : '') .'class="fsn-row full-width-row '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. $classes : '') .'"'. (!empty($style) ? ' style="'. $style .'"' : '') .'>';
+					//action executed before the front-end row shortcode container output
+					ob_start();
+					do_action('fsn_before_row_container', $atts);
+					$output .= ob_get_clean();
+					//open fluid or defined container
+					$options = get_option('fsn_options');
+					if (empty($options['fsn_bootstrap_fluid'])) {
+						$output .= '<div class="container">';
+					} else {
+						$output .= '<div class="container-fluid">';
+					}
+			} elseif ($row_width == 'full-width') {
+				$output .= '<div '. (!empty($id) ? 'id="'. $id .'" ' : '') .' class="fsn-row full-width-container '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. $classes : '') .'"'. (!empty($style) ? ' style="'. $style .'"' : '') .'>';
+			}
+			
+			//action executed before the front-end row shortcode output
+			ob_start();
+			do_action('fsn_before_row', $atts);
+			$output .= ob_get_clean();
+
+			$output .= '<div class="row">'. do_shortcode($content) .'</div>';
+			
+			//action executed after the front-end row shortcode output
+			ob_start();
+			do_action('fsn_after_row', $atts);
+			$output .= ob_get_clean();
+			
+			//close row container
+			if (empty($row_width)) {
+					$output .= '</div>'; //close container
+					//action executed after the front-end row shortcode container output
+					ob_start();
+					do_action('fsn_after_row_container', $atts);
+					$output .= ob_get_clean();
+				$output .= '</div>'; //close full width row
+			} elseif ($row_width == 'full-width') {
+				$output .= '</div>'; //close full width container
+			}
+		}
+		
+		return $output;
+	}
+	
+	/**
+	 * The Column shortcode.
+	 *
+	 * Output a column into a row. Columns contain content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $attr Attributes attributed to the shortcode.
+	 * @param string $content Optional. Shortcode content.
+	 * @return string
+	 */
+	
+	public function column_shortcode($atts, $content = null) {
+		extract( shortcode_atts( array(
+			'width' => '12',
+			'offset' => false,
+			'column_style' => ''
+		), $atts ) );
+		
+		//if running AJAX, get action being run
+		if (defined('DOING_AJAX') || DOING_AJAX) {
+			if (!empty($_POST['action'])) {
+				$ajax_action = $_POST['action'];
+			}
+		}
+		
+		//build output
+		if ( is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX || (!empty($ajax_action) && $ajax_action == 'load_template' || $ajax_action == 'components_modal')) ) {
+			$shortcode_atts_data = '';
+			if (!empty($atts)) {
+				foreach($atts as $key => $value) {
+					$att_name = str_replace('_','-', $key);
+					$shortcode_atts_data .= ' data-'. $att_name .'="'. $value .'"';
+				}
+			}
+			$output = '';
+			$output .= '<div class="col-sm-'. $width . (!empty($offset) ? ' col-sm-offset-'. $offset : '') .'"'. $shortcode_atts_data .'>';
+				$output .= '<div class="column-container clearfix">';
+					$output .= '<div class="column-header">';
+						$output .= '<div class="column-controls">';
+							$output .= '<span class="column-controls-toggle" title="Column Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+							$output .= '<div class="column-controls-dropdown collapsed">';
+								$output .= '<a href="#" class="edit-col">'. __('Edit', 'fusion') .'</a>';
+								$output .= '<a href="#" class="delete-col">'. __('Delete', 'fusion') .'</a>';
+							$output .= '</div>';
+							$output .= '<a href="#" class="control-icon edit-col" title="Edit Column"><i class="material-icons md-18">&#xE3C9;</i></a>';
+						$output .= '</div>';
+						$output .= '<h3 class="column-title"><span class="column-width">'. $width .'</span> / 12</h3>';
+					$output .= '</div>';
+					$output .= '<div class="column-wrapper">';
+						$output .= do_shortcode($content);
+					$output .= '</div>';
+					$output .= '<a href="#" class="fsn-add-element" data-container="column" title="Add Element"><i class="material-icons md-18">&#xE147;</i></a>';
+				$output .= '</div>';
+			$output .= '</div>';
+		} else {
+			
+			//build style
+			$style = '';
+			
+			//filter for modifying style
+			$style = apply_filters('fsn_column_style', $style, $atts);
+			
+			//build classes
+			$classes_array = array();
+			
+			//column style
+			if (!empty($column_style)) {
+				$classes_array[] = $column_style;
+			}
+			
+			//filter for adding classes
+			$classes_array = apply_filters('fsn_column_classes', $classes_array, $atts);
+			
+			if (!empty($classes_array)) {
+				$classes = implode(' ', $classes_array);
+			}
+		
+			$output = '';
+			//action executed before the front-end column shortcode output
+			ob_start();
+			do_action('fsn_before_column', $atts);
+			$output .= ob_get_clean();
+			
+			$output .= '<div class="col-sm-'. $width . (!empty($offset) ? ' col-sm-offset-'. $offset : '') .'"><div class="fsn-column-inner '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. $classes : '') .'"'. (!empty($style) ? ' style="'. $style .'"' : '') .'>'. do_shortcode($content) .'</div></div>';
+			
+			//action executed after the front-end column shortcode output
+			ob_start();
+			do_action('fsn_after_column', $atts);
+			$output .= ob_get_clean();
+		}
+		
+		return $output;
+	}
+	
+	/**
+	 * Decode Custom HTML Entities
+	 *
+	 * Replace the Custom HTML Entities needed to preserve the integrity of Fusion shortcodes in light of TinyMCE inflexibilities
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $content the content to be modified
+	 * @return string
+	 */
+	 
+	public static function decode_custom_entities($content) {
+	
+		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;');
+		$html_entities = array('"','[',']');
+		
+		$content = str_replace($custom_entities, $html_entities, $content);
+		
+		return $content;
+	}
+	
+	/**
+	 * Render Fusion editor
+	 *
+	 * Output editor on select post types.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post The post object.
+	 */
+	
+	public function render_editor($post) {
+		$options = get_option('fsn_options');
+		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+		if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) {
+			echo '<a href="#" class="button button-primary fsn-toggle-editor"><div class="fsn-toggle-editor-default">Switch To Default Editor</div><div class="fsn-toggle-editor-fusion">Switch To Fusion Editor</div></a>';
+			echo '<div class="fsn-editor wp-editor-container">';
+				echo '<div class="fsn-main-controls">';
+					if ($post->post_type != 'template') {
+						echo '<a href="#" class="button fsn-save-template">'. __('Save Template', 'fusion') .'</a>';
+					}
+					echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">'. __('Load Template', 'fusion') .'</a>';
+					//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
+				echo '</div>';
+				echo '<div class="fsn-interface-container">';			
+					//output grid content
+					echo '<div id="fsn-main-ui" class="fsn-interface-grid">';			
+						echo do_shortcode($post->post_content);
+					echo '</div>';
+				echo '</div>';
+			echo '</div>';
+		}
+	}
+	
+	/**
+	 * Add Screen Options
+	 *
+	 * Add screen options for configuring fusion on a per-user basis
+	 *
+	 * @since 1.0.0
+	 */
+	
+	public function add_screen_options() {
+		$current_screen = get_current_screen();
+		$options = get_option('fsn_options');
+		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+		if ( !empty($fsn_post_types) && is_array($fsn_post_types) && in_array($current_screen->post_type, $fsn_post_types) ) {
+			add_filter( 'screen_settings', array($this, 'filter_screen_settings'), 10, 2 );
+		}
+	}
+	
+	public function filter_screen_settings($screen_settings, $screen_object) {
+		$expand = '<fieldset class="editor-expand"><legend>' . __( 'Fusion settings' ) . '</legend><label for="fsn_disable_tooltips">';
+		$expand .= '<input type="checkbox" id="fsn_disable_tooltips"' . checked( get_user_setting( 'fsn_disable_tooltips', false ), 'on', false ) . ' />';
+		$expand .= __( 'Disable Fusion tooltips.' ) . '</label></fieldset>';
+		$screen_settings .= $expand;
+		return $screen_settings;
+	}
+	
+	/**
+	 * Filter image sizes
+	 *
+	 * Filter out image sizes that should not be user-selectable
+	 *
+	 * @since 1.0.0
+	 */
+	 
+	public function selectable_image_sizes($fsn_selectable_image_sizes) {
+		//unset WordPress medium large image size
+		unset($fsn_selectable_image_sizes['medium_large']);
+		return $fsn_selectable_image_sizes;
+	}
+	
+	/**
+	 * Render add content modal.
+	 *
+	 * @since 1.0.0
+	 */
+	 
+	public function render_add_element_modal() {
+		//get elements global
+		global $fsn_elements;
+		$nesting_level = intval($_POST['nesting_level']);
+		$tabs_nesting_level = intval($_POST['tabs_nesting_level']);
+		?>
+		<div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">						
+						<h4 class="modal-title" id="myModalLabel"><?php _e('Add Element', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+					</div>
+					<div class="modal-body">
+						<div class="element-grid">
+							<?php if ($nesting_level === 1) : ?>
+								<div class="element-grid-item">
+									<a href="#" class="element-item" data-element-type="row"><i class="material-icons">reorder</i> <span class="element-name"><?php _e('Row', 'fusion'); ?></span></a>
+								</div>
+							<?php endif; ?>
+							<?php if ($tabs_nesting_level === 0 && $nesting_level === 1) : ?>
+								<div class="element-grid-item">
+									<a href="#" class="element-item" data-element-type="tabs"><i class="material-icons">tab</i> <span class="element-name"><?php _e('Tabs', 'fusion'); ?></span></a>
+								</div>
+							<?php endif; ?>
+							<?php if (!empty($fsn_elements)) {
+								//output all elements
+								foreach($fsn_elements as $fsn_element) {
+									echo '<div class="element-grid-item">';
+										echo '<a href="#" class="element-item" data-element-type="'. $fsn_element->shortcode_tag .'">'. (!empty($fsn_element->icon) ? '<i class="material-icons">'. $fsn_element->icon .'</i> ' : '') .'<span class="element-name">'. $fsn_element->name .'</span></a>';
+									echo '</div>';
+								}
+							} ?>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		exit;
+	}
+	
+	/**
+	 * Render edit row modal.
+	 *
+	 * @since 1.0.0
+	 */
+	 
+	public function render_edit_row_modal() {
+		$saved_values = $_POST['saved_values'];
+		if (empty($saved_values)) {
+			$saved_values = array();
+		}
+		$row_style_options = array(
+			'' => __('Light', 'fusion'),
+			'dark' => __('Dark', 'fusion')
+		);
+		$row_style_options = apply_filters('fsn_row_style_options', $row_style_options);
+		
+		//map row parameters
+		$params = array(
+			array(
+				'type' => 'select',
+				'options' => $row_style_options,
+				'param_name' => 'row_style',
+				'label' => __('Style', 'fusion'),
+				'help' => __('Choose Row style. Light will inherit globally set text color. Dark will adopt text color set within this Row for headlines and links.', 'fusion'),
+				'section' => 'advanced'
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'' => __('Default', 'fusion'),
+					'collapse' => __('Collapse', 'fusion')
+				),
+				'param_name' => 'row_function',
+				'label' => __('Function', 'fusion'),
+				'help' => __('Choose Row function. "Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
+				'section' => 'advanced'
+			),
+			array(
+				'type' => 'radio',
+				'options' => array(
+					'' => __('Container', 'fusion'),
+					'full-width' => __('Full Width','fusion')
+				),
+				'param_name' => 'row_width',
+				'label' => __('Width', 'fusion'),
+				'help' => __('Choose whether Row is wrapped in container (default) or is full width.', 'fusion')
+			),
+			array(
+				'type' => 'checkbox',
+				'param_name' => 'seamless',
+				'label' => __('Seamless', 'fusion'),
+				'help' => __('Check to enable seamless Columns with no left/right margins for Row.', 'fusion')
+			),
+			array(
+				'type' => 'image',			
+				'param_name' => 'background_image',
+				'label' => __('Background Image', 'fusion'),
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'repeat' => __('Repeat','fusion'),
+					'no-repeat' => __('No Repeat', 'fusion')
+				),
+				'param_name' => 'background_repeat',
+				'label' => __('Background Image Repeat', 'fusion'),
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'left top' => __('Top Left', 'fusion'),
+					'center top' => __('Top Center', 'fusion'),
+					'right top' => __('Top Right', 'fusion'),
+					'left center' => __('Center Left', 'fusion'),
+					'center center' => __('Center Center', 'fusion'),
+					'right center' => __('Center Right', 'fusion'),
+					'left bottom' => __('Bottom Left', 'fusion'),
+					'center bottom' => __('Bottom Center', 'fusion'),
+					'right bottom' => __('Bottom Right', 'fusion'),
+					'custom' => __('Custom', 'fusion')
+				),
+				'param_name' => 'background_position',
+				'label' => __('Background Image Position', 'fusion'),
+			),
+			array(
+				'type' => 'text',
+				'param_name' => 'background_position_custom',
+				'label' => __('Custom Background Image Position', 'fusion'),
+				'help' => __('Input background image x-y position (e.g. 20px 20px).', 'fusion'),
+				'dependency' => array(
+					'param_name' => 'background_position',
+					'value' => 'custom'
+				)
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'scroll' => __('Scroll', 'fusion'),
+					'fixed' => __('Fixed', 'fusion')
+				),
+				'param_name' => 'background_attachment',
+				'label' => __('Background Image Attachment', 'fusion')
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'auto' => __('Auto', 'fusion'),
+					'cover' => __('Cover', 'fusion'),
+					'contain' => __('Contain', 'fusion')
+				),
+				'param_name' => 'background_size',
+				'label' => __('Background Image Size', 'fusion')
+			),
+			array(
+				'type' => 'text',
+				'param_name' => 'id',
+				'label' => __('ID', 'fusion'),
+				'help' => __('Input row ID. Rows can be targeted by their ID for triggering collapsed Rows or anchor links.', 'fusion'),
+				'section' => 'advanced'
+			),
+			array(
+				'type' => 'note',
+				'help' => __('Set left and right margins or padding on Columns.', 'fusion'),
+				'section' => 'style'
+			)
+		);
+		
+		//add style params
+		global $fsn_style_params;
+		$style_params = $fsn_style_params;
+		$params = array_merge_recursive($params, $style_params);
+		
+		//filter row params
+		$params = apply_filters('fsn_row_params', $params);
+		
+		//sort params into sections
+		$fsn_param_sections = fsn_get_sorted_param_sections($params);
+		$tabset_id = uniqid();
+		?>
+		<div class="modal fade" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header has-tabs">						
+						<h4 class="modal-title" id="myModalLabel"><?php _e('Row', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<?php
+						echo '<ul class="nav nav-tabs" role="tablist">';
+							$active_tab = true;
+							for($i=0; $i < count($fsn_param_sections); $i++) {
+								if (count($fsn_param_sections[$i]['params']) > 0) {
+							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" aria-controls="options" role="tab" data-toggle="tab">'. $fsn_param_sections[$i]['name'] .'</a></li>';
+							    	$active_tab = false;
+						    	}
+							}
+						echo '</ul>';	
+						?>
+					</div>
+					<div class="modal-body">						
+						<form role="form">
+							<?php
+							echo '<div class="tab-content">';
+								$active_tab = true;
+								for($i=0; $i < count($fsn_param_sections); $i++) {
+									if (count($fsn_param_sections[$i]['params']) > 0) {
+										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" data-section-id="'. $fsn_param_sections[$i]['id'] .'">';
+											foreach($fsn_param_sections[$i]['params'] as $param) {
+												//check for saved values
+												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+													$param['content_field'] = true;
+												} elseif (empty($param['content_field'])) {
+													$param['content_field'] = false;
+												}
+												$data_attribute_name = str_replace('_', '-', $param['param_name']);
+												if ( array_key_exists($data_attribute_name, $saved_values) ) {
+													$param_value = stripslashes($saved_values[$data_attribute_name]);
+													if ($param['encode_base64'] == true) {
+														$param_value = wp_strip_all_tags($param_value);
+														$param_value = htmlentities(base64_decode($param_value));
+													} else if ($param['encode_url'] == true) {
+														$param_value = wp_strip_all_tags($param_value);
+														$param_value = urldecode($param_value);
+													}
+													//decode custom entities
+													$param_value = FusionCore::decode_custom_entities($param_value);
+												} else {
+													$param_value = '';
+												}
+												//check for dependency
+												$dependency = !empty($param['dependency']) ? true : false;
+												if ($dependency === true) {
+													$depends_on_param = $param['dependency']['param_name'];
+													$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
+													if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
+														$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+													} else if (!empty($param['dependency']['value'])) {
+														$depends_on_value = $param['dependency']['value'];
+													} else {
+														$depends_on_value = '';
+													}
+													$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
+													$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+				
+												}
+												
+												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+													echo self::get_input_field($param, $param_value);
+												echo '</div>';
+											}
+										echo '</div>';
+										$active_tab = false;
+									}
+								}
+							echo '</div>';
+							?>							
+						</form>
+					</div>
+					<div class="modal-footer">
+						<span class="save-notice">Changes will be saved on close.</span>
+						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		exit;
+	}
+	
+	/**
+	 * Render edit column modal.
+	 *
+	 * @since 1.0.0
+	 */
+	 
+	public function render_edit_column_modal() {
+		$saved_values = $_POST['saved_values'];
+		if (empty($saved_values)) {
+			$saved_values = array();
+		}
+		$column_style_options = array(
+			'' => __('Light', 'fusion'),
+			'dark' => __('Dark', 'fusion')
+		);
+		$column_style_options = apply_filters('fsn_column_style_options', $column_style_options);
+		//map column parameters
+		$params = array(
+			array(
+				'type' => 'select',
+				'options' => $column_style_options,
+				'param_name' => 'column_style',
+				'label' => __('Style', 'fusion'),
+				'help' => __('Choose Column style. Light will inherit globally set text color. Dark will adopt text color set within this Column for headlines and links.', 'fusion'),
+				'section' => 'advanced'
+			)
+		);
+		
+		//add style params
+		global $fsn_style_params;
+		$style_params = $fsn_style_params;
+		$params = array_merge_recursive($params, $style_params);
+		
+		//filter column params
+		$params = apply_filters('fsn_column_params', $params);
+		
+		//sort params into sections
+		$fsn_param_sections = fsn_get_sorted_param_sections($params);
+		$tabset_id = uniqid();
+		?>
+		<div class="modal fade" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header has-tabs">						
+						<h4 class="modal-title" id="myModalLabel"><?php _e('Column', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<?php
+						echo '<ul class="nav nav-tabs" role="tablist">';
+							$active_tab = true;
+							for($i=0; $i < count($fsn_param_sections); $i++) {
+								if (count($fsn_param_sections[$i]['params']) > 0) {
+							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" aria-controls="options" role="tab" data-toggle="tab">'. $fsn_param_sections[$i]['name'] .'</a></li>';
+							    	$active_tab = false;
+						    	}
+							}
+						echo '</ul>';	
+						?>
+					</div>
+					<div class="modal-body">						
+						<form role="form">
+							<?php
+							echo '<div class="tab-content">';
+								$active_tab = true;
+								for($i=0; $i < count($fsn_param_sections); $i++) {
+									if (count($fsn_param_sections[$i]['params']) > 0) {
+										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" data-section-id="'. $fsn_param_sections[$i]['id'] .'">';
+											foreach($fsn_param_sections[$i]['params'] as $param) {
+												//check for saved values
+												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+													$param['content_field'] = true;
+												} elseif (empty($param['content_field'])) {
+													$param['content_field'] = false;
+												}
+												$data_attribute_name = str_replace('_', '-', $param['param_name']);
+												if ( array_key_exists($data_attribute_name, $saved_values) ) {
+													$param_value = stripslashes($saved_values[$data_attribute_name]);
+													if ($param['encode_base64'] == true) {
+														$param_value = wp_strip_all_tags($param_value);
+														$param_value = htmlentities(base64_decode($param_value));
+													} else if ($param['encode_url'] == true) {
+														$param_value = wp_strip_all_tags($param_value);
+														$param_value = urldecode($param_value);
+													}
+													//decode custom entities
+													$param_value = FusionCore::decode_custom_entities($param_value);
+												} else {
+													$param_value = '';
+												}
+												//check for dependency
+												$dependency = !empty($param['dependency']) ? true : false;
+												if ($dependency === true) {
+													$depends_on_param = $param['dependency']['param_name'];
+													$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
+													if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
+														$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+													} else if (!empty($param['dependency']['value'])) {
+														$depends_on_value = $param['dependency']['value'];
+													} else {
+														$depends_on_value = '';
+													}
+													$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
+													$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+				
+												}
+												
+												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+													echo self::get_input_field($param, $param_value);
+												echo '</div>';
+											}
+										echo '</div>';
+										$active_tab = false;
+									}
+								}
+							echo '</div>';
+							?>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<span class="save-notice">Changes will be saved on close.</span>
+						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		exit;
+	}
+		
+	/**
+	 * Get input field for compontent modals.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $type The type of input field to get.
+	 * @param string $param_name The name to be assigned to the input field.
+	 * @param string $param_value The input field's value (if already set).
+	 */
+	
+	public static function get_input_field($param, $param_value = '') {
+		if (!isset($param['content_field'])) {
+			$param['content_field'] = false;
+		}
+		$input = '';
+		switch($param['type']) {
+			case 'text':
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<input type="text" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') . ($param['encode_base64'] == true ? ' encode-base64' : '') . ($param['encode_url'] == true ? ' encode-url' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. $param['placeholder'] .'"' : '') .'>';				
+				break;
+			case 'textarea':
+				if ($param['content_field'] == true && ($param['encode_base64'] == true || $param['encode_url'] == true)) {
+					$param_value = $param_value;
+				} elseif ($param['content_field'] == true && empty($param['encode_base64']) && empty($param['encode_url'])) {
+					$param_value = esc_textarea(fsn_unautop($param_value));
+				} else {
+					$param_value = esc_textarea($param_value);	
+				}
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<textarea class="form-control element-input'. ($param['content_field'] == true ? ' content-field' : '') .  ($param['nested'] == true ? ' nested' : '') . ($param['encode_base64'] == true ? ' encode-base64' : '') . ($param['encode_url'] == true ? ' encode-url' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" rows="5">'. $param_value .'</textarea>';
+				break;
+			case 'checkbox':
+				$input .= '<div class="checkbox">';
+					$input .= '<label for="fsn_'. $param['param_name'] .'">';
+						$input .= '<input type="checkbox" class="element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'"'. checked( $param_value, 'on', false ) .'>';
+						$input .= $param['label'];
+					$input .= '</label>';
+				$input .= '</div>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				break;
+			case 'radio':
+				$input .= '<label>'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				//select fist radio button option if value is not set
+				if (empty($param_value)) {
+					$option_keys = array_keys($param['options']);
+					$param_value = $option_keys[0];
+				}
+				foreach($param['options'] as $key => $value) {
+					$input .= '<div class="radio">';
+						$input .= '<label>';
+							$input .= '<input type="radio" class="element-input'. ($param['nested'] == true ? ' nested' : '') .'" value="'. esc_attr($key) .'" name="'. $param['param_name'] .'"'. checked( $param_value, $key, false ) .'>';
+							$input .= $value;
+						$input .= '</label>';
+			    	$input .= '</div>';
+		    	}		    	
+		    	break;
+			case 'select':
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<select class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. $param['param_name'] .'">';
+					foreach($param['options'] as $key => $value) {
+						$input .= '<option value="'. esc_attr($key) .'"'. selected( $param_value, $key, false ) .'>'. $value .'</option>';
+					}
+				$input .= '</select>';				
+				break;			
+			case 'textarea_rte':
+				$input .= '<label>'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				if ($param['content_field'] == false) {
+					ob_start();
+					wp_editor($param_value, 'fsncontent', array('editor_class' => 'element-input'));
+					$input .= ob_get_clean();
+				} else {
+					ob_start();
+					wp_editor($param_value, 'fsncontent');
+					$input .= ob_get_clean();
+				}				
+				break;
+			case 'colorpicker':
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<input type="text" class="form-control element-input ad-color-picker'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';				
+				break;
+			case 'image':
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
+				if ( !empty($param_value) ) {
+			    	$image_attrs = wp_get_attachment_image_src($param_value, 'medium');
+			    	$input .= '<img src="'. $image_attrs[0] .'" class="image-field-preview" alt="">';
+				}
+				$button_verb_empty = __('Add', 'fusion');
+				$button_verb_isset = __('Change', 'fusion');
+				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
+				$input .= '<a href="#" class="fsn_upload_image button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'">'. sprintf(__('<span class="button-verb">%1$s</span> Image', 'fusion'), $button_verb) .'</a>';
+				$input .= '<a href="#" class="fsn-remove-image button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Image', 'fusion') .'</a>';
+				break;
+			case 'video':
+				$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
+				if ( !empty($param_value) ) {
+			    	$image_attrs = wp_get_attachment_image_src($param_value, 'thumbnail', true);
+			    	$input .= '<img src="'. $image_attrs[0] .'" class="video-field-preview" alt="">';
+				}
+				$button_verb_empty = __('Add', 'fusion');
+				$button_verb_isset = __('Change', 'fusion');
+				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
+				$input .= '<a href="#" class="fsn_upload_video button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'">'. sprintf(__('<span class="button-verb">%1$s</span> Video', 'fusion'), $button_verb) .'</a>';
+				$input .= '<a href="#" class="fsn-remove-video button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Video', 'fusion') .'</a>';
+				break;
+			case 'button':
+				if (!empty($param_value)) {
+					$button_array = json_decode($param_value);
+					$saved_button_link = !empty($button_array->link) ? $button_array->link : '';
+					$saved_button_label = !empty($button_array->label) ? $button_array->label : '';
+					$saved_button_attached_id = !empty($button_array->attachedID) ? $button_array->attachedID : '';
+					$saved_button_target = !empty($button_array->target) ? $button_array->target : '';
+					$saved_button_type = !empty($button_array->type) ? $button_array->type : '';
+					$saved_button_collapse_id = !empty($button_array->collapseID) ? $button_array->collapseID : '';
+					$saved_button_collapse_label_show = !empty($button_array->collapseLabelShow) ? $button_array->collapseLabelShow : '';
+					$saved_button_collapse_label_hide = !empty($button_array->collapseLabelHide) ? $button_array->collapseLabelHide : '';
+					$saved_button_component_id = !empty($button_array->componentID) ? $button_array->componentID : '';
+				}
+				$input .= '<label>'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<div class="button-summary">';
+					if (!empty($param_value)) {
+						switch($saved_button_type) {
+							case 'external':
+								$input .= '<p>Type: <strong>External Link</strong></p>';
+								$input .= !empty($saved_button_link) ? '<p>Links to: <strong>'. $saved_button_link .'</strong></p>' : '';
+								$input .= !empty($saved_button_label) ? '<p>Label: <strong>'. $saved_button_label .'</strong></p>' : '';
+								switch($saved_button_target) {
+									case '_blank':
+										$input .= '<p>Opens in: <strong>New Window / Tab</strong></p>';
+										break;
+									case '_parent':
+										$input .= '<p>Opens in: <strong>Parent Frame</strong></p>';
+										break;
+									case '_top':
+										$input .= '<p>Opens in: <strong>Full Body of the Window</strong></p>';
+										break;
+									default:
+										$input .= '<p>Opens in: <strong>Current Window / Tab</strong></p>';
+								}
+								break;
+							case 'internal':
+								$input .= '<p>Type: <strong>Internal Link</strong></p>';
+								$input .= !empty($saved_button_attached_id) ? '<p>Links to: <strong>'. get_the_title($saved_button_attached_id) .'</strong></p>' : '';
+								$input .= !empty($saved_button_label) ? '<p>Label: <strong>'. $saved_button_label .'</strong></p>' : '';
+								switch($saved_button_target) {
+									case '_blank':
+										$input .= '<p>Opens in: <strong>New Window / Tab</strong></p>';
+										break;
+									case '_parent':
+										$input .= '<p>Opens in: <strong>Parent Frame</strong></p>';
+										break;
+									case '_top':
+										$input .= '<p>Opens in: <strong>Full Body of the Window</strong></p>';
+										break;
+									default:
+										$input .= '<p>Opens in: <strong>Current Window / Tab</strong></p>';
+								}
+								break;
+							case 'collapse':
+								if (!empty($saved_button_component_id)) {
+									$saved_button_collapse_id = get_the_title($saved_button_component_id);
+								}
+								$input .= '<p>Type: <strong>Collapse</strong></p>';
+								$input .= !empty($saved_button_collapse_id) ? '<p>Opens: <strong>'. $saved_button_collapse_id .'</strong></p>' : '';
+								$input .= !empty($saved_button_collapse_label_show) ? '<p>Show Label: <strong>'. $saved_button_collapse_label_show .'</strong></p>' : '';
+								$input .= !empty($saved_button_collapse_label_hide) ? '<p>Hide Label: <strong>'. $saved_button_collapse_label_hide .'</strong></p>' : '';
+								break;
+							case 'modal':
+								if (!empty($saved_button_component_id)) {
+									$saved_button_modal_id = get_the_title($saved_button_component_id);
+								}
+								$input .= '<p>Type: <strong>Modal</strong></p>';
+								$input .= !empty($saved_button_modal_id) ? '<p>Opens: <strong>'. $saved_button_modal_id .'</strong></p>' : '';
+								$input .= !empty($saved_button_label) ? '<p>Label: <strong>'. $saved_button_label .'</strong></p>' : '';
+								break;
+						}
+					}
+				$input .= '</div>';
+				$button_verb_empty = __('Add', 'fusion');
+				$button_verb_isset = __('Edit', 'fusion');
+				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
+				$input .= '<a href="#" class="fsn-add-edit-button button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'">'. sprintf(__('<span class="button-verb">%1$s</span> Button', 'fusion'), $button_verb) .'</a>';
+				$input .= '<a href="#" class="fsn-remove-button button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Button', 'fusion') .'</a>';
+				$input .= '<input type="hidden" class="form-control element-input button-string'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
+				break;
+			case 'box':
+				if (!empty($param_value)) {
+					$box_array = json_decode($param_value);
+					$box_top = !empty($box_array->top) ? $box_array->top : '';
+					$box_right = !empty($box_array->right) ? $box_array->right : '';
+					$box_bottom = !empty($box_array->bottom) ? $box_array->bottom : '';
+					$box_left = !empty($box_array->left) ? $box_array->left : '';
+				}
+				$input .= '<label>'. $param['label'] .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+				$input .= '<div class="fsn-box-form">';
+					$input .= '<label for="fsn_'. $param['param_name'] .'_top">Top</label>';
+					$input .= '<input type="text" class="form-control box-top" id="fsn_'. $param['param_name'] .'_top" name="'. $param['param_name'] .'_top" value="'. $box_top .'">';
+					$input .= '<label for="fsn_'. $param['param_name'] .'_right">Right</label>';
+					$input .= '<input type="text" class="form-control box-right" id="fsn_'. $param['param_name'] .'_right" name="'. $param['param_name'] .'_right" value="'. $box_right .'">';
+					$input .= '<label for="fsn_'. $param['param_name'] .'_bottom">Bottom</label>';
+					$input .= '<input type="text" class="form-control box-bottom" id="fsn_'. $param['param_name'] .'_bottom" name="'. $param['param_name'] .'_bottom" value="'. $box_bottom .'">';
+					$input .= '<label for="fsn_'. $param['param_name'] .'_left">Left</label>';
+					$input .= '<input type="text" class="form-control box-left" id="fsn_'. $param['param_name'] .'_left" name="'. $param['param_name'] .'_left" value="'. $box_left .'">';
+				$input .= '</div>';
+				$input .= '<input type="hidden" class="form-control element-input box-string'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. $param['param_name'] .'" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
+				break;
+			case 'note':
+				$input .= '<p class="description">'. $param['help'] .'</p>';
+				break;
+		}
+		
+		$input = apply_filters('fsn_input_types', $input, $param, $param_value);
+		
+		return $input;
+	}
+	
+	/**
+	 * Update image field preview
+	 *
+	 * Updates preview thumbnail for images inserted from the media library
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	 
+	public function update_image_preview() {
+		$attachment_id = $_POST['id'];
+		$image_attrs = wp_get_attachment_image_src($attachment_id, 'medium');
+    	echo '<img src="'. $image_attrs[0] .'" class="image-field-preview" alt="">';
+		
+		exit;	
+	}
+	
+	/**
+	 * Update video field preview
+	 *
+	 * Updates preview thumbnail for videos inserted from the media library
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	 
+	public function update_video_preview() {
+		$attachment_id = $_POST['id'];
+		$image_attrs = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
+    	echo '<img src="'. $image_attrs[0] .'" class="video-field-preview" alt="">';
+		
+		exit;	
+	}
+}
+
+$fsn_core = new FusionCore();
+
+//include settings page
+require_once('includes/classes/settings.php');
+
+//include templates class
+require_once('includes/classes/templates.php');
+
+//include mapping class
+require_once('includes/classes/map.php');
+
+//include extension class
+require_once('includes/classes/extend.php');
+
+//include tabs class
+require_once('includes/classes/tabs.php');
+
+//include components class
+require_once('includes/classes/components.php');
+
+//include page views class
+require_once('includes/classes/page-views.php');
+
+//include button class
+require_once('includes/classes/button.php');
+
+//include custom lists class
+require_once('includes/classes/custom-list.php');
+
+//ELEMENTS
+
+//text
+require_once('includes/extensions/text.php');
+
+//code
+require_once('includes/extensions/code.php');
+
+//insert component
+require_once('includes/extensions/insert-component.php');
+
+//UTILITIES
+
+//functions
+require_once('includes/utilities/functions.php');
+
+?>

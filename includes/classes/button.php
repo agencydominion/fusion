@@ -1,0 +1,239 @@
+<?php
+/**
+ * @package Fusion
+ */
+
+/**
+ * Button Modal Fusion Extension.
+ *
+ * Class to add Scripting and AJAX functionality for the Button field type
+ *
+ * @since 1.0.0
+ */
+ 
+class FusionCoreButtonModal	{
+
+	public function __construct() {
+		
+		//Button Modal
+		add_action('wp_ajax_init-button-modal', array($this, 'button_init_modal'));
+		
+	}
+
+	/**
+	 * Initialize modal
+	 *
+	 * @since 1.0.0
+	 */
+
+	public function button_init_modal() {	
+		$current_link = $_POST['current_link'];
+		$current_label = stripslashes($_POST['current_label']);
+		$current_attached = $_POST['current_attached'];
+		$current_target = $_POST['current_target'];
+		$current_type = $_POST['current_type'];
+		$current_collapse_id = $_POST['current_collapse_id'];
+		$current_collapse_label_show = stripslashes($_POST['current_collapse_label_show']);
+		$current_collapse_label_hide = stripslashes($_POST['current_collapse_label_hide']);
+		$current_modal_id = $_POST['current_modal_id'];
+		$current_component_id = $_POST['current_component_id'];
+		?>
+		<div class="modal fade button-modal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title"><?php _e('Button', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+					</div>
+					<div class="modal-body">
+						<form role="form">
+						<?php
+						//get registered post types
+						$post_types = get_post_types();		
+						unset($post_types['attachment']);
+						unset($post_types['revision']);
+						unset($post_types['nav_menu_item']);
+						unset($post_types['component']);
+						unset($post_types['template']);
+						if (isset($post_types['notification'])) {
+							unset($post_types['notification']);	
+						}
+						
+						//get all post items
+						$all_items = fsn_get_post_ids_titles_by_type($post_types);
+									
+						$all_items_options = array();
+						$all_items_options[''] = ''; //blank so that chosen will allow deselect on single selects
+						foreach($all_items as $item) {
+						    $all_items_options[$item['id']] = $item['post_title'];
+						}
+						//map button parameters
+						$params = array(
+							array(
+								'type' => 'radio',
+								'options' => array(
+									'external' => __('External', 'fusion'),
+									'internal' => __('Internal', 'fusion'),
+									'collapse' => __('Collapse', 'fusion'),
+									'modal' => __('Modal', 'fusion')
+								),
+								'param_name' => 'button_type',
+								'label' => __('Type', 'fusion')
+							),
+							array(
+								'type' => 'text',
+								'param_name' => 'button_link',
+								'label' => __('Link', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => 'external'
+								)
+							),
+							array(
+								'type' => 'select',
+								'options' => $all_items_options,
+								'param_name' => 'button_attached',
+								'class' => 'chosen',
+								'label' => __('Link to Content', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => 'internal'
+								)
+							),
+							array(
+								'type' => 'components',
+								'param_name' => 'button_component_id',
+								'label' => __('Choose Component', 'fusion'),
+								'help' => __('Choose component to attach and link to, edit this component, or add new component.', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => array('modal', 'collapse')
+								)
+							),
+							array(
+								'type' => 'text',
+								'param_name' => 'button_label',
+								'label' => __('Label', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => array('external','internal','modal')
+								)
+							),
+							array(
+								'type' => 'text',
+								'param_name' => 'button_collapse_id',
+								'label' => __('Collapse ID', 'fusion'),
+								'help' => __('Input the ID attribute for the collapsible element if not using an attached Component.', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => 'collapse'
+								)
+							),
+							array(
+								'type' => 'text',
+								'param_name' => 'button_collapse_label_show',
+								'label' => __('Show Label', 'fusion'),
+								'help' => __('Input button label text for when the collapsible element is hidden (clicking will show).', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => 'collapse'
+								)
+							),
+							array(
+								'type' => 'text',
+								'param_name' => 'button_collapse_label_hide',
+								'label' => __('Hide Label', 'fusion'),
+								'help' => __('Input button label text for when the collapsible element is shown (clicking will hide).', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => 'collapse'
+								)
+							),
+							array(
+								'type' => 'select',
+								'options' => array(
+									'' => __('_self', 'fusion'),
+									'_blank' => __('_blank (new tab / window)', 'fusion'),
+									'_parent' => __('_parent (parent frame)', 'fusion'),
+									'_top' => __('_top (full body of the window)', 'fusion')
+								),
+								'param_name' => 'button_target',
+								'label' => __('Target', 'fusion'),
+								'dependency' => array(
+									'param_name' => 'button_type',
+									'value' => array('external','internal')
+								)
+							)
+						);
+						
+						if (!empty($params)) {
+							foreach($params as $param) {
+								//check for saved values
+								switch($param['param_name']) {
+									case 'button_link':
+										$param_value = $current_link;
+										break;
+									case 'button_label':
+										$param_value = $current_label;
+										break;
+									case 'button_attached':
+										$param_value = $current_attached;
+										break;
+									case 'button_target':
+										$param_value = $current_target;
+										break;
+									case 'button_type':
+										$param_value = $current_type;
+										break;
+									case 'button_collapse_id':
+										$param_value = $current_collapse_id;
+										break;
+									case 'button_collapse_label_show':
+										$param_value = $current_collapse_label_show;
+										break;
+									case 'button_collapse_label_hide':
+										$param_value = $current_collapse_label_hide;
+										break;
+									case 'button_component_id':
+										$param_value = $current_component_id;
+										break;
+								}
+								//check for dependency
+								$dependency = !empty($param['dependency']) ? true : false;
+								if ($dependency === true) {
+									$depends_on_param = $param['dependency']['param_name'];
+									$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
+									if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
+										$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+									} else if (!empty($param['dependency']['value'])) {
+										$depends_on_value = $param['dependency']['value'];
+									} else {
+										$depends_on_value = '';
+									}
+									
+									$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
+									$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+								}
+								echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+									echo FusionCore::get_input_field($param, $param_value);
+								echo '</div>';
+							}
+						}
+						?>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<span class="save-notice">Changes will be saved on close.</span>
+						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php
+		exit;
+	}
+}
+
+$fsn_core_button_modal = new FusionCoreButtonModal();
+
+?>
