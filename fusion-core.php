@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://agencydominion.com
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
@@ -26,7 +26,7 @@ class FusionCore	{
 		// Initialize the language files
 		load_plugin_textdomain( 'fusion', false, plugin_dir_url( __FILE__ ) . 'languages' );
 		
-		// Add views update schedule on plugin activation
+		// Add default settings on plugin activation
 		register_activation_hook( __FILE__, array($this, 'settings_defaults') );
 		
 		// Enqueue admin scripts and styles
@@ -97,21 +97,31 @@ class FusionCore	{
 	
 	public function settings_defaults() {
 		$options = get_option('fsn_options');
-		//set default post types
-		if (empty($options['fsn_post_types'])) {
-			$options['fsn_post_types'] = array('post','page','template','component');
-			update_option('fsn_options', $options);
+		$current_version = get_option('fsn_current_version');
+		if (empty($options) && empty($current_version)) {
+			//set default post types
+			if (empty($options['fsn_post_types'])) {
+				$options['fsn_post_types'] = array('post','page','template','component');
+				update_option('fsn_options', $options);
+			}
+			//check if using Fusion Base theme
+			$template = get_option('template');
+				if ($template != 'fusion-base') {
+				//enable front end bootstrap
+				if (empty($options['fsn_bootstrap_enable'])) {
+					$options['fsn_bootstrap_enable'] = 'on';
+					update_option('fsn_options', $options);
+				}
+				//enable fluid containers
+				if (empty($options['fsn_bootstrap_fluid'])) {
+					$options['fsn_bootstrap_fluid'] = 'on';
+					update_option('fsn_options', $options);
+				}
+			}
 		}
-		//enable front end bootstrap
-		if (empty($options['fsn_bootstrap_enable'])) {
-			$options['fsn_bootstrap_enable'] = 'on';
-			update_option('fsn_options', $options);
-		}
-		//enable fluid containers
-		if (empty($options['fsn_bootstrap_fluid'])) {
-			$options['fsn_bootstrap_fluid'] = 'on';
-			update_option('fsn_options', $options);
-		}
+		//set version number
+		$plugin_data = get_plugin_data(__FILE__);
+		update_option('fsn_current_version', $plugin_data['Version']);
 	}
 	
 	/**
