@@ -12,6 +12,8 @@
  * License: GPL2
  */
  
+define( 'FSN_VERSION', '1.0.3' );
+ 
 /**
  * Fusion class.
  *
@@ -123,14 +125,13 @@ class FusionCore	{
 			}
 		}
 		//set version number
-		$plugin_data = get_plugin_data(__FILE__);
-		update_option('fsn_current_version', $plugin_data['Version']);
+		update_option('fsn_current_version', FSN_VERSION);
 	}
 	
 	/**
 	 * Set version number
 	 *
-	 * Checks the version number in the options table and, if not found or not a match, set the version number.
+	 * Check the version number in the options table and, if not found or not a match, set the version number.
 	 *
 	 * @since 1.0.3
 	 *
@@ -138,9 +139,8 @@ class FusionCore	{
 	
 	public function set_version_number() {
 		$current_version = get_option('fsn_current_version');
-		$plugin_data = get_plugin_data(__FILE__);
-		if (empty($current_version) || $current_version != $plugin_data['Version']) 	{
-			update_option('fsn_current_version', $plugin_data['Version']);
+		if (empty($current_version) || $current_version != FSN_VERSION) 	{
+			update_option('fsn_current_version', FSN_VERSION);
 		}
 	}
 	
