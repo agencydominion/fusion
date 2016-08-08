@@ -257,21 +257,19 @@ class FusionCoreComponents	{
 	public function output_attached_modal_components() {
 		//get global attached modals array
 		global $fsn_attached_modals;
-		if (!empty($fsn_attached_modals)) {
-			//remove duplicates
-			$attached_modals = array_unique($fsn_attached_modals);
-			//output modals
-			foreach($attached_modals as $attached_modal) {
-				echo '<div id="modal-component-'. $attached_modal .'" class="component modal fade">';
-					echo '<div class="modal-component-inner container">';
-						echo '<div class="modal-component-controls clearfix">';
-							echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="material-icons md-48">&#xE5CD;</i></button>';
-						echo '</div>';
-						echo do_shortcode('[fsn_component component_id="'. $attached_modal .'"]');
+		//remove duplicates
+		$attached_modals = array_unique($fsn_attached_modals);
+		//output modals
+		foreach($attached_modals as $attached_modal) {
+			echo '<div id="modal-component-'. $attached_modal .'" class="component modal fade">';
+				echo '<div class="modal-component-inner container">';
+					echo '<div class="modal-component-controls clearfix">';
+						echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="material-icons md-48">&#xE5CD;</i></button>';
 					echo '</div>';
+					echo do_shortcode('[fsn_component component_id="'. $attached_modal .'"]');
 				echo '</div>';
-			}
-		}		
+			echo '</div>';
+			}		
 		//unset global
 		unset($GLOBALS['fsn_attached_modals']);
 	}
