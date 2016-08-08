@@ -1035,8 +1035,10 @@ function fsnInitUIevents(instance) {
 					} else if (jQuery('.content-field').hasClass('encode-url')) {
 						var newContent = jQuery('.content-field').val();
 						var newContent = encodeURIComponent(newContent);
-					} else {
+					} else if (jQuery('.content-field').is('textarea')) {
 						var newContent = fsnautop(jQuery('.content-field').val());
+					} else {
+						var newContent = jQuery('.content-field').val();
 					}
 					if (newContent != '') {
 						currentContent.html(newContent);
