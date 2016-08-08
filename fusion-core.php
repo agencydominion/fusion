@@ -798,8 +798,8 @@ class FusionCore	{
 	 
 	public static function decode_custom_entities($content) {
 	
-		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;');
-		$html_entities = array('"','[',']');
+		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;','#fsnlt;','#fsngt;');
+		$html_entities = array('"','[',']','<','>');
 		
 		$content = str_replace($custom_entities, $html_entities, $content);
 		

@@ -2406,7 +2406,9 @@ function fsnCustomEntitiesEncode(str) {
     return String(str)
 	    .replace(/"/g, '#fsnquot;')
 	    .replace(/\[/g, '#fsnsqbl;')
-	    .replace(/\]/g, '#fsnsqbr;');
+	    .replace(/\]/g, '#fsnsqbr;')
+	    .replace(/\</g, '#fsnlt;')
+	    .replace(/\>/g, '#fsngt;');
 }
 
 //Add HTML line breaks and paragraph tags in place of single and double line breaks.
