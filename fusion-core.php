@@ -6,11 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://agencydominion.com
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
+ 
+define( 'FSN_VERSION', '1.0.4' );
  
 /**
  * Fusion class.
@@ -28,6 +30,9 @@ class FusionCore	{
 		
 		// Add default settings on plugin activation
 		register_activation_hook( __FILE__, array($this, 'settings_defaults') );
+		
+		// Check and update version number option
+		add_action('admin_init', array($this, 'set_version_number'));
 		
 		// Enqueue admin scripts and styles
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts_styles'));
@@ -120,8 +125,23 @@ class FusionCore	{
 			}
 		}
 		//set version number
-		$plugin_data = get_plugin_data(__FILE__);
-		update_option('fsn_current_version', $plugin_data['Version']);
+		update_option('fsn_current_version', FSN_VERSION);
+	}
+	
+	/**
+	 * Set version number
+	 *
+	 * Check the version number in the options table and, if not found or not a match, set the version number.
+	 *
+	 * @since 1.0.3
+	 *
+	 */
+	
+	public function set_version_number() {
+		$current_version = get_option('fsn_current_version');
+		if (empty($current_version) || $current_version != FSN_VERSION) 	{
+			update_option('fsn_current_version', FSN_VERSION);
+		}
 	}
 	
 	/**
@@ -778,8 +798,8 @@ class FusionCore	{
 	 
 	public static function decode_custom_entities($content) {
 	
-		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;');
-		$html_entities = array('"','[',']');
+		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;','#fsnlt;','#fsngt;');
+		$html_entities = array('"','[',']','<','>');
 		
 		$content = str_replace($custom_entities, $html_entities, $content);
 		
