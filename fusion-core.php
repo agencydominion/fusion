@@ -572,6 +572,12 @@ class FusionCore	{
 						$output .= '<div class="row-controls-dropdown collapsed">';
 							$output .= '<a href="#" class="edit-row">'. __('Edit', 'fusion') .'</a>';
 							$output .= '<a href="#" class="duplicate-row">'. __('Duplicate', 'fusion') .'</a>';
+							$output .= '<hr>';
+							$output .= '<a href="#" class="move-row" data-move="up">'. __('Move Up', 'fusion') .'</a>';
+							$output .= '<a href="#" class="move-row" data-move="down">'. __('Move Down', 'fusion') .'</a>';
+							$output .= '<a href="#" class="move-row" data-move="top">'. __('Move to Top', 'fusion') .'</a>';
+							$output .= '<a href="#" class="move-row" data-move="bottom">'. __('Move to Bottom', 'fusion') .'</a>';
+							$output .= '<hr>';
 							$output .= '<a href="#" class="delete-row">'. __('Delete', 'fusion') .'</a>';
 						$output .= '</div>';
 						$output .= '<a href="#" class="control-icon edit-row" title="Edit Row"><i class="material-icons md-18">&#xE3C9;</i></a>';
