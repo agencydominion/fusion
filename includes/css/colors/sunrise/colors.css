@@ -94,6 +94,15 @@
 	border-right-color:transparent;
 }
 
+.fsn-interface-grid .row-container > .row-header .row-controls .row-controls-dropdown hr,
+.fsn-interface-grid .column-container > .column-header .column-controls .column-controls-dropdown hr,
+.fsn-interface-grid .tabs-container > .tabs-header .tabs-controls .tabs-controls-dropdown hr,
+.fsn-interface-grid .tab-container > .tab-header .tab-controls .tab-controls-dropdown hr,
+.fsn-interface-grid .fsn-element > .element-controls .element-controls-dropdown hr,
+#load_template_modal .template-item .template-controls-dropdown hr	{
+	border-top-color:rgba(255, 255, 255, 0.1);
+}
+
 .fsn-interface-grid .row-container > .row-header .row-controls .row-controls-dropdown > a,
 .fsn-interface-grid .column-container > .column-header .column-controls .column-controls-dropdown > a,
 .fsn-interface-grid .tabs-container > .tabs-header .tabs-controls .tabs-controls-dropdown > a,
