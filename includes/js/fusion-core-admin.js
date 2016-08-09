@@ -285,6 +285,13 @@ function fsnInitUIevents(instance) {
 			if (instance.is(':empty')) {
 				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text')));
 				instance.empty().append(fsnInitContent);
+				//reinit sortables and resizables
+				initSortables(instance);
+				initResizables(instance);
+				//reinit add col fields
+				fsnAddColFields(instance);
+				//init tooltips
+				fsnInitTooltips(instance);
 			}
 		});
 	});
