@@ -113,7 +113,7 @@ function fsnGetRow(content) {
 	if (content == undefined) {
 		var content = '';
 	}
-	var output = '<div class="row-container clearfix"><div class="row-header"><div class="row-controls"><span class="row-controls-toggle" title="Row Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="row-controls-dropdown collapsed"><a href="#" class="edit-row">Edit</a><a href="#" class="duplicate-row">Duplicate</a><a href="#" class="delete-row">Delete</a></div><a href="#" class="control-icon edit-row" title="Edit Row"><i class="material-icons md-18">&#xE3C9;</i></a></div><a href="#" class="fsn-add-row" title="Add Row"><i class="material-icons md-18">&#xE147;</i></a></div><div class="row-wrapper"><div class="row">'+ content +'</div></div></div>';
+	var output = '<div class="row-container clearfix"><div class="row-header"><div class="row-controls"><span class="row-controls-toggle" title="Row Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="row-controls-dropdown collapsed"><a href="#" class="edit-row">Edit</a><a href="#" class="duplicate-row">Duplicate</a><hr><a href="#" class="move-row" data-move="up">Move Up</a><a href="#" class="move-row" data-move="down">Move Down</a><a href="#" class="move-row" data-move="top">Move to Top</a><a href="#" class="move-row" data-move="bottom">Move to Bottom</a><hr><a href="#" class="delete-row">Delete</a></div><a href="#" class="control-icon edit-row" title="Edit Row"><i class="material-icons md-18">&#xE3C9;</i></a></div><a href="#" class="fsn-add-row" title="Add Row"><i class="material-icons md-18">&#xE147;</i></a></div><div class="row-wrapper"><div class="row">'+ content +'</div></div></div>';
 	return output;
 }
 
@@ -285,6 +285,13 @@ function fsnInitUIevents(instance) {
 			if (instance.is(':empty')) {
 				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text')));
 				instance.empty().append(fsnInitContent);
+				//reinit sortables and resizables
+				initSortables(instance);
+				initResizables(instance);
+				//reinit add col fields
+				fsnAddColFields(instance);
+				//init tooltips
+				fsnInitTooltips(instance);
 			}
 		});
 	});
@@ -317,6 +324,34 @@ function fsnInitUIevents(instance) {
 		initResizables(instance);
 		//init tooltips
 		fsnInitTooltips(instance);
+		//update content
+		fsnUpdateContent(instance);
+	});
+	
+	//move row in visual editor
+	instance.on('click', '.move-row', function(e) {
+		e.preventDefault();
+		var trigger = jQuery(this);
+		var targetRow = trigger.closest('.row-container');
+		var moveTo = trigger.data('move');
+		switch(moveTo) {
+			case 'up':
+				var previousRow = targetRow.prev('.row-container');
+				targetRow.detach().insertBefore(previousRow);
+				break;
+			case 'down':
+				var nextRow = targetRow.next('.row-container');
+				targetRow.detach().insertAfter(nextRow);
+				break;
+			case 'top':
+				var topRow = targetRow.siblings('.row-container').first();
+				targetRow.detach().insertBefore(topRow);
+				break;
+			case 'bottom':
+				var bottomRow = targetRow.siblings('.row-container').last();
+				targetRow.detach().insertAfter(bottomRow);
+				break;
+		}
 		//update content
 		fsnUpdateContent(instance);
 	});
