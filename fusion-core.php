@@ -171,6 +171,10 @@ class FusionCore	{
 			if ($user_admin_color != 'fresh') {
 				wp_enqueue_style( 'fsn_core_admin_color_scheme', plugin_dir_url( __FILE__ ) . 'includes/css/colors/'. $user_admin_color .'/colors.css', false, '1.0.0' );
 			}
+			wp_localize_script( 'fsn_core_admin', 'fsnJS', array(
+					'fsnEditNonce' => wp_create_nonce('fsn-admin-edit')
+				)
+			);
 			//jQuery UI
 			wp_enqueue_style( 'jquery-ui-custom', plugin_dir_url( __FILE__ ) . 'includes/css/jquery-ui-1.11.4.custom/jquery-ui.min.css', false, '1.11.4' );
 			wp_enqueue_script('jquery-ui-sortable');
@@ -891,6 +895,13 @@ class FusionCore	{
 	 */
 	 
 	public function render_add_element_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		//get elements global
 		global $fsn_elements;
 		$nesting_level = intval($_POST['nesting_level']);
@@ -942,6 +953,13 @@ class FusionCore	{
 	 */
 	 
 	public function render_edit_row_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
@@ -1170,6 +1188,13 @@ class FusionCore	{
 	 */
 	 
 	public function render_edit_column_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
@@ -1528,6 +1553,13 @@ class FusionCore	{
 	 */
 	 
 	public function update_image_preview() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$attachment_id = $_POST['id'];
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'medium');
     	echo '<img src="'. $image_attrs[0] .'" class="image-field-preview" alt="">';
@@ -1545,6 +1577,13 @@ class FusionCore	{
 	 */
 	 
 	public function update_video_preview() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$attachment_id = $_POST['id'];
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
     	echo '<img src="'. $image_attrs[0] .'" class="video-field-preview" alt="">';

@@ -26,7 +26,14 @@ class FusionCoreButtonModal	{
 	 * @since 1.0.0
 	 */
 
-	public function button_init_modal() {	
+	public function button_init_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$current_link = $_POST['current_link'];
 		$current_label = stripslashes($_POST['current_label']);
 		$current_attached = $_POST['current_attached'];

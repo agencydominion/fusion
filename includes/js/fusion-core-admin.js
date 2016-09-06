@@ -562,6 +562,8 @@ function fsnInitUIevents(instance) {
 			trigger.tooltip('close');	
 		} catch(err) {}
 		
+		var postID = jQuery('input#post_ID').val();
+		
 		//row options
 		var containerType = trigger.attr('data-container');
 		var currentCol = trigger.closest('[class*="col-"]');
@@ -585,11 +587,17 @@ function fsnInitUIevents(instance) {
 		var data = {
 			action: 'add_element_modal',
 			nesting_level: nestingLevel,
-			tabs_nesting_level: tabsNestingLevel
+			tabs_nesting_level: tabsNestingLevel,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};				
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -640,6 +648,7 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.edit-row', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		
 		//row options
 		var currentContent = trigger.closest('.row-container').find('.row').first();		
@@ -648,11 +657,17 @@ function fsnInitUIevents(instance) {
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_row_modal',
-			saved_values: dataAttributes
+			saved_values: dataAttributes,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};				
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -731,6 +746,7 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.edit-col', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		
 		//column options
 		var currentContent = trigger.closest('[class*="col-"]');
@@ -739,11 +755,17 @@ function fsnInitUIevents(instance) {
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_column_modal',
-			saved_values: dataAttributes
+			saved_values: dataAttributes,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -816,6 +838,7 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.edit-tabs', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		
 		//tabs options
 		var currentContent = trigger.closest('.tabs-container');
@@ -824,11 +847,17 @@ function fsnInitUIevents(instance) {
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_tabs_modal',
-			saved_values: dataAttributes
+			saved_values: dataAttributes,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -901,6 +930,7 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.edit-tab', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		
 		//tab options
 		var currentContent = trigger.closest('.tab-container');
@@ -909,11 +939,17 @@ function fsnInitUIevents(instance) {
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_tab_modal',
-			saved_values: dataAttributes
+			saved_values: dataAttributes,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -987,7 +1023,6 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.fsn-element .edit-element', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
-		
 		var postID = jQuery('input#post_ID').val();
 		var shortcodeTag = trigger.closest('.fsn-element').attr('data-shortcode-tag');		
 		
@@ -1001,11 +1036,16 @@ function fsnInitUIevents(instance) {
 			action: shortcodeTag +'_modal',
 			content_html: fsnContent,
 			saved_values: dataAttributes,
-			post_id: postID
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};				
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -1162,13 +1202,21 @@ function fsnInitUIevents(instance) {
 	instanceParent.on('click', '.fsn-save-template', function(e) {
 		e.preventDefault();
 		
+		var postID = jQuery('input#post_ID').val();
+		
 		//data to pass to AJAX function
 		var data = {
 			action: 'save_template_modal',
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};				
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -1187,7 +1235,9 @@ function fsnInitUIevents(instance) {
 				var savedata = {
 					action: 'save_template',
 					template_name: templateName,
-					template_data: templateData
+					template_data: templateData,
+					post_id: postID,
+					security: fsnJS.fsnEditNonce
 				};
 				jQuery.post(ajaxurl, savedata, function(response) {
 					modalSelector.find('.notice').remove();
@@ -1215,13 +1265,21 @@ function fsnInitUIevents(instance) {
 	instanceParent.on('click', '.fsn-load-template' , function(e) {
 		e.preventDefault();
 		
+		var postID = jQuery('input#post_ID').val();
+		
 		//data to pass to AJAX function
 		var data = {
 			action: 'load_template_modal',
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};				
 	
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
@@ -1247,9 +1305,15 @@ function fsnInitUIevents(instance) {
 				
 				var loaddata = {
 					action: 'load_template',
-					template_id: templateID
+					template_id: templateID,
+					post_id: postID,
+					security: fsnJS.fsnEditNonce
 				};
 				jQuery.post(ajaxurl, loaddata, function(response) {
+					if (response == '-1') {
+						alert('Oops, something went wrong. Please reload the page and try again.');
+						return false;
+					}
 					//hide modal					
 					instance.empty().append(response);
 					modalSelector.modal('hide');
@@ -1288,9 +1352,15 @@ function fsnInitUIevents(instance) {
 				var templateID = templateItem.attr('data-template-id');
 				var loaddata = {
 					action: 'delete_template',
-					template_id: templateID
+					template_id: templateID,
+					post_id: postID,
+					security: fsnJS.fsnEditNonce
 				};
 				jQuery.post(ajaxurl, loaddata, function(response) {
+					if (response == '-1') {
+						alert('Oops, something went wrong. Please reload the page and try again.');
+						return false;
+					}
 					//remove item
 					if(response.status == 'success') {
 						templateItem.fadeOut(300, function() {
@@ -1938,9 +2008,14 @@ jQuery(document).ready(function() {
 		        current_collapse_id: currentCollapseID,
 		        current_collapse_label_show: currentCollapseLabelShow,
 		        current_collapse_label_hide: currentCollapseLabelHide,
-		        current_component_id: currentComponentID
+		        current_component_id: currentComponentID,
+		        security: fsnJS.fsnEditNonce
 		    },
 		    function( response ) {
+			    if (response == '-1') {
+					alert('Oops, something went wrong. Please reload the page and try again.');
+					return false;
+				}
 		        jQuery('body').append(response);
 		        var buttonModal = jQuery('.button-modal').last();
 				
@@ -2142,13 +2217,20 @@ jQuery(document).ready(function() {
 	
 		var customListItemsContainer = jQuery(this).siblings('.custom-list-sort');
 		var customListID = customListItemsContainer.attr('data-list-id');
+		var postID = jQuery('input#post_ID').val();
 		
 		e.preventDefault();
 		var data = {
 			action: 'custom_list_add_item',
-			listID: customListID
+			listID: customListID,
+			post_id: postID,
+			security: fsnJS.fsnEditNonce
 		};
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			customListItemsContainer.append(response);
 			//initialize color pickers
 			jQuery('.ad-color-picker').wpColorPicker();
@@ -2906,11 +2988,16 @@ function launchComponentsModal(id) {
 	//data to pass to AJAX function
 	var data = {
 		action: 'components_modal',
-		component_id: id
+		component_id: id,
+		security: fsnJS.fsnEditNonce
 	};			
 
 	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 	jQuery.post(ajaxurl, data, function(response) {
+		if (response == '-1') {
+			alert('Oops, something went wrong. Please reload the page and try again.');
+			return false;
+		}
 		//append modal to body
 		jQuery('body').append(response);
 		//open modal
@@ -2960,11 +3047,16 @@ jQuery(document).ready(function() {
 			post_id: postID,
 			component_id: componentID,
 			component_title: componentTitle,
-			component_content: componentContent
+			component_content: componentContent,
+			security: fsnJS.fsnEditNonce
 		};
 		
 		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
+			if (response == '-1') {
+				alert('Oops, something went wrong. Please reload the page and try again.');
+				return false;
+			}
 			//update message
 			editForm.prev('.notice').remove();
 			editForm.before(response).removeClass('saving');
@@ -3001,6 +3093,7 @@ jQuery(document).ready(function() {
 	jQuery('body').on('click', '.fsn_upload_image', function(e) {
 		e.preventDefault();
 		var buttonTrigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
 	    var custom_uploader = wp.media({
 	        title: 'Select Image',
@@ -3015,11 +3108,17 @@ jQuery(document).ready(function() {
 	        //data to pass to AJAX function
 			var data = {
 				action: 'update_image_preview',
-				id: attachment.id
+				id: attachment.id,
+				post_id: postID,
+				security: fsnJS.fsnEditNonce
 			};				
 		
 			// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 			jQuery.post(ajaxurl, data, function(response) {
+				if (response == '-1') {
+					alert('Oops, something went wrong. Please reload the page and try again.');
+					return false;
+				}
 				if (targetField.siblings('.image-field-preview').length != 0) {
 					targetField.siblings('.image-field-preview').remove();
 				}
@@ -3045,6 +3144,7 @@ jQuery(document).ready(function() {
 	jQuery('body').on('click', '.fsn_upload_video', function(e) {
 		e.preventDefault();
 		var buttonTrigger = jQuery(this);
+		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
 	    var custom_uploader = wp.media({
 	        title: 'Select Video',
@@ -3059,11 +3159,17 @@ jQuery(document).ready(function() {
 	        //data to pass to AJAX function
 			var data = {
 				action: 'update_video_preview',
-				id: attachment.id
+				id: attachment.id,
+				post_id: postID,
+				security: fsnJS.fsnEditNonce
 			};				
 		
 			// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 			jQuery.post(ajaxurl, data, function(response) {
+				if (response == '-1') {
+					alert('Oops, something went wrong. Please reload the page and try again.');
+					return false;
+				}
 				if (targetField.siblings('.video-field-preview').length != 0) {
 					targetField.siblings('.video-field-preview').remove();
 				}

@@ -102,6 +102,12 @@ class FusionCoreTemplate	{
 	 */
 	 
 	public function render_save_template_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
 		?>
 		<div class="modal fade" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
@@ -142,6 +148,12 @@ class FusionCoreTemplate	{
 	 */
 	 
 	public function save_template() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
 		
 		$template_name = $_POST['template_name'];
 		$template_data = $_POST['template_data'];
@@ -176,6 +188,12 @@ class FusionCoreTemplate	{
 	 */
 	 
 	public function render_load_template_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
 		?>
 		<div class="modal fade" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
@@ -221,7 +239,13 @@ class FusionCoreTemplate	{
 	 */
 	 
 	public function load_template() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$template_id = $_POST['template_id'];
 		$template = get_post($template_id);
 		
@@ -239,7 +263,13 @@ class FusionCoreTemplate	{
 	 */
 	 
 	public function delete_template() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$template_id = $_POST['template_id'];		
 		
 		header('Content-type: application/json');

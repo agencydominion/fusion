@@ -161,6 +161,13 @@ class FusionCoreComponents	{
 	 */
 	 
 	public function render_components_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['component_id'] ) )
+			die( '-1' );
+			
 		$component_id = $_POST['component_id'];
 		?>
 		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -208,6 +215,13 @@ class FusionCoreComponents	{
 	 */
 	
 	public function update_component() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['component_id'] ) )
+			die( '-1' );
+		
 		$post_id = $_POST['post_id'];
 		$component_id = $_POST['component_id'];
 		$component_title = $_POST['component_title'];
