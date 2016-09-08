@@ -105,6 +105,13 @@ class FusionCoreCustomList	{
 	 */
 	 
 	public function add_custom_list_item() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+		
 		global $fsn_custom_lists;	
 		$listID = $_POST['listID'];
 		$params = $fsn_custom_lists[$listID]['params'];

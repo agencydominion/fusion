@@ -262,6 +262,13 @@ class FusionCoreTabs	{
 	 */
 	 
 	public function render_edit_tabs_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
@@ -394,6 +401,13 @@ class FusionCoreTabs	{
 	 */
 	 
 	public function render_edit_tab_modal() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+			die( '-1' );
+			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
