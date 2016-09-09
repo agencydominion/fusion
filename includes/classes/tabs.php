@@ -59,7 +59,7 @@ class FusionCoreTabs	{
 			if (!empty($atts)) {
 				foreach($atts as $key => $value) {
 					$att_name = str_replace('_','-', $key);
-					$shortcode_atts_data .= ' data-'. $att_name .'="'. $value .'"';	
+					$shortcode_atts_data .= ' data-'. esc_attr($att_name) .'="'. esc_attr($value) .'"';	
 				}
 			}
 			$output = '';
@@ -91,9 +91,9 @@ class FusionCoreTabs	{
 										$value = $tab_attribute[2];
 										$tab_attributes[$key] = $value;	
 									}
-									$tab_title = $tab_attributes['tab_title'];
+									$tab_title = FusionCore::decode_custom_entities($tab_attributes['tab_title']);
 									$tab_id = $tab_attributes['tab_id'];
-									$output .= '<li'. ($i == 0 ? ' class="active"' : '') .'><a href="#'. $tab_id .'" data-toggle="tab">'. $tab_title .'</a></li>';
+									$output .= '<li'. ($i == 0 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" data-toggle="tab">'. esc_html($tab_title) .'</a></li>';
 									$i++;
 								}
 								$output .= '<li><a href="#" class="fsn-add-tab" title="Add Tab"><i class="material-icons md-18">&#xE147;</i></a></li>';								
@@ -132,7 +132,7 @@ class FusionCoreTabs	{
 		
 			$output = '';
 
-			$output .= '<div class="fsn-tabs-container '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. $classes : '') .'">';
+			$output .= '<div class="fsn-tabs-container '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'">';
 				//action hook for outputting content before tabs
 				ob_start();
 				do_action('fsn_before_tabs', $atts, $content);
@@ -197,11 +197,11 @@ class FusionCoreTabs	{
 			if (!empty($atts)) {
 				foreach($atts as $key => $value) {
 					$att_name = str_replace('_','-', $key);
-					$shortcode_atts_data .= ' data-'. $att_name .'="'. $value .'"';	
+					$shortcode_atts_data .= ' data-'. esc_attr($att_name) .'="'. esc_attr($value) .'"';	
 				}
 			}
 			$output = '';
-			$output .= '<div class="tab-pane'. ($fsn_tab_counter === 1 ? ' active' : '') .'" id="'. $tab_id .'">';
+			$output .= '<div class="tab-pane'. ($fsn_tab_counter === 1 ? ' active' : '') .'" id="'. esc_attr($tab_id) .'">';
 				$output .= '<div class="tab-container"'. $shortcode_atts_data .'>';
 					$output .= '<div class="tab-header">';
 						$output .= '<div class="tab-controls">';
@@ -239,12 +239,12 @@ class FusionCoreTabs	{
 			
 			switch ($fsn_tab_output_phase) {
 				case 'tab_nav':
-					$output .= '<li'. ($fsn_tab_counter === 1 ? ' class="active"' : '') .'><a href="#'. $tab_id .'" data-toggle="tab"'. (!empty($classes) ? ' class="'. $classes .'"' : '') .'>'. $tab_title .'</a></li>';
+					$output .= '<li'. ($fsn_tab_counter === 1 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" data-toggle="tab"'. (!empty($classes) ? ' class="'. esc_attr($classes) .'"' : '') .'>'. esc_html($tab_title) .'</a></li>';
 					break;
 				case 'tab_content':
-					$output .= '<div id="'. $tab_id .'" class="tab-pane'. (!empty($fsn_tabs_settings['fade']) ? ' fade' : '') . (!empty($fsn_tabs_settings['fade']) && $fsn_tab_counter === 1 ? ' in' : '') . ($fsn_tab_counter === 1 ? ' active' : '') .'">';
-						$output .= '<div class="fsn-tab-container'. (!empty($classes) ? ' '. $classes : '') .'">';
-							$output .= '<div class="visible-print-block fsn-tab-label">'. $tab_title .'</div>';
+					$output .= '<div id="'. esc_attr($tab_id) .'" class="tab-pane'. (!empty($fsn_tabs_settings['fade']) ? ' fade' : '') . (!empty($fsn_tabs_settings['fade']) && $fsn_tab_counter === 1 ? ' in' : '') . ($fsn_tab_counter === 1 ? ' active' : '') .'">';
+						$output .= '<div class="fsn-tab-container'. (!empty($classes) ? ' '. esc_attr($classes) : '') .'">';
+							$output .= '<div class="visible-print-block fsn-tab-label">'. esc_html($tab_title) .'</div>';
 							$output .= do_shortcode($content);
 						$output .= '</div>';
 					$output .= '</div>';
@@ -321,7 +321,7 @@ class FusionCoreTabs	{
 							$active_tab = true;
 							for($i=0; $i < count($fsn_param_sections); $i++) {
 								if (count($fsn_param_sections[$i]['params']) > 0) {
-							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" aria-controls="options" role="tab" data-toggle="tab">'. $fsn_param_sections[$i]['name'] .'</a></li>';
+							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 							    	$active_tab = false;
 						    	}
 							}
@@ -335,7 +335,7 @@ class FusionCoreTabs	{
 								$active_tab = true;
 								for($i=0; $i < count($fsn_param_sections); $i++) {
 									if (count($fsn_param_sections[$i]['params']) > 0) {
-										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" data-section-id="'. $fsn_param_sections[$i]['id'] .'">';
+										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'">';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
 												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
@@ -364,18 +364,16 @@ class FusionCoreTabs	{
 													$depends_on_param = $param['dependency']['param_name'];
 													$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 													if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-														$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+														$depends_on_value = json_encode($param['dependency']['value']);
 													} else if (!empty($param['dependency']['value'])) {
 														$depends_on_value = $param['dependency']['value'];
 													} else {
 														$depends_on_value = '';
 													}
 													$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-													$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
-				
+													$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_param) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 												}
-												
-												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 													echo FusionCore::get_input_field($param, $param_value);
 												echo '</div>';
 											}
@@ -473,7 +471,7 @@ class FusionCoreTabs	{
 										$depends_on_param = $param['dependency']['param_name'];
 										$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 										if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-											$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+											$depends_on_value = json_encode($param['dependency']['value']);
 										} else if (!empty($param['dependency']['value'])) {
 											$depends_on_value = $param['dependency']['value'];
 										} else {
@@ -481,9 +479,9 @@ class FusionCoreTabs	{
 										}
 										
 										$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-										$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+										$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_param) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 									}
-									echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+									echo '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 										echo FusionCore::get_input_field($param, $param_value);
 									echo '</div>';
 								}

@@ -100,7 +100,7 @@ class FusionCoreSettings	{
 		// echo the fields
 		foreach ($post_types as $post_type) {
 			$post_type_object = get_post_type_object( $post_type );
-			echo '<input name="fsn_options[fsn_post_types][]" type="checkbox" value="'. $post_type .'"'. (in_array($post_type, $fsn_post_types) ? ' checked="checked"' : '') .'>'. $post_type_object->labels->name .'<br>';
+			echo '<input name="fsn_options[fsn_post_types][]" type="checkbox" value="'. esc_attr($post_type) .'"'. (in_array($post_type, $fsn_post_types) ? ' checked="checked"' : '') .'>'. esc_html($post_type_object->labels->name) .'<br>';
 		}
 		echo '<p class="description">'. __('Choose the post types on which Fusion will be available.', 'fusion') .'</p>';
 	}

@@ -208,8 +208,8 @@ class FusionCoreTemplate	{
 						if (!empty($saved_templates)) {
 							$i = 1;
 							foreach($saved_templates as $template) {
-								echo '<div class="template-item" data-template-id="'. $template['id'] .'">';
-									echo '<span class="template-name">'. $template['post_title'] .'</span>';
+								echo '<div class="template-item" data-template-id="'. esc_attr($template['id']) .'">';
+									echo '<span class="template-name">'. esc_html($template['post_title']) .'</span>';
 									echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
 									echo '<div class="template-controls-dropdown collapsed">';
 										echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';

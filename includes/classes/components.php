@@ -125,23 +125,22 @@ class FusionCoreComponents	{
 					$nonattached_components[] = $component;
 				}
 			}
-			
-			$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
-			$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
+			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 			$input .= '<div class="component-select chosen">';
-				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. $param['param_name'] .'">';
+				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'">';
 				$input .= '<option value=""></option>';
 				if (!empty($attached_components)) {
 					$input .= '<optgroup label="Components Attached to this Post">';
 					foreach($attached_components as $attached_component) {
-						$input .= '<option value="'. $attached_component .'"'. selected( $param_value, $attached_component, false ) .'>'. get_the_title($attached_component) .'</option>';
+						$input .= '<option value="'. esc_attr($attached_component) .'"'. selected( $param_value, $attached_component, false ) .'>'. get_the_title($attached_component) .'</option>';
 					}
 					$input .= '</optgroup>';
 				}
 				if (!empty($nonattached_components)) {
 					$input .= '<optgroup label="Other Components">';
 					foreach($nonattached_components as $nonattached_component) {
-						$input .= '<option value="'. $nonattached_component .'"'. selected( $param_value, $nonattached_component, false ) .'>'. get_the_title($nonattached_component) .'</option>';
+						$input .= '<option value="'. esc_attr($nonattached_component) .'"'. selected( $param_value, $nonattached_component, false ) .'>'. get_the_title($nonattached_component) .'</option>';
 					}
 					$input .= '</optgroup>';
 				}
@@ -178,7 +177,7 @@ class FusionCoreComponents	{
 					<form id="edit_component" method="post">
 						<?php
 						echo '<input type="text" id="component_title" name="component_title" '. (!empty($component_id) ? 'value="'. get_the_title($component_id) .'"' : 'value="" placeholder="New Component"') .'>';
-						echo '<input type="hidden" name="component_id" value="'. (!empty($component_id) ? $component_id : '') .'">';
+						echo '<input type="hidden" name="component_id" value="'. (!empty($component_id) ? esc_attr($component_id) : '') .'">';
 						echo '<div class="fsn-main-controls">';
 							echo '<p class="description">Click the "Save" button below to save changes to this Component.</p>';
 							echo '<a href="#" class="button fsn-save-template">'. __('Save Template', 'fusion') .'</a>';
@@ -257,7 +256,7 @@ class FusionCoreComponents	{
 			}
 		}
 		
-		echo '<div class="notice '. $notice_class .' is-dismissible"'. (!empty($new_component_id) ? ' data-new-component-id="'. $new_component_id .'"' : '') .'><p>'. $notice .' <a href="#" data-dismiss="modal">Done Editing</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
+		echo '<div class="notice '. esc_attr($notice_class) .' is-dismissible"'. (!empty($new_component_id) ? ' data-new-component-id="'. esc_attr($new_component_id) .'"' : '') .'><p>'. $notice .' <a href="#" data-dismiss="modal">Done Editing</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
 		
 		exit;
 	}
@@ -276,12 +275,12 @@ class FusionCoreComponents	{
 			$attached_modals = array_unique($fsn_attached_modals);
 			//output modals
 			foreach($attached_modals as $attached_modal) {
-				echo '<div id="modal-component-'. $attached_modal .'" class="component modal fade">';
+				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" class="component modal fade">';
 					echo '<div class="modal-component-inner container">';
 						echo '<div class="modal-component-controls clearfix">';
 							echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="material-icons md-48">&#xE5CD;</i></button>';
 						echo '</div>';
-						echo do_shortcode('[fsn_component component_id="'. $attached_modal .'"]');
+						echo do_shortcode('[fsn_component component_id="'. esc_attr($attached_modal) .'"]');
 					echo '</div>';
 				echo '</div>';
 			}
