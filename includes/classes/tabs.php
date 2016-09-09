@@ -49,7 +49,7 @@ class FusionCoreTabs	{
 		//if running AJAX, get action being run
 		if (defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		
@@ -187,7 +187,7 @@ class FusionCoreTabs	{
 		//if running AJAX, get action being run
 		if (defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		
@@ -266,12 +266,16 @@ class FusionCoreTabs	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
+		} else {
+			foreach($saved_values as $key => $value) {
+				$saved_values[$key] = wp_filter_post_kses($value);
+			}
 		}
 		//tabs layouts
 		$tabs_layouts_array = array(
@@ -405,12 +409,16 @@ class FusionCoreTabs	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
+		} else {
+			foreach($saved_values as $key => $value) {
+				$saved_values[$key] = wp_filter_post_kses($value);
+			}
 		}
 		?>
 		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

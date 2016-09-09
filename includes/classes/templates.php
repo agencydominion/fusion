@@ -106,7 +106,7 @@ class FusionCoreTemplate	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
 		<div class="modal fade" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -152,11 +152,11 @@ class FusionCoreTemplate	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		
-		$template_name = $_POST['template_name'];
-		$template_data = $_POST['template_data'];
+		$template_name = sanitize_text_field($_POST['template_name']);
+		$template_data = wp_filter_post_kses($_POST['template_data']);
 		if (!empty($template_name) && !empty($template_data)) {
 			$new_template_vars = array(
 				'post_title' => $template_name,
@@ -192,7 +192,7 @@ class FusionCoreTemplate	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
 		<div class="modal fade" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -243,10 +243,10 @@ class FusionCoreTemplate	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$template_id = $_POST['template_id'];
+		$template_id = intval($_POST['template_id']);
 		$template = get_post($template_id);
 		
 		if (!empty($template)) {
@@ -267,10 +267,10 @@ class FusionCoreTemplate	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$template_id = $_POST['template_id'];		
+		$template_id = intval($_POST['template_id']);
 		
 		header('Content-type: application/json');
 		

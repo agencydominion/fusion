@@ -109,11 +109,11 @@ class FusionCoreCustomList	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		
 		global $fsn_custom_lists;	
-		$listID = $_POST['listID'];
+		$listID = sanitize_text_field($_POST['listID']);
 		$params = $fsn_custom_lists[$listID]['params'];
 		$uniqueID = uniqid();	
 		echo '<div class="custom-list-item">';		
@@ -165,7 +165,7 @@ class FusionCoreCustomList	{
 		//if running AJAX, get action being run
 		if (defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		

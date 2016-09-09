@@ -113,7 +113,7 @@ class FusionCoreComponents	{
 	public function add_components_field_type($input, $param, $param_value = '') {
 		if ($param['type'] == 'components') {
 			
-			$post_id = $_POST['post_id'];
+			$post_id = intval($_POST['post_id']);
 			
 			$all_components = fsn_get_post_ids_by_type('component');
 			$attached_components = array();
@@ -165,10 +165,10 @@ class FusionCoreComponents	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['component_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
 			die( '-1' );
 			
-		$component_id = $_POST['component_id'];
+		$component_id = intval($_POST['component_id']);
 		?>
 		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -219,13 +219,13 @@ class FusionCoreComponents	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['component_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
 			die( '-1' );
 		
-		$post_id = $_POST['post_id'];
-		$component_id = $_POST['component_id'];
-		$component_title = $_POST['component_title'];
-		$component_content = $_POST['component_content'];
+		$post_id = intval($_POST['post_id']);
+		$component_id = intval($_POST['component_id']);
+		$component_title = sanitize_text_field($_POST['component_title']);
+		$component_content = wp_filter_post_kses($_POST['component_content']);
 		
 		if (!empty($component_id)) {
 			$updated_component_id = wp_update_post(array(
