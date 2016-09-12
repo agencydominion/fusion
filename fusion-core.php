@@ -1412,7 +1412,7 @@ class FusionCore	{
 				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				if ( !empty($param_value) ) {
 			    	$image_attrs = wp_get_attachment_image_src($param_value, 'medium');
-			    	$input .= '<img src="'. $image_attrs[0] .'" class="image-field-preview" alt="">';
+			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
 				$button_verb_isset = __('Change', 'fusion');
@@ -1426,7 +1426,7 @@ class FusionCore	{
 				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				if ( !empty($param_value) ) {
 			    	$image_attrs = wp_get_attachment_image_src($param_value, 'thumbnail', true);
-			    	$input .= '<img src="'. $image_attrs[0] .'" class="video-field-preview" alt="">';
+			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
 				$button_verb_isset = __('Change', 'fusion');
@@ -1566,7 +1566,7 @@ class FusionCore	{
 			
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'medium');
-    	echo '<img src="'. $image_attrs[0] .'" class="image-field-preview" alt="">';
+    	echo '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
 		
 		exit;	
 	}
@@ -1590,7 +1590,7 @@ class FusionCore	{
 			
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
-    	echo '<img src="'. $image_attrs[0] .'" class="video-field-preview" alt="">';
+    	echo '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
 		
 		exit;	
 	}
