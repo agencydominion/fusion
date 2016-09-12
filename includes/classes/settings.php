@@ -76,13 +76,6 @@ class FusionCoreSettings	{
 			'fsn_settings',
 			'fsn_general_settings'
 		);
-		add_settings_field(
-			'fsn_page_views',
-			__('Enable Page Views Tracking', 'fusion'),
-			array($this, 'fsn_page_views_toggle'),
-			'fsn_settings',
-			'fsn_general_settings'
-		);
 	}
 	
 	public function fsn_output_general_settings() {
@@ -121,15 +114,6 @@ class FusionCoreSettings	{
 		// echo the field
 		echo '<input id="fsn_bootstrap_fluid" name="fsn_options[fsn_bootstrap_fluid]" type="checkbox" '. checked($fsn_bootstrap_fluid, 'on', false) .'>';
 		echo '<p class="description">'. __('Check this option to fit the grid into the active theme\'s content container (will be required for most themes).', 'fusion') .'</p>';
-	}
-	
-	public function fsn_page_views_toggle() {
-		// get option value from the database
-		$options = get_option( 'fsn_options' );
-		$fsn_page_views = !empty($options['fsn_page_views']) ? $options['fsn_page_views'] : '';
-		// echo the field
-		echo '<input id="fsn_page_views" name="fsn_options[fsn_page_views]" type="checkbox" '. checked($fsn_page_views, 'on', false) .'>';
-		echo '<p class="description">'. __('Check to enable Page Views tracking. Tracks Daily, Weekly, Monthly, and All Time views.', 'fusion') .'</p>';
 	}
 	
 }

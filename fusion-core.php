@@ -1616,9 +1616,6 @@ require_once('includes/classes/tabs.php');
 //include components class
 require_once('includes/classes/components.php');
 
-//include page views class
-require_once('includes/classes/page-views.php');
-
 //include button class
 require_once('includes/classes/button.php');
 
