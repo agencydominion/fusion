@@ -164,8 +164,13 @@ class FusionCoreComponents	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
-			die( '-1' );
+		if (!empty($_POST['component_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		}
 			
 		$component_id = intval($_POST['component_id']);
 		?>
@@ -218,8 +223,13 @@ class FusionCoreComponents	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
-			die( '-1' );
+		if (!empty($_POST['component_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		}
 		
 		$post_id = intval($_POST['post_id']);
 		$component_id = intval($_POST['component_id']);
