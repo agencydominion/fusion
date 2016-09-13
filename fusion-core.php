@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://agencydominion.com
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.0.7
+ * Version: 1.0.8
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.0.7' );
+define( 'FSN_VERSION', '1.0.8' );
  
 /**
  * Fusion class.
