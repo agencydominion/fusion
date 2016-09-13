@@ -1147,7 +1147,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -2984,11 +2984,13 @@ jQuery(document).ready(function() {
 });
 
 function launchComponentsModal(id) {
+	var postID = jQuery('input#post_ID').val();
 	
 	//data to pass to AJAX function
 	var data = {
 		action: 'components_modal',
 		component_id: id,
+		post_id: postID,
 		security: fsnJS.fsnEditNonce
 	};			
 

@@ -31,7 +31,7 @@ function fsn_init_insert_component_element() {
 		if (!empty($component_id)) {
 			$component = get_post($component_id);
 			if (!empty($component)) {
-				$output .= '<div id="component-'. $component_id .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
+				$output .= '<div id="component-'. esc_attr($component_id) .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
 					$output .= apply_filters('fsn_the_content', $component->post_content);
 				$output .= '</div>';
 			}

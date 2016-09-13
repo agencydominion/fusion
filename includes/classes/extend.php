@@ -33,7 +33,7 @@ class FusionCoreExtend	{
 		//if running AJAX, get action being run
 		if (is_admin() && defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		
@@ -68,11 +68,11 @@ class FusionCoreExtend	{
 		if (!empty($atts)) {
 			foreach($atts as $key => $value) {
 				$att_name = str_replace('_','-', $key);
-				$shortcode_atts_data .= ' data-'. $att_name .'="'. $value .'"';	
+				$shortcode_atts_data .= ' data-'. esc_attr($att_name) .'="'. esc_attr($value) .'"';	
 			}
 		}
-		$element_label = !empty($atts['element_label']) ? $atts['element_label'] : $this->name;
-		$output = '<div class="fsn-element '. $this->shortcode_tag .'" data-shortcode-tag="'. $this->shortcode_tag .'">';
+		$element_label = !empty($atts['element_label']) ? FusionCore::decode_custom_entities($atts['element_label']) : $this->name;
+		$output = '<div class="fsn-element '. esc_attr($this->shortcode_tag) .'" data-shortcode-tag="'. esc_attr($this->shortcode_tag) .'">';
 			$output .= '<div class="element-controls">';
 				$output .= '<span class="element-controls-toggle" title="Element Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
 				$output .= '<div class="element-controls-dropdown collapsed">';
@@ -82,7 +82,7 @@ class FusionCoreExtend	{
 				$output .= '</div>';
 				$output .= '<a href="#" class="control-icon edit-element" title="Edit Element"><i class="material-icons md-18">&#xE3C9;</i></a>';
 			$output .= '</div>';
-			$output .= '<div class="element-label" title="'. esc_attr($this->name) . '">'. $element_label . '</div>';
+			$output .= '<div class="element-label" title="'. esc_attr($this->name) . '">'. esc_html($element_label) . '</div>';
 			$output .= '<div class="element-text-holder"'. (!empty($shortcode_atts_data) ? $shortcode_atts_data : '') .'>';
 				$output .= apply_filters('fsn_admin_shortcode_content_output', wpautop($content), $this->shortcode_tag, $content);
 			$output .= '</div>';			
@@ -102,13 +102,17 @@ class FusionCoreExtend	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$content_html = stripslashes($_POST['content_html']);
+		$content_html = stripslashes(wp_filter_post_kses($_POST['content_html']));
 		$saved_values = $_POST['saved_values'];
 		if (empty($saved_values)) {
 			$saved_values = array();
+		} else {
+			foreach($saved_values as $key => $value) {
+				$saved_values[$key] = wp_filter_post_kses($value);
+			}
 		}
 		//filter params
 		$params = $this->params;
@@ -143,18 +147,18 @@ class FusionCoreExtend	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="<?php echo $this->shortcode_tag ?>_modal" tabindex="-1" role="dialog">
+		<div class="modal fade" id="<?php echo esc_attr($this->shortcode_tag) ?>_modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
-						<h4 class="modal-title"><?php echo $this->name; ?></h4>
+						<h4 class="modal-title"><?php echo esc_html($this->name); ?></h4>
 						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
 							for($i=0; $i < count($fsn_param_sections); $i++) {
 								if (count($fsn_param_sections[$i]['params']) > 0) {
-							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" aria-controls="options" role="tab" data-toggle="tab">'. $fsn_param_sections[$i]['name'] .'</a></li>';
+							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 							    	$active_tab = false;
 						    	}
 							}
@@ -168,8 +172,8 @@ class FusionCoreExtend	{
 								$active_tab = true;
 								for($i=0; $i < count($fsn_param_sections); $i++) {
 									if (count($fsn_param_sections[$i]['params']) > 0) {
-										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. $fsn_param_sections[$i]['id'] .'-'. $tabset_id .'" data-section-id="'. $fsn_param_sections[$i]['id'] .'">';
-											echo !empty($this->description) && $active_tab == true ? '<p class="fsn-element-description">'. $this->description .'</p>' : '';
+										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'">';
+											echo !empty($this->description) && $active_tab == true ? '<p class="fsn-element-description">'. esc_html($this->description) .'</p>' : '';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
 												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
@@ -207,18 +211,18 @@ class FusionCoreExtend	{
 													$depends_on_param = $param['dependency']['param_name'];
 													$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 													if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-														$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+														$depends_on_value = json_encode($param['dependency']['value']);
 													} else if (!empty($param['dependency']['value'])) {
 														$depends_on_value = $param['dependency']['value'];
 													} else {
 														$depends_on_value = '';
 													}
 													$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-													$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+													$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_param) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 				
 												}
 												
-												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+												echo '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 													echo FusionCore::get_input_field($param, $param_value);
 												echo '</div>';
 											}
@@ -240,7 +244,6 @@ class FusionCoreExtend	{
 		<?php
 		exit;
 	}
-
 }
 
 ?>

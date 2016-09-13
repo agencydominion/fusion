@@ -77,10 +77,10 @@ class FusionCoreCustomList	{
 		
 			$param['content_field'] = true;
 						
-			$input .= '<label for="fsn_'. $param['param_name'] .'">'. $param['label'] .'</label>';
-			$input .= !empty($param['help']) ? '<p class="help-block">'. $param['help'] .'</p>' : '';
+			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
+			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 			//drag and drop interface
-			$input .= '<div class="custom-list-sort" data-list-id="'. $param['id'] .'">';
+			$input .= '<div class="custom-list-sort" data-list-id="'. esc_attr($param['id']) .'">';
 				//output existing custom list items
 		    	if ( !empty($param_value) ) {
 		    		$input .= do_shortcode($param_value);
@@ -109,11 +109,11 @@ class FusionCoreCustomList	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		
 		global $fsn_custom_lists;	
-		$listID = $_POST['listID'];
+		$listID = sanitize_text_field($_POST['listID']);
 		$params = $fsn_custom_lists[$listID]['params'];
 		$uniqueID = uniqid();	
 		echo '<div class="custom-list-item">';		
@@ -128,16 +128,16 @@ class FusionCoreCustomList	{
 						$depends_on_field = $param['dependency']['param_name']. '-paramid'. $uniqueID;
 						$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 						if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-							$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+							$depends_on_value = json_encode($param['dependency']['value']);
 						} else if (!empty($param['dependency']['value'])) {
 							$depends_on_value = $param['dependency']['value'];
 						} else {
 							$depends_on_value = '';
 						}
 						$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-						$dependency_string = ' data-dependency-param="'. $depends_on_field .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+						$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 					}
-					echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+					echo '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 						echo FusionCore::get_input_field($param, $param_value);
 					echo '</div>';
 				}
@@ -165,7 +165,7 @@ class FusionCoreCustomList	{
 		//if running AJAX, get action being run
 		if (defined('DOING_AJAX') || DOING_AJAX) {
 			if (!empty($_POST['action'])) {
-				$ajax_action = $_POST['action'];
+				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
 		
@@ -198,17 +198,16 @@ class FusionCoreCustomList	{
 							$depends_on_field = $param['dependency']['param_name']. '-paramid'. $uniqueID;
 							$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 							if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-								$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+								$depends_on_value = json_encode($param['dependency']['value']);
 							} else if (!empty($param['dependency']['value'])) {
 								$depends_on_value = $param['dependency']['value'];
 							} else {
 								$depends_on_value = '';
 							}
-							
 							$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-							$dependency_string = ' data-dependency-param="'. $depends_on_field .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+							$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_field) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 						}
-						$output .= '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+						$output .= '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 							$output .= FusionCore::get_input_field($param, $param_value);
 						$output .= '</div>';
 					}
@@ -218,7 +217,7 @@ class FusionCoreCustomList	{
 			$output .= '</div>';
 		} else {
 			$output = '';
-			$callback_function = 'fsn_get_'. $list_id .'_list_item';
+			$callback_function = 'fsn_get_'. sanitize_text_field($list_id) .'_list_item';
 			$output .= call_user_func($callback_function, $atts, $content);
 		}
 		

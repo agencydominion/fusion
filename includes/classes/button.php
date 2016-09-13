@@ -31,19 +31,18 @@ class FusionCoreButtonModal	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', $_POST['post_id'] ) )
+		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$current_link = $_POST['current_link'];
-		$current_label = stripslashes($_POST['current_label']);
-		$current_attached = $_POST['current_attached'];
-		$current_target = $_POST['current_target'];
-		$current_type = $_POST['current_type'];
-		$current_collapse_id = $_POST['current_collapse_id'];
-		$current_collapse_label_show = stripslashes($_POST['current_collapse_label_show']);
-		$current_collapse_label_hide = stripslashes($_POST['current_collapse_label_hide']);
-		$current_modal_id = $_POST['current_modal_id'];
-		$current_component_id = $_POST['current_component_id'];
+		$current_link = esc_url_raw($_POST['current_link']);
+		$current_label = stripslashes(wp_filter_post_kses($_POST['current_label']));
+		$current_attached = intval($_POST['current_attached']);
+		$current_target = wp_filter_post_kses($_POST['current_target']);
+		$current_type = wp_filter_post_kses($_POST['current_type']);
+		$current_collapse_id = wp_filter_post_kses($_POST['current_collapse_id']);
+		$current_collapse_label_show = stripslashes(wp_filter_post_kses($_POST['current_collapse_label_show']));
+		$current_collapse_label_hide = stripslashes(wp_filter_post_kses($_POST['current_collapse_label_hide']));
+		$current_component_id = intval($_POST['current_component_id']);
 		?>
 		<div class="modal fade button-modal">
 			<div class="modal-dialog modal-lg">
@@ -211,17 +210,16 @@ class FusionCoreButtonModal	{
 									$depends_on_param = $param['dependency']['param_name'];
 									$depends_on_not_empty = !empty($param['dependency']['not_empty']) ? $param['dependency']['not_empty'] : false;
 									if (!empty($param['dependency']['value']) && is_array($param['dependency']['value'])) {
-										$depends_on_value = esc_attr(json_encode($param['dependency']['value']));
+										$depends_on_value = json_encode($param['dependency']['value']);
 									} else if (!empty($param['dependency']['value'])) {
 										$depends_on_value = $param['dependency']['value'];
 									} else {
 										$depends_on_value = '';
 									}
-									
 									$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
-									$dependency_string = ' data-dependency-param="'. $depends_on_param .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. $depends_on_value .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. $dependency_callback .'"' : '');
+									$dependency_string = ' data-dependency-param="'. esc_attr($depends_on_param) .'"'. ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="'. esc_attr($depends_on_value) .'"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="'. esc_attr($dependency_callback) .'"' : '');
 								}
-								echo '<div class="form-group'. ( !empty($param['class']) ? ' '. $param['class'] : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
+								echo '<div class="form-group'. ( !empty($param['class']) ? ' '. esc_attr($param['class']) : '' ) .'"'. ( $dependency === true ? $dependency_string : '' ) .'>';
 									echo FusionCore::get_input_field($param, $param_value);
 								echo '</div>';
 							}

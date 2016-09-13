@@ -1649,13 +1649,6 @@ a img.aligncenter {
 	box-shadow:0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-#components-modal-inner h3 {
-    font-size: 14px;
-    line-height: 1.4;
-    margin: 0;
-    padding: 8px 12px;
-}
-
 #component_title	{
 	font-size: 1.7em;
 	height: 1.7em;

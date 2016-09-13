@@ -176,7 +176,7 @@ function fsn_style_params_class($atts) {
 		$style_params_class .= !empty($user_classes) ? ' '. $user_classes : '';
 	}
 	
-	return $style_params_class;
+	return esc_attr($style_params_class);
 }
 
 /**
@@ -220,6 +220,7 @@ function fsn_get_sorted_param_sections($params) {
  
 function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $mobile_size = 'mobile', $desktop_init = false) {
 	if (!empty($image_id)) {
+		$image_id = intval($image_id);
 		$attachment = get_post($image_id);
 		$attachment_attrs_mobile = wp_get_attachment_image_src($image_id, $mobile_size);
 		$attachment_attrs_desktop = wp_get_attachment_image_src($image_id, $desktop_size);
@@ -241,7 +242,7 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 			$attachment_width = $attachment_attrs_mobile[1];
 			$attachment_height = $attachment_attrs_mobile[2];
 		}
-		$image = '<img class="ad-dynamic-image'. (!empty($classes) ? ' '. $classes : '') .'" src="'. $attachment_src .'" width="'. $attachment_width .'" height="'. $attachment_height .'" alt="'. get_the_title($image_id) .'" data-image-json="'. esc_attr(json_encode($image_data)) .'">';
+		$image = '<img class="ad-dynamic-image'. (!empty($classes) ? ' '. esc_attr($classes) : '') .'" src="'. esc_url($attachment_src) .'" width="'. esc_attr($attachment_width) .'" height="'. esc_attr($attachment_height) .'" alt="'. get_the_title($image_id) .'" data-image-json="'. esc_attr(json_encode($image_data)) .'">';
 	}
 	
 	return $image;
@@ -350,14 +351,14 @@ function fsn_get_button_object($button) {
 function fsn_get_button_anchor_attributes($button_object, $classes) {
 	extract($button_object);
 	$button_attributes = '';
-	$button_attributes .= !empty($button_link) ? ' href="'. $button_link .'"' : ' href="#"';
-	$button_attributes .= !empty($classes) ? ' class="'. $classes .'"' : '';
-	$button_attributes .= !empty($button_target) ? ' target="'. $button_target .'"' : '';
+	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
+	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
+	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
 	if ($button_type == 'collapse') {
 		$button_attributes .= ' data-toggle="collapse"';
 		if (!empty($button_label_show) && !empty($button_label_hide)) {
-			$button_attributes .= ' data-label-show="'. $button_label_show .'"';
-			$button_attributes .= ' data-label-hide="'. $button_label_hide .'"';
+			$button_attributes .= ' data-label-show="'. esc_attr($button_label_show) .'"';
+			$button_attributes .= ' data-label-hide="'. esc_attr($button_label_hide) .'"';
 		}
 	} elseif ($button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
