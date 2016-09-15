@@ -160,7 +160,7 @@ class FusionCore	{
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
 		
 		// Editor scripts and styles
-		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) {
+		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && ( (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) ) {
 			//bootstrap
 			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.3.5', true );
 			//google material icons
@@ -553,7 +553,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
@@ -720,7 +720,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}

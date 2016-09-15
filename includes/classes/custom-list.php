@@ -163,7 +163,7 @@ class FusionCoreCustomList	{
 		$parent_shortcode = $fsn_custom_lists[$list_id]['parent'];
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
