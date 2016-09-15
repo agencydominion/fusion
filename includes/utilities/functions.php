@@ -403,7 +403,7 @@ function fsn_pagination($query_max_pages = false) {
  * @return string
  */
  
-function fsn_get_post_meta($args) {
+function fsn_get_post_meta($args = false) {
 	global $post;
 	
 	$defaults = array(
