@@ -43,20 +43,43 @@
 	padding-right:0;
 }
 
-.full-width-container.dark h1, .full-width-container.dark .h1, .full-width-container.dark h2, .full-width-container.dark .h2, .full-width-container.dark h3, .full-width-container.dark .h3, .full-width-container.dark h4, .full-width-container.dark .h4, .full-width-container.dark h5, .full-width-container.dark .h5, .full-width-container.dark h6, .full-width-container.dark .h6, .full-width-row.dark h1, .full-width-row.dark .h1, .full-width-row.dark h2, .full-width-row.dark .h2, .full-width-row.dark h3, .full-width-row.dark .h3, .full-width-row.dark h4, .full-width-row.dark .h4, .full-width-row.dark h5, .full-width-row.dark .h5, .full-width-row.dark h6, .full-width-row.dark .h6	{
+.dark h1, .dark .h1, .dark h2, .dark .h2, .dark h3, .dark .h3, .dark h4, .dark .h4, .dark h5, .dark .h5, .dark h6, .dark .h6	{
 	color:inherit;
 }
 
-.full-width-container.dark a, .full-width-row.dark a, .full-width-container.dark a:focus, .full-width-row.dark a:focus, .full-width-container.dark a:hover, .full-width-row.dark a:hover, .full-width-container.dark a:active, .full-width-row.dark a:active	{
+.dark a, .dark a:focus, .dark a:hover, .dark a:active	{
 	color:inherit;
 }
 
-.fsn-column-inner.dark h1, .fsn-column-inner.dark .h1, .fsn-column-inner.dark h2, .fsn-column-inner.dark .h2, .fsn-column-inner.dark h3, .fsn-column-inner.dark .h3, .fsn-column-inner.dark h4, .fsn-column-inner.dark .h4, .fsn-column-inner.dark h5, .fsn-column-inner.dark .h5, .fsn-column-inner.dark h6, .fsn-column-inner.dark .h6	{
-	color:inherit;
+.dark .btn-default {
+  color: #333333;
 }
-
-.fsn-column-inner.dark a, .fsn-column-inner.dark a:focus, .fsn-column-inner.dark a:hover, .fsn-column-inner.dark a:active	{
-	color:inherit;
+.dark .btn-default:focus,
+.dark .btn-default.focus {
+  color: #333333;
+}
+.dark .btn-default:hover {
+  color: #333333;
+}
+.dark .btn-default:active,
+.dark .btn-default.active,
+.dark .open > .dropdown-toggle.btn-default {
+  color: #333333;
+}
+.dark .btn-default:active:hover,
+.dark .btn-default.active:hover,
+.dark .open > .dropdown-toggle.btn-default:hover,
+.dark .btn-default:active:focus,
+.dark .btn-default.active:focus,
+.dark .open > .dropdown-toggle.btn-default:focus,
+.dark .btn-default:active.focus,
+.dark .btn-default.active.focus,
+.dark .open > .dropdown-toggle.btn-default.focus {
+  color: #333333;
+}
+.dark .btn-default .badge {
+  color: #ffffff;
+  background-color: #333333;
 }
 
 .nav.nav-tabs	{
