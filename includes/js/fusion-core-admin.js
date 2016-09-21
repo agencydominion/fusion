@@ -2297,7 +2297,7 @@ jQuery(document).ready(function() {
 	});
 	//Init select2 fields inside custom list items
 	jQuery('body').on('fsnAddListItem', function(e) {
-		initSelect2Fields();
+		fsnInitPostSelect();
 	});
 });
 
@@ -2395,11 +2395,11 @@ function fsnUpdateBoxField(field) {
 jQuery(document).ready(function() {
 	jQuery('body').on('show.bs.modal', '.modal', function() {
 		var modal = jQuery(this);
-		initSelect2Fields();
+		fsnInitPostSelect();
 	});	
 });
 
-function initSelect2Fields() {
+function fsnInitPostSelect() {
 	var select2Elements = jQuery('.select2-posts-element');
 	select2Elements.each(function() {
 		var select2Element = jQuery(this);
