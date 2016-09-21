@@ -64,15 +64,7 @@ class FusionCoreButtonModal	{
 						if (isset($post_types['notification'])) {
 							unset($post_types['notification']);	
 						}
-						
-						//get all post items
-						$all_items = fsn_get_post_ids_titles_by_type($post_types);
-									
-						$all_items_options = array();
-						$all_items_options[''] = ''; //blank so that chosen will allow deselect on single selects
-						foreach($all_items as $item) {
-						    $all_items_options[$item['id']] = $item['post_title'];
-						}
+
 						//map button parameters
 						$params = array(
 							array(
@@ -96,11 +88,10 @@ class FusionCoreButtonModal	{
 								)
 							),
 							array(
-								'type' => 'select',
-								'options' => $all_items_options,
+								'type' => 'select_post',
 								'param_name' => 'button_attached',
-								'class' => 'chosen',
 								'label' => __('Link to Content', 'fusion'),
+								'post_type' => $post_types,
 								'dependency' => array(
 									'param_name' => 'button_type',
 									'value' => 'internal'

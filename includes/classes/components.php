@@ -115,34 +115,13 @@ class FusionCoreComponents	{
 			
 			$post_id = intval($_POST['post_id']);
 			
-			$all_components = fsn_get_post_ids_by_type('component');
-			$attached_components = array();
-			$nonattached_components = array();
-			foreach ($all_components as $component) {
-				if (wp_get_post_parent_id($component) == $post_id) {
-					$attached_components[] = $component;
-				} else {
-					$nonattached_components[] = $component;
-				}
-			}
 			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-			$input .= '<div class="component-select chosen">';
-				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'">';
-				$input .= '<option value=""></option>';
-				if (!empty($attached_components)) {
-					$input .= '<optgroup label="Components Attached to this Post">';
-					foreach($attached_components as $attached_component) {
-						$input .= '<option value="'. esc_attr($attached_component) .'"'. selected( $param_value, $attached_component, false ) .'>'. get_the_title($attached_component) .'</option>';
-					}
-					$input .= '</optgroup>';
-				}
-				if (!empty($nonattached_components)) {
-					$input .= '<optgroup label="Other Components">';
-					foreach($nonattached_components as $nonattached_component) {
-						$input .= '<option value="'. esc_attr($nonattached_component) .'"'. selected( $param_value, $nonattached_component, false ) .'>'. get_the_title($nonattached_component) .'</option>';
-					}
-					$input .= '</optgroup>';
+			$input .= '<div class="component-select">';
+				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component">';
+				$input .= '<option></option>';
+				if (!empty($param_value)) {
+					$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
 				}
 				$input .= '</select>';
 			$input .= '</div>';

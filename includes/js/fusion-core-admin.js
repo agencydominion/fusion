@@ -2295,13 +2295,9 @@ jQuery(document).ready(function() {
 			customListItemShortcodes();
 		}
 	});
-	//Init chosen fields inside custom list items
+	//Init select2 fields inside custom list items
 	jQuery('body').on('fsnAddListItem', function(e) {
-		jQuery('.chosen select').chosen({
-			allow_single_deselect: true,
-			width: '100%',
-			placeholder_text_single : 'Choose an option.'
-		});
+		initSelect2Fields();
 	});
 });
 
@@ -2395,16 +2391,59 @@ function fsnUpdateBoxField(field) {
     boxStringField.val(boxJSON);
 }
 
-//init chosen fields inside modals
+//init select2 fields inside modals
 jQuery(document).ready(function() {
-	jQuery('body').on('show.bs.modal', '.modal', function() {	
-		jQuery('.chosen select').chosen({
-			allow_single_deselect: true,
-			width: '100%',
-			placeholder_text_single : 'Choose an option.'
-		});	
+	jQuery('body').on('show.bs.modal', '.modal', function() {
+		var modal = jQuery(this);
+		initSelect2Fields();
 	});	
 });
+
+function initSelect2Fields() {
+	var select2Elements = jQuery('.select2-posts-element');
+	select2Elements.each(function() {
+		var select2Element = jQuery(this);
+		if (select2Element.prop('multiple') === true) {
+			var allowClear = false;
+		} else {
+			var allowClear = true;
+		}
+		var postType  = select2Element.data('postType');
+		select2Element.select2({
+			placeholder : 'Choose an option.',
+			allowClear: allowClear,
+			ajax: {
+				url: ajaxurl,
+				dataType: 'json',
+				method: 'POST',
+			    delay: 250,
+			    data: function (params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+						action: 'fsn_posts_search',
+						postType: postType
+					};
+			    },
+			    processResults: function (data, params) {
+					params.page = params.page || 1;
+					return {
+						results: data.items,
+						pagination: {
+							more: (params.page * 5) < data.total_count
+						}
+					};
+				},
+			},
+			minimumInputLength: 1,
+			language: {
+				inputTooShort: function(args) {
+					return 'Start typing to search...';
+				}
+			}
+		});
+	});	
+}
 
 //create JS object from data attributes
 function getDataAttrs(obj) {
@@ -3073,13 +3112,13 @@ jQuery(document).ready(function() {
 					if (componentSelector.parent('.component-select').hasClass('active'))	{
 						componentSelector.find('optgroup').first().find('option').first().prop('selected', true);	
 					}
-					componentSelector.trigger('chosen:updated');
+					componentSelector.trigger('change.select2');
 				});
 			} else {
 				componentSelectors.each(function() {
 					var componentSelector = jQuery(this);
 					componentSelector.find('option[value="'+ componentID +'"]').text(componentTitle);
-					componentSelector.trigger('chosen:updated');
+					componentSelector.trigger('change.select2');
 				});
 			}
 		});

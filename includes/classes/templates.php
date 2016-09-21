@@ -204,9 +204,8 @@ class FusionCoreTemplate	{
 					</div>
 					<div class="modal-body">						
 						<?php
-						$saved_templates = fsn_get_post_ids_titles_by_type('template');
+						
 						if (!empty($saved_templates)) {
-							$i = 1;
 							foreach($saved_templates as $template) {
 								echo '<div class="template-item" data-template-id="'. esc_attr($template['id']) .'">';
 									echo '<span class="template-name">'. esc_html($template['post_title']) .'</span>';
@@ -215,7 +214,6 @@ class FusionCoreTemplate	{
 										echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
 									echo '</div>';
 								echo '</div>';
-								$i++;
 							}
 						} else {
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
@@ -278,7 +276,6 @@ class FusionCoreTemplate	{
 		
 		if (!empty($deleted_template)) {
 			$response_array['status'] = 'success';
-			delete_transient('fsn_all_items');
 		} else {
 			$response_array['status'] = 'error';	
 		}
