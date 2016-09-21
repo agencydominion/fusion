@@ -1562,8 +1562,8 @@ class FusionCore	{
 	 */
 	
 	public function posts_search() {
-		
-		$search = sanitize_text_field($_POST['q']);
+		global $wpdb;
+		$search = esc_sql($wpdb->esc_like($_POST['q']));
 		$paged = !empty($_POST['page']) ? intval($_POST['page']) : 1;
 		$post_type = !empty($_POST['postType']) ? $_POST['postType'] : 'post';
 		if (is_array($post_type)) {
@@ -1579,8 +1579,12 @@ class FusionCore	{
 			'total_count' => 0
 		);
 		
+		add_filter('posts_where', function( $where ) use ($search) {
+			$where .= (" AND post_title LIKE '%" . $search . "%'");
+			return $where;
+		});
+		
 		$matching_items = new WP_Query(array(
-			's' => $search,
 			'post_type' => $post_type,
 			'post_status' => 'publish',
 			'posts_per_page' => 5,
