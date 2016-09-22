@@ -2400,6 +2400,7 @@ jQuery(document).ready(function() {
 });
 
 function fsnInitPostSelect() {
+	var postID = jQuery('input#post_ID').val();
 	var select2Elements = jQuery('.select2-posts-element');
 	select2Elements.each(function() {
 		var select2Element = jQuery(this);
@@ -2409,6 +2410,7 @@ function fsnInitPostSelect() {
 			var allowClear = true;
 		}
 		var postType  = select2Element.data('postType');
+		var hierarchical = select2Element.data('hierarchical');
 		select2Element.select2({
 			placeholder : 'Choose an option.',
 			allowClear: allowClear,
@@ -2422,7 +2424,10 @@ function fsnInitPostSelect() {
 						q: params.term, // search term
 						page: params.page,
 						action: 'fsn_posts_search',
-						postType: postType
+						postType: postType,
+						post_id: postID,
+						hierarchical : hierarchical,
+						security: fsnJS.fsnEditNonce,
 					};
 			    },
 			    processResults: function (data, params) {
@@ -3108,9 +3113,9 @@ jQuery(document).ready(function() {
 				editForm.find('input[name="component_id"]').val(newComponentID);
 				componentSelectors.each(function() {
 					var componentSelector = jQuery(this);
-					componentSelector.find('optgroup').first().prepend('<option value="'+ newComponentID +'">'+ componentTitle +'</option>');
+					componentSelector.prepend('<option value="'+ newComponentID +'">'+ componentTitle +'</option>');
 					if (componentSelector.parent('.component-select').hasClass('active'))	{
-						componentSelector.find('optgroup').first().find('option').first().prop('selected', true);	
+						componentSelector.find('option').first().prop('selected', true);	
 					}
 					componentSelector.trigger('change.select2');
 				});
@@ -3118,7 +3123,8 @@ jQuery(document).ready(function() {
 				componentSelectors.each(function() {
 					var componentSelector = jQuery(this);
 					componentSelector.find('option[value="'+ componentID +'"]').text(componentTitle);
-					componentSelector.trigger('change.select2');
+					componentSelector.select2('destroy');
+					fsnInitPostSelect();
 				});
 			}
 		});

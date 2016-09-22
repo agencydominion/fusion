@@ -1562,8 +1562,18 @@ class FusionCore	{
 	 */
 	
 	public function posts_search() {
-		global $wpdb;
-		$search = esc_sql($wpdb->esc_like($_POST['q']));
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if (!empty($_POST['post_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_theme_options' ) )
+				die( '-1' );
+		}
+		
 		$paged = !empty($_POST['page']) ? intval($_POST['page']) : 1;
 		$post_type = !empty($_POST['postType']) ? $_POST['postType'] : 'post';
 		if (is_array($post_type)) {
@@ -1574,33 +1584,69 @@ class FusionCore	{
 			sanitize_text_field($post_type);
 		}
 		
-		$result = array(
-			'items' => array(),
-			'total_count' => 0
-		);
+		if (!empty($_POST['q'])) {
+			global $wpdb;
+			$search = esc_sql( $wpdb->esc_like( sanitize_text_field($_POST['q']) ) );
+			add_filter('posts_where', function( $where ) use ($search) {
+				$where .= (" AND post_title LIKE '%" . $search . "%'");
+				return $where;
+			});
+		}
 		
-		add_filter('posts_where', function( $where ) use ($search) {
-			$where .= (" AND post_title LIKE '%" . $search . "%'");
-			return $where;
-		});
-		
-		$matching_items = new WP_Query(array(
+		$query_args = array(
 			'post_type' => $post_type,
 			'post_status' => 'publish',
 			'posts_per_page' => 5,
 			'paged' => $paged,
 			'orderby' => 'title',
 			'order' => 'ASC',
-			'fields' => 'ids'
-		));
+			'fields' => 'id=>parent'
+		);
+		
+		$matching_items = new WP_Query($query_args);
+		
+		$result = array(
+			'items' => array(),
+			'total_count' => 0
+		);
 				
 		if (!empty($matching_items->posts)) {
 			$result['items'] = array();
-			foreach($matching_items->posts as $item) {
-				$result['items'][] = array(
-					'id' => $item,
-					'text' => get_the_title($item)
-				);
+			if (!empty($_POST['post_id']) && !empty($_POST['hierarchical'])) {
+				$attached_items = array();
+				$nonattached_items = array();
+				foreach ($matching_items->posts as $item) {
+					if ($item->post_parent == $_POST['post_id']) {
+						$attached_items[] = array(
+							'id' => $item->ID,
+							'text' => get_the_title($item->ID)
+						);
+					} else {
+						$nonattached_items[] = array(
+							'id' => $item->ID,
+							'text' => get_the_title($item->ID)
+						);
+					}
+				}
+				if (!empty($attached_items)) {
+					$result['items'][] = array(
+						'text' => 'Items Attached to this Post',
+						'children' => $attached_items
+					);
+				}
+				if (!empty($nonattached_items)) {
+					$result['items'][] = array(
+						'text' => 'Other Items',
+						'children' => $nonattached_items
+					);
+				}
+			} else {
+				foreach($matching_items->posts as $item) {
+					$result['items'][] = array(
+						'id' => $item->ID,
+						'text' => get_the_title($item->ID)
+					);
+				}
 			}
 			$result['total_count'] = $matching_items->found_posts;
 		}
