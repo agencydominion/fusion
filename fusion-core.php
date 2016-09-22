@@ -1574,6 +1574,7 @@ class FusionCore	{
 				die( '-1' );
 		}
 		
+		$posts_per_page = !empty($_POST['posts_per_page']) ? $_POST['posts_per_page'] : get_option('posts_per_page');
 		$paged = !empty($_POST['page']) ? intval($_POST['page']) : 1;
 		$post_type = !empty($_POST['postType']) ? $_POST['postType'] : 'post';
 		if (is_array($post_type)) {
@@ -1596,7 +1597,7 @@ class FusionCore	{
 		$query_args = array(
 			'post_type' => $post_type,
 			'post_status' => 'publish',
-			'posts_per_page' => 5,
+			'posts_per_page' => $posts_per_page,
 			'paged' => $paged,
 			'orderby' => 'title',
 			'order' => 'ASC',

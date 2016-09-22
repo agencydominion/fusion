@@ -2409,6 +2409,7 @@ function fsnInitPostSelect() {
 		} else {
 			var allowClear = true;
 		}
+		var postsPerPage = 30;
 		var postType  = select2Element.data('postType');
 		var hierarchical = select2Element.data('hierarchical');
 		select2Element.select2({
@@ -2424,6 +2425,7 @@ function fsnInitPostSelect() {
 						q: params.term, // search term
 						page: params.page,
 						action: 'fsn_posts_search',
+						posts_per_page: postsPerPage,
 						postType: postType,
 						post_id: postID,
 						hierarchical : hierarchical,
@@ -2435,7 +2437,7 @@ function fsnInitPostSelect() {
 					return {
 						results: data.items,
 						pagination: {
-							more: (params.page * 5) < data.total_count
+							more: (params.page * postsPerPage) < data.total_count
 						}
 					};
 				},
