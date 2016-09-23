@@ -15,20 +15,13 @@
  * @return string
  */
 	 
- //RTE TEXT ELEMENT
+/**
+ * Map Shortcode
+ */
+
 add_action('init', 'fsn_init_text', 12);
 function fsn_init_text() {
 	
-	//OUTPUT SHORTCODE
-	function fsn_text_shortcode( $atts, $content ) {			
-			
-		$output = '<div class="fsn-text '. fsn_style_params_class($atts) .'">'. do_shortcode($content) .'</div>';
-		
-		return $output;
-	}
-	add_shortcode('fsn_text', 'fsn_text_shortcode');
-	
-	//MAP SHORTCODE
 	if (function_exists('fsn_map')) {
 	
 		fsn_map(array(
@@ -46,3 +39,15 @@ function fsn_init_text() {
 		));
 	}
 }
+
+/**
+ * Output Shortcode
+ */
+
+function fsn_text_shortcode( $atts, $content ) {			
+		
+	$output = '<div class="fsn-text '. fsn_style_params_class($atts) .'">'. do_shortcode($content) .'</div>';
+	
+	return $output;
+}
+add_shortcode('fsn_text', 'fsn_text_shortcode');

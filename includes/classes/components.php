@@ -17,6 +17,7 @@ class FusionCoreComponents	{
 		
 		// Register components post type
 		add_action('init', array($this, 'init_components_post_type'));
+		add_filter( 'post_updated_messages', array($this, 'component_updated_messages') );
 		
 		//add components field type
 		add_filter('fsn_input_types', array($this, 'add_components_field_type'), 10, 3);
@@ -73,30 +74,35 @@ class FusionCoreComponents	{
 		);
 	
 		register_post_type( 'component', $args );
-		
-		function fsn_component_updated_messages( $messages ) {
-		  global $post, $post_ID;
-		
-		  $messages['component'] = array(
-		    0 => '', // Unused. Messages start at index 1.
-		    1 => sprintf( __('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    2 => __('Custom field updated.', 'fusion'),
-		    3 => __('Custom field deleted.', 'fusion'),
-		    4 => __('Component updated.', 'fusion'),
-		    /* translators: %s: date and time of the revision */
-		    5 => isset($_GET['revision']) ? sprintf( __('Component restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-		    6 => sprintf( __('Component published. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    7 => __('Component saved.', 'fusion'),
-		    8 => sprintf( __('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		    9 => sprintf( __('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
-		      // translators: Publish box date format, see http://php.net/date
-		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-		    10 => sprintf( __('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		  );
-		
-		  return $messages;
-		}
-		add_filter( 'post_updated_messages', 'fsn_component_updated_messages' );
+	}
+	
+	/**
+	 * Filter Component post type messages
+	 *
+	 * @since 1.0.0
+	 */
+	
+	public function component_updated_messages( $messages ) {
+	  global $post, $post_ID;
+	
+	  $messages['component'] = array(
+	    0 => '', // Unused. Messages start at index 1.
+	    1 => sprintf( __('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    2 => __('Custom field updated.', 'fusion'),
+	    3 => __('Custom field deleted.', 'fusion'),
+	    4 => __('Component updated.', 'fusion'),
+	    /* translators: %s: date and time of the revision */
+	    5 => isset($_GET['revision']) ? sprintf( __('Component restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	    6 => sprintf( __('Component published. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    7 => __('Component saved.', 'fusion'),
+	    8 => sprintf( __('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	    9 => sprintf( __('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
+	      // translators: Publish box date format, see http://php.net/date
+	      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	    10 => sprintf( __('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	  );
+	
+	  return $messages;
 	}
 	
 	/**

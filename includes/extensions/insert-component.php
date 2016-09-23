@@ -11,42 +11,13 @@
  * @since 1.0.0
  */
 
+/**
+ * Map Shortcode
+ */
+ 
 add_action('init', 'fsn_init_insert_component_element', 12);
 function fsn_init_insert_component_element() {
 	
-	//OUTPUT SHORTCODE
-	function fsn_component_shortcode( $atts, $content ) {		
-		extract( shortcode_atts( array(							
-			'component_id' => false,
-			'component_collapse' => false
-		), $atts ) );
-		
-		$output = '';
-		
-		//before fusion component action hook
-		ob_start();
-		do_action('fsn_before_component', $atts);
-		$output .= ob_get_clean();
-		
-		if (!empty($component_id)) {
-			$component = get_post($component_id);
-			if (!empty($component)) {
-				$output .= '<div id="component-'. esc_attr($component_id) .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
-					$output .= apply_filters('fsn_the_content', $component->post_content);
-				$output .= '</div>';
-			}
-		}
-		
-		//after fusion component action hook
-		ob_start();
-		do_action('fsn_after_component', $atts);
-		$output .= ob_get_clean();
-		
-		return $output;
-	}
-	add_shortcode('fsn_component', 'fsn_component_shortcode');
-	
-	//MAP SHORTCODE
 	if (function_exists('fsn_map')) {
 		
 		fsn_map(array(
@@ -72,4 +43,40 @@ function fsn_init_insert_component_element() {
 		));
 	}
 }
+
+/**
+ * Output Shortcode
+ */
+
+function fsn_component_shortcode( $atts, $content ) {		
+	extract( shortcode_atts( array(							
+		'component_id' => false,
+		'component_collapse' => false
+	), $atts ) );
+	
+	$output = '';
+	
+	//before fusion component action hook
+	ob_start();
+	do_action('fsn_before_component', $atts);
+	$output .= ob_get_clean();
+	
+	if (!empty($component_id)) {
+		$component = get_post($component_id);
+		if (!empty($component)) {
+			$output .= '<div id="component-'. esc_attr($component_id) .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
+				$output .= apply_filters('fsn_the_content', $component->post_content);
+			$output .= '</div>';
+		}
+	}
+	
+	//after fusion component action hook
+	ob_start();
+	do_action('fsn_after_component', $atts);
+	$output .= ob_get_clean();
+	
+	return $output;
+}
+add_shortcode('fsn_component', 'fsn_component_shortcode');
+
 ?>

@@ -17,6 +17,7 @@ class FusionCoreTemplate	{
 		
 		// Register templatess post type
 		add_action('init', array($this, 'init_templates_post_type'));
+		add_filter( 'post_updated_messages', array($this, 'template_updated_messages') );
 		
 		//initialize AJAX modals
 		add_action( 'wp_ajax_save_template_modal', array($this, 'render_save_template_modal'));
@@ -70,29 +71,35 @@ class FusionCoreTemplate	{
 	
 		register_post_type( 'template', $args );
 		
-		function fsn_template_updated_messages( $messages ) {
-		  global $post, $post_ID;
-		
-		  $messages['template'] = array(
-		    0 => '', // Unused. Messages start at index 1.
-		    1 => sprintf( __('Template updated. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    2 => __('Custom field updated.', 'fusion'),
-		    3 => __('Custom field deleted.', 'fusion'),
-		    4 => __('Template updated.', 'fusion'),
-		    /* translators: %s: date and time of the revision */
-		    5 => isset($_GET['revision']) ? sprintf( __('Template restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-		    6 => sprintf( __('Template published. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    7 => __('Template saved.', 'fusion'),
-		    8 => sprintf( __('Template submitted. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		    9 => sprintf( __('Template scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview template</a>', 'fusion'),
-		      // translators: Publish box date format, see http://php.net/date
-		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-		    10 => sprintf( __('Template draft updated. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		  );
-		
-		  return $messages;
-		}
-		add_filter( 'post_updated_messages', 'fsn_template_updated_messages' );
+	}
+	
+	/**
+	 * Filter Template post type messages
+	 *
+	 * @since 1.0.0
+	 */
+	
+	public function template_updated_messages( $messages ) {
+	  global $post, $post_ID;
+	
+	  $messages['template'] = array(
+	    0 => '', // Unused. Messages start at index 1.
+	    1 => sprintf( __('Template updated. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    2 => __('Custom field updated.', 'fusion'),
+	    3 => __('Custom field deleted.', 'fusion'),
+	    4 => __('Template updated.', 'fusion'),
+	    /* translators: %s: date and time of the revision */
+	    5 => isset($_GET['revision']) ? sprintf( __('Template restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	    6 => sprintf( __('Template published. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    7 => __('Template saved.', 'fusion'),
+	    8 => sprintf( __('Template submitted. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	    9 => sprintf( __('Template scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview template</a>', 'fusion'),
+	      // translators: Publish box date format, see http://php.net/date
+	      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	    10 => sprintf( __('Template draft updated. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	  );
+	
+	  return $messages;
 	}
 	
 	/**

@@ -10,19 +10,14 @@
  *
  * @since 1.0.0
  */
- 
- //Code
+
+/**
+ * Map Shortcode
+ */
+
 add_action('init', 'fsn_init_code', 12);
 function fsn_init_code() {
 	
-	//OUTPUT SHORTCODE
-	function fsn_code( $atts, $content ) {		
-		
-		return '<div class="fsn-code '. fsn_style_params_class($atts) .'">'. base64_decode( wp_strip_all_tags($content) ) .'</div>';
-	}
-	add_shortcode('fsn_code', 'fsn_code');
-	
-	//MAP SHORTCODE
 	if (function_exists('fsn_map')) {	
 		fsn_map(array(
 			'name' => __('Code', 'fusion'),
@@ -41,5 +36,15 @@ function fsn_init_code() {
 		));
 	}
 }
+
+/**
+ * Output Shortcode
+ */
+
+function fsn_code( $atts, $content ) {		
+	
+	return '<div class="fsn-code '. fsn_style_params_class($atts) .'">'. base64_decode( wp_strip_all_tags($content) ) .'</div>';
+}
+add_shortcode('fsn_code', 'fsn_code');
 
 ?>
