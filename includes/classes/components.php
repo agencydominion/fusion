@@ -17,6 +17,7 @@ class FusionCoreComponents	{
 		
 		// Register components post type
 		add_action('init', array($this, 'init_components_post_type'));
+		add_filter( 'post_updated_messages', array($this, 'component_updated_messages') );
 		
 		//add components field type
 		add_filter('fsn_input_types', array($this, 'add_components_field_type'), 10, 3);
@@ -73,30 +74,35 @@ class FusionCoreComponents	{
 		);
 	
 		register_post_type( 'component', $args );
-		
-		function fsn_component_updated_messages( $messages ) {
-		  global $post, $post_ID;
-		
-		  $messages['component'] = array(
-		    0 => '', // Unused. Messages start at index 1.
-		    1 => sprintf( __('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    2 => __('Custom field updated.', 'fusion'),
-		    3 => __('Custom field deleted.', 'fusion'),
-		    4 => __('Component updated.', 'fusion'),
-		    /* translators: %s: date and time of the revision */
-		    5 => isset($_GET['revision']) ? sprintf( __('Component restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-		    6 => sprintf( __('Component published. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    7 => __('Component saved.', 'fusion'),
-		    8 => sprintf( __('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		    9 => sprintf( __('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
-		      // translators: Publish box date format, see http://php.net/date
-		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-		    10 => sprintf( __('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		  );
-		
-		  return $messages;
-		}
-		add_filter( 'post_updated_messages', 'fsn_component_updated_messages' );
+	}
+	
+	/**
+	 * Filter Component post type messages
+	 *
+	 * @since 1.0.0
+	 */
+	
+	public function component_updated_messages( $messages ) {
+	  global $post, $post_ID;
+	
+	  $messages['component'] = array(
+	    0 => '', // Unused. Messages start at index 1.
+	    1 => sprintf( __('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    2 => __('Custom field updated.', 'fusion'),
+	    3 => __('Custom field deleted.', 'fusion'),
+	    4 => __('Component updated.', 'fusion'),
+	    /* translators: %s: date and time of the revision */
+	    5 => isset($_GET['revision']) ? sprintf( __('Component restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	    6 => sprintf( __('Component published. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    7 => __('Component saved.', 'fusion'),
+	    8 => sprintf( __('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	    9 => sprintf( __('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
+	      // translators: Publish box date format, see http://php.net/date
+	      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	    10 => sprintf( __('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	  );
+	
+	  return $messages;
 	}
 	
 	/**
@@ -115,34 +121,13 @@ class FusionCoreComponents	{
 			
 			$post_id = intval($_POST['post_id']);
 			
-			$all_components = fsn_get_post_ids_by_type('component');
-			$attached_components = array();
-			$nonattached_components = array();
-			foreach ($all_components as $component) {
-				if (wp_get_post_parent_id($component) == $post_id) {
-					$attached_components[] = $component;
-				} else {
-					$nonattached_components[] = $component;
-				}
-			}
 			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-			$input .= '<div class="component-select chosen">';
-				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'">';
-				$input .= '<option value=""></option>';
-				if (!empty($attached_components)) {
-					$input .= '<optgroup label="Components Attached to this Post">';
-					foreach($attached_components as $attached_component) {
-						$input .= '<option value="'. esc_attr($attached_component) .'"'. selected( $param_value, $attached_component, false ) .'>'. get_the_title($attached_component) .'</option>';
-					}
-					$input .= '</optgroup>';
-				}
-				if (!empty($nonattached_components)) {
-					$input .= '<optgroup label="Other Components">';
-					foreach($nonattached_components as $nonattached_component) {
-						$input .= '<option value="'. esc_attr($nonattached_component) .'"'. selected( $param_value, $nonattached_component, false ) .'>'. get_the_title($nonattached_component) .'</option>';
-					}
-					$input .= '</optgroup>';
+			$input .= '<div class="component-select">';
+				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
+				$input .= '<option></option>';
+				if (!empty($param_value)) {
+					$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
 				}
 				$input .= '</select>';
 			$input .= '</div>';

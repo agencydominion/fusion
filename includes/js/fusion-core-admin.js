@@ -1303,13 +1303,13 @@ function fsnInitUIevents(instance) {
 				var templateItem = jQuery(this);
 				var templateID = templateItem.attr('data-template-id');
 				
-				var loaddata = {
+				var data = {
 					action: 'load_template',
 					template_id: templateID,
 					post_id: postID,
 					security: fsnJS.fsnEditNonce
 				};
-				jQuery.post(ajaxurl, loaddata, function(response) {
+				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
 						alert('Oops, something went wrong. Please reload the page and try again.');
 						return false;
@@ -1350,13 +1350,13 @@ function fsnInitUIevents(instance) {
 				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var templateItem = jQuery(this).closest('.template-item');
 				var templateID = templateItem.attr('data-template-id');
-				var loaddata = {
+				var data = {
 					action: 'delete_template',
 					template_id: templateID,
 					post_id: postID,
 					security: fsnJS.fsnEditNonce
 				};
-				jQuery.post(ajaxurl, loaddata, function(response) {
+				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
 						alert('Oops, something went wrong. Please reload the page and try again.');
 						return false;
@@ -1373,6 +1373,44 @@ function fsnInitUIevents(instance) {
 						alert('There was an error deleting the template. Please try again.');
 					}
 				});		
+			});
+			//load more templates
+			modalSelector.on('click', '.fsn-load-more-templates', function(e) {
+				e.preventDefault();
+				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+				var loadMoreBtn = jQuery(this);
+				var nextPage = (loadMoreBtn.data('paged') !== undefined) ? parseInt(loadMoreBtn.data('paged')) : 2;
+				var postsPerPage = 20;
+				var totalPosts = parseInt(loadMoreBtn.data('total'));
+				var totalPages = Math.ceil(totalPosts/postsPerPage);
+				
+				var data = {
+					action: 'fsn_posts_search',
+					page : nextPage,
+					posts_per_page : postsPerPage,
+					postType : 'template',
+					post_id: postID,
+					security: fsnJS.fsnEditNonce
+				};
+				jQuery.post(ajaxurl, data, function(response) {
+					if (response == '-1') {
+						alert('Oops, something went wrong. Please reload the page and try again.');
+						return false;
+					}
+					//load tempaltes
+					var output = '';
+					for (i=0; i < response.items.length; i++) {
+						output += '<div class="template-item" data-template-id="'+ response.items[i].id +'"><span class="template-name">'+ response.items[i].text +'</span><span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span><div class="template-controls-dropdown collapsed"><a href="#" class="delete-template">Delete</a></div></div>';
+					}
+					loadMoreBtn.before(output);
+					//increment page
+					if (nextPage < totalPages) {
+						nextPage = nextPage + 1;
+						loadMoreBtn.data('paged', nextPage);
+					} else {
+						loadMoreBtn.remove();
+					}
+				}, 'json');
 			});
 			//delete modal on hidden
 			modalSelector.on('hidden.bs.modal', function(e) {
@@ -2295,13 +2333,9 @@ jQuery(document).ready(function() {
 			customListItemShortcodes();
 		}
 	});
-	//Init chosen fields inside custom list items
+	//Init select2 fields inside custom list items
 	jQuery('body').on('fsnAddListItem', function(e) {
-		jQuery('.chosen select').chosen({
-			allow_single_deselect: true,
-			width: '100%',
-			placeholder_text_single : 'Choose an option.'
-		});
+		fsnInitPostSelect();
 	});
 });
 
@@ -2395,16 +2429,66 @@ function fsnUpdateBoxField(field) {
     boxStringField.val(boxJSON);
 }
 
-//init chosen fields inside modals
+//init select2 fields inside modals
 jQuery(document).ready(function() {
-	jQuery('body').on('show.bs.modal', '.modal', function() {	
-		jQuery('.chosen select').chosen({
-			allow_single_deselect: true,
-			width: '100%',
-			placeholder_text_single : 'Choose an option.'
-		});	
+	jQuery('body').on('show.bs.modal', '.modal', function() {
+		var modal = jQuery(this);
+		fsnInitPostSelect();
 	});	
 });
+
+function fsnInitPostSelect() {
+	var postID = jQuery('input#post_ID').val();
+	var select2Elements = jQuery('.select2-posts-element');
+	select2Elements.each(function() {
+		var select2Element = jQuery(this);
+		if (select2Element.prop('multiple') === true) {
+			var allowClear = false;
+		} else {
+			var allowClear = true;
+		}
+		var postsPerPage = 30;
+		var postType  = select2Element.data('postType');
+		var hierarchical = select2Element.data('hierarchical');
+		select2Element.select2({
+			placeholder : 'Choose an option.',
+			allowClear: allowClear,
+			ajax: {
+				url: ajaxurl,
+				dataType: 'json',
+				method: 'POST',
+			    delay: 250,
+			    data: function (params) {
+					return {
+						q: params.term, // search term
+						page: params.page,
+						action: 'fsn_posts_search',
+						posts_per_page: postsPerPage,
+						postType: postType,
+						post_id: postID,
+						hierarchical : hierarchical,
+						security: fsnJS.fsnEditNonce,
+					};
+			    },
+			    processResults: function (data, params) {
+					params.page = params.page || 1;
+					return {
+						results: data.items,
+						pagination: {
+							more: (params.page * postsPerPage) < data.total_count
+						}
+					};
+				},
+			},
+			minimumInputLength: 1,
+			language: {
+				inputTooShort: function(args) {
+					return 'Start typing to search...';
+				}
+			}
+		});
+	});	
+}
 
 //create JS object from data attributes
 function getDataAttrs(obj) {
@@ -3069,17 +3153,18 @@ jQuery(document).ready(function() {
 				editForm.find('input[name="component_id"]').val(newComponentID);
 				componentSelectors.each(function() {
 					var componentSelector = jQuery(this);
-					componentSelector.find('optgroup').first().prepend('<option value="'+ newComponentID +'">'+ componentTitle +'</option>');
+					componentSelector.prepend('<option value="'+ newComponentID +'">'+ componentTitle +'</option>');
 					if (componentSelector.parent('.component-select').hasClass('active'))	{
-						componentSelector.find('optgroup').first().find('option').first().prop('selected', true);	
+						componentSelector.find('option').first().prop('selected', true);	
 					}
-					componentSelector.trigger('chosen:updated');
+					componentSelector.trigger('change.select2');
 				});
 			} else {
 				componentSelectors.each(function() {
 					var componentSelector = jQuery(this);
 					componentSelector.find('option[value="'+ componentID +'"]').text(componentTitle);
-					componentSelector.trigger('chosen:updated');
+					componentSelector.select2('destroy');
+					fsnInitPostSelect();
 				});
 			}
 		});

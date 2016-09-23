@@ -31,7 +31,7 @@ class FusionCoreExtend	{
 		do_action('fsn_extension_init', $this);
 			
 		//if running AJAX, get action being run
-		if (is_admin() && defined('DOING_AJAX') || DOING_AJAX) {
+		if (is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}

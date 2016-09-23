@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://agencydominion.com
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.0.8
+ * Version: 1.1.0
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.0.8' );
+define( 'FSN_VERSION', '1.1.0' );
  
 /**
  * Fusion class.
@@ -42,12 +42,6 @@ class FusionCore	{
 		
 		// Add Mobile Detection script
 		add_action('init', array($this, 'include_mobile_detect_function'));
-		
-		// Populate All Items global
-		add_action('init', array($this, 'init_all_items_global'), 11);
-		
-		// Delete All Items global transient on post save
-		add_action('save_post', array($this, 'delete_all_items_global'), 10, 2);
 		
 		// Register Param Sections
 		add_action('init', array($this, 'register_param_sections'));
@@ -84,6 +78,9 @@ class FusionCore	{
 		// Update media previews
 		add_action( 'wp_ajax_update_image_preview', array($this, 'update_image_preview') );
 		add_action( 'wp_ajax_update_video_preview', array($this, 'update_video_preview') );
+		
+		// Lookup Posts from Select2 boxes
+		add_action( 'wp_ajax_fsn_posts_search', array($this, 'posts_search') );
 		
 		//add hi-res image size
 		if ( function_exists( 'add_image_size' ) ) { 
@@ -160,7 +157,7 @@ class FusionCore	{
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
 		
 		// Editor scripts and styles
-		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) {
+		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && ( (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) ) {
 			//bootstrap
 			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.3.5', true );
 			//google material icons
@@ -184,9 +181,9 @@ class FusionCore	{
 			wp_enqueue_script( 'wp-color-picker' );
 			wp_enqueue_style( 'wp-color-picker' );
 		}
-		//chosen
-		wp_enqueue_script('chosen', plugin_dir_url( __FILE__ ) . 'includes/utilities/chosen/chosen.jquery.min.js', array('jquery'), '1.1.0', true);
-		wp_enqueue_style('chosen', plugin_dir_url( __FILE__ ) . 'includes/utilities/chosen/chosen.min.css');
+		//select2
+		wp_enqueue_script('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/js/select2.min.js', array('jquery'), '4.0.3', true);
+		wp_enqueue_style('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/css/select2.min.css');
 	}
 	
 	/**
@@ -232,56 +229,6 @@ class FusionCore	{
 	
 	public function include_mobile_detect_function() {
 		include 'includes/utilities/mobile-detect/Mobile_Detect.php';
-	}
-	
-	/**
-	 * Populate All Items global
-	 *
-	 * @since 1.0.0
-	 *
-	 */
-	
-	public function init_all_items_global() {
-		if (is_admin()) {
-			global $fsn_all_items, $wpdb;
-			$fsn_all_items_transient = get_transient('fsn_all_items');
-			if ($fsn_all_items_transient === false) {
-				//get registered post types
-				$post_types = get_post_types();		
-				unset($post_types['attachment']);
-				unset($post_types['revision']);
-				unset($post_types['nav_menu_item']);
-				
-				$post_types = apply_filters('fsn_all_items_global_post_types', $post_types);
-				
-				$post_types_query = "'".implode($post_types,"','")."'";
-				
-				$posts_table_name = $wpdb->prefix . 'posts';
-				$all_items_query = "SELECT ID, post_title, post_type FROM $posts_table_name WHERE 1=1 AND post_type IN ($post_types_query) AND post_status = ('publish') ORDER BY post_title ASC";
-				$all_items_results = $wpdb->get_results($all_items_query);
-				
-				foreach ($all_items_results as $all_items_result) {
-					$fsn_all_items[] = array(
-						'id' => $all_items_result->ID,
-						'post_title' => $all_items_result->post_title,
-						'post_type' => $all_items_result->post_type
-					);
-			    }
-				set_transient('fsn_all_items', $fsn_all_items, 3600 * 24);
-			} else {
-				$fsn_all_items = $fsn_all_items_transient;
-			}
-		}
-	}
-	
-	/**
-	 * Delete All Items transient when the post is saved.
-	 *
-	 * @param int $post_id The ID of the post being saved.
-	 */
-	 
-	public function delete_all_items_global($post_id) {
-		delete_transient('fsn_all_items');
 	}
 
 	/**
@@ -553,7 +500,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
@@ -720,7 +667,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
-		if (defined('DOING_AJAX') || DOING_AJAX) {
+		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
@@ -1387,6 +1334,16 @@ class FusionCore	{
 						$input .= '<option value="'. esc_attr($key) .'"'. selected( $param_value, $key, false ) .'>'. esc_html($value) .'</option>';
 					}
 				$input .= '</select>';				
+				break;
+			case 'select_post':
+				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
+				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
+				$input .= '<select class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="'. (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post' ) .'">';
+					$input .= '<option></option>';
+					if (!empty($param_value)) {
+						$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
+					}
+				$input .= '</select>';				
 				break;			
 			case 'textarea_rte':
 				$input .= '<label>'. esc_html($param['label']) .'</label>';
@@ -1594,6 +1551,112 @@ class FusionCore	{
 		
 		exit;	
 	}
+	
+	/**
+	 * Posts Search
+	 *
+	 * Query the database with AJAX and return a JSON array of results
+	 *
+	 * @since 1.0.9
+	 *
+	 */
+	
+	public function posts_search() {
+		//verify nonce
+		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		
+		//verify capabilities
+		if (!empty($_POST['post_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_theme_options' ) )
+				die( '-1' );
+		}
+		
+		$posts_per_page = !empty($_POST['posts_per_page']) ? $_POST['posts_per_page'] : get_option('posts_per_page');
+		$paged = !empty($_POST['page']) ? intval($_POST['page']) : 1;
+		$post_type = !empty($_POST['postType']) ? $_POST['postType'] : 'post';
+		if (is_array($post_type)) {
+			foreach($post_type as $key => $value) {
+				$post_type[sanitize_text_field($key)] = sanitize_text_field($value);
+			}
+		} else {
+			sanitize_text_field($post_type);
+		}
+		
+		if (!empty($_POST['q'])) {
+			global $wpdb;
+			$search = esc_sql( $wpdb->esc_like( sanitize_text_field($_POST['q']) ) );
+			add_filter('posts_where', function( $where ) use ($search) {
+				$where .= (" AND post_title LIKE '%" . $search . "%'");
+				return $where;
+			});
+		}
+		
+		$query_args = array(
+			'post_type' => $post_type,
+			'post_status' => 'publish',
+			'posts_per_page' => $posts_per_page,
+			'paged' => $paged,
+			'orderby' => 'title',
+			'order' => 'ASC',
+			'fields' => 'id=>parent'
+		);
+		
+		$matching_items = new WP_Query($query_args);
+		
+		$result = array(
+			'items' => array(),
+			'total_count' => 0
+		);
+				
+		if (!empty($matching_items->posts)) {
+			$result['items'] = array();
+			if (!empty($_POST['post_id']) && !empty($_POST['hierarchical'])) {
+				$attached_items = array();
+				$nonattached_items = array();
+				foreach ($matching_items->posts as $item) {
+					if ($item->post_parent == $_POST['post_id']) {
+						$attached_items[] = array(
+							'id' => $item->ID,
+							'text' => get_the_title($item->ID)
+						);
+					} else {
+						$nonattached_items[] = array(
+							'id' => $item->ID,
+							'text' => get_the_title($item->ID)
+						);
+					}
+				}
+				if (!empty($attached_items)) {
+					$result['items'][] = array(
+						'text' => 'Items Attached to this Post',
+						'children' => $attached_items
+					);
+				}
+				if (!empty($nonattached_items)) {
+					$result['items'][] = array(
+						'text' => 'Other Items',
+						'children' => $nonattached_items
+					);
+				}
+			} else {
+				foreach($matching_items->posts as $item) {
+					$result['items'][] = array(
+						'id' => $item->ID,
+						'text' => get_the_title($item->ID)
+					);
+				}
+			}
+			$result['total_count'] = $matching_items->found_posts;
+		}
+		
+		echo json_encode($result);
+		
+		exit;
+	}
+	
 }
 
 $fsn_core = new FusionCore();

@@ -17,6 +17,7 @@ class FusionCoreTemplate	{
 		
 		// Register templatess post type
 		add_action('init', array($this, 'init_templates_post_type'));
+		add_filter( 'post_updated_messages', array($this, 'template_updated_messages') );
 		
 		//initialize AJAX modals
 		add_action( 'wp_ajax_save_template_modal', array($this, 'render_save_template_modal'));
@@ -70,29 +71,35 @@ class FusionCoreTemplate	{
 	
 		register_post_type( 'template', $args );
 		
-		function fsn_template_updated_messages( $messages ) {
-		  global $post, $post_ID;
-		
-		  $messages['template'] = array(
-		    0 => '', // Unused. Messages start at index 1.
-		    1 => sprintf( __('Template updated. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    2 => __('Custom field updated.', 'fusion'),
-		    3 => __('Custom field deleted.', 'fusion'),
-		    4 => __('Template updated.', 'fusion'),
-		    /* translators: %s: date and time of the revision */
-		    5 => isset($_GET['revision']) ? sprintf( __('Template restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-		    6 => sprintf( __('Template published. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-		    7 => __('Template saved.', 'fusion'),
-		    8 => sprintf( __('Template submitted. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		    9 => sprintf( __('Template scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview template</a>', 'fusion'),
-		      // translators: Publish box date format, see http://php.net/date
-		      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-		    10 => sprintf( __('Template draft updated. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-		  );
-		
-		  return $messages;
-		}
-		add_filter( 'post_updated_messages', 'fsn_template_updated_messages' );
+	}
+	
+	/**
+	 * Filter Template post type messages
+	 *
+	 * @since 1.0.0
+	 */
+	
+	public function template_updated_messages( $messages ) {
+	  global $post, $post_ID;
+	
+	  $messages['template'] = array(
+	    0 => '', // Unused. Messages start at index 1.
+	    1 => sprintf( __('Template updated. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    2 => __('Custom field updated.', 'fusion'),
+	    3 => __('Custom field deleted.', 'fusion'),
+	    4 => __('Template updated.', 'fusion'),
+	    /* translators: %s: date and time of the revision */
+	    5 => isset($_GET['revision']) ? sprintf( __('Template restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
+	    6 => sprintf( __('Template published. <a href="%s">View template</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
+	    7 => __('Template saved.', 'fusion'),
+	    8 => sprintf( __('Template submitted. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	    9 => sprintf( __('Template scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview template</a>', 'fusion'),
+	      // translators: Publish box date format, see http://php.net/date
+	      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
+	    10 => sprintf( __('Template draft updated. <a target="_blank" href="%s">Preview template</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
+	  );
+	
+	  return $messages;
 	}
 	
 	/**
@@ -204,21 +211,32 @@ class FusionCoreTemplate	{
 					</div>
 					<div class="modal-body">						
 						<?php
-						$saved_templates = fsn_get_post_ids_titles_by_type('template');
-						if (!empty($saved_templates)) {
-							$i = 1;
-							foreach($saved_templates as $template) {
-								echo '<div class="template-item" data-template-id="'. esc_attr($template['id']) .'">';
-									echo '<span class="template-name">'. esc_html($template['post_title']) .'</span>';
-									echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
-									echo '<div class="template-controls-dropdown collapsed">';
-										echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
+						$saved_templates = new WP_Query(array(
+							'post_type' => 'template',
+							'post_status' => 'publish',
+							'posts_per_page' => 20,
+							'orderby' => 'title',
+							'order' => 'ASC',
+							'fields' => 'ids'
+						));
+						if (!empty($saved_templates->posts)) {
+							echo '<div class="template-items">';
+								foreach($saved_templates->posts as $template) {
+									echo '<div class="template-item" data-template-id="'. esc_attr($template) .'">';
+										echo '<span class="template-name">'. esc_html(get_the_title($template)) .'</span>';
+										echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
+										echo '<div class="template-controls-dropdown collapsed">';
+											echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
+										echo '</div>';
 									echo '</div>';
-								echo '</div>';
-								$i++;
-							}
+								}
+							echo '</div>';
 						} else {
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
+						}
+						$total_templates = $saved_templates->found_posts;
+						if ($total_templates > 20) {
+							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">Load More</a>';
 						}
 						?>
 					</div>
@@ -278,7 +296,6 @@ class FusionCoreTemplate	{
 		
 		if (!empty($deleted_template)) {
 			$response_array['status'] = 'success';
-			delete_transient('fsn_all_items');
 		} else {
 			$response_array['status'] = 'error';	
 		}

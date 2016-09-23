@@ -348,7 +348,7 @@ function fsn_get_button_object($button) {
  *
  */
 
-function fsn_get_button_anchor_attributes($button_object, $classes) {
+function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 	extract($button_object);
 	$button_attributes = '';
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
@@ -403,7 +403,7 @@ function fsn_pagination($query_max_pages = false) {
  * @return string
  */
  
-function fsn_get_post_meta($args) {
+function fsn_get_post_meta($args = false) {
 	global $post;
 	
 	$defaults = array(
@@ -432,12 +432,14 @@ function fsn_get_post_meta($args) {
 			$numcats = count($categories_array);
 			$i = 0;
 			$categories = '';
-			foreach($categories_array as $category) {
-				$i++;
-				$categories .= '<a href="'. get_term_link($category, $taxonomy) .'">'. $category->name .'</a>';
-				$categories .= $i < $numcats ? ', ' : '';
+			if (!empty($categories_array)) {
+				foreach($categories_array as $category) {
+					$i++;
+					$categories .= '<a href="'. get_term_link($category, $taxonomy) .'">'. $category->name .'</a>';
+					$categories .= $i < $numcats ? ', ' : '';
+				}
+				$output .= !empty($author) || !empty($date) ? ' '. $separator .' '. $categories : $categories;
 			}
-			$output .= !empty($author) || !empty($date) ? ' '. $separator .' '. $categories : $categories;
 		}		
 	}
 	if (!empty($tags)) {
@@ -456,70 +458,6 @@ function fsn_get_post_meta($args) {
 		}
 	}
 	return $output;
-}
-
-/**
- * Get Post IDs by Type
- *
- * Function for getting and returning an array of post IDs by post type(s)
- *
- * @since 1.0.0
- *
- * @param mixed $post_types A string or array of post types to return
- *
- */
- 
-function fsn_get_post_ids_by_type($post_types) {
-	global $fsn_all_items;
-	
-	$post_ids = array();
-	if (!empty($post_types) && is_array($post_types)) {
-		foreach($fsn_all_items as $item) {
-			if (in_array($item['post_type'], $post_types))	{
-				$post_ids[] = $item['id'];
-			}
-		}
-	} else if (!empty($post_types) && is_string($post_types)) {
-		foreach($fsn_all_items as $item) {
-			if ($item['post_type'] == $post_types)	{
-				$post_ids[] = $item['id'];
-			}
-		}
-	}
-	return $post_ids;
-}
-
-/**
- * Get Post IDs and Title by Type
- *
- * Function for getting and returning an array of post IDs and titles by post type(s)
- *
- * @since 1.0.0
- *
- * @param mixed $post_types A string or array of post types to return
- *
- */
- 
-function fsn_get_post_ids_titles_by_type($post_types) {
-	global $fsn_all_items;
-	
-	$post_ids = array();
-	if (!empty($fsn_all_items)) {
-		if (!empty($post_types) && is_array($post_types)) {
-			foreach($fsn_all_items as $item) {
-				if (in_array($item['post_type'], $post_types))	{
-					$post_ids[] = $item;
-				}
-			}
-		} else if (!empty($post_types) && is_string($post_types)) {
-			foreach($fsn_all_items as $item) {
-				if ($item['post_type'] == $post_types)	{
-					$post_ids[] = $item;
-				}
-			}
-		}
-	}
-	return $post_ids;
 }
 
 ?>
