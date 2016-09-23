@@ -1303,13 +1303,13 @@ function fsnInitUIevents(instance) {
 				var templateItem = jQuery(this);
 				var templateID = templateItem.attr('data-template-id');
 				
-				var loaddata = {
+				var data = {
 					action: 'load_template',
 					template_id: templateID,
 					post_id: postID,
 					security: fsnJS.fsnEditNonce
 				};
-				jQuery.post(ajaxurl, loaddata, function(response) {
+				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
 						alert('Oops, something went wrong. Please reload the page and try again.');
 						return false;
@@ -1350,13 +1350,13 @@ function fsnInitUIevents(instance) {
 				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var templateItem = jQuery(this).closest('.template-item');
 				var templateID = templateItem.attr('data-template-id');
-				var loaddata = {
+				var data = {
 					action: 'delete_template',
 					template_id: templateID,
 					post_id: postID,
 					security: fsnJS.fsnEditNonce
 				};
-				jQuery.post(ajaxurl, loaddata, function(response) {
+				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
 						alert('Oops, something went wrong. Please reload the page and try again.');
 						return false;
@@ -1373,6 +1373,44 @@ function fsnInitUIevents(instance) {
 						alert('There was an error deleting the template. Please try again.');
 					}
 				});		
+			});
+			//load more templates
+			modalSelector.on('click', '.fsn-load-more-templates', function(e) {
+				e.preventDefault();
+				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+				var loadMoreBtn = jQuery(this);
+				var nextPage = (loadMoreBtn.data('paged') !== undefined) ? parseInt(loadMoreBtn.data('paged')) : 2;
+				var postsPerPage = 20;
+				var totalPosts = parseInt(loadMoreBtn.data('total'));
+				var totalPages = Math.ceil(totalPosts/postsPerPage);
+				
+				var data = {
+					action: 'fsn_posts_search',
+					page : nextPage,
+					posts_per_page : postsPerPage,
+					postType : 'template',
+					post_id: postID,
+					security: fsnJS.fsnEditNonce
+				};
+				jQuery.post(ajaxurl, data, function(response) {
+					if (response == '-1') {
+						alert('Oops, something went wrong. Please reload the page and try again.');
+						return false;
+					}
+					//load tempaltes
+					var output = '';
+					for (i=0; i < response.items.length; i++) {
+						output += '<div class="template-item" data-template-id="'+ response.items[i].id +'"><span class="template-name">'+ response.items[i].text +'</span><span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span><div class="template-controls-dropdown collapsed"><a href="#" class="delete-template">Delete</a></div></div>';
+					}
+					loadMoreBtn.before(output);
+					//increment page
+					if (nextPage < totalPages) {
+						nextPage = nextPage + 1;
+						loadMoreBtn.data('paged', nextPage);
+					} else {
+						loadMoreBtn.remove();
+					}
+				}, 'json');
 			});
 			//delete modal on hidden
 			modalSelector.on('hidden.bs.modal', function(e) {

@@ -204,19 +204,32 @@ class FusionCoreTemplate	{
 					</div>
 					<div class="modal-body">						
 						<?php
-						
-						if (!empty($saved_templates)) {
-							foreach($saved_templates as $template) {
-								echo '<div class="template-item" data-template-id="'. esc_attr($template['id']) .'">';
-									echo '<span class="template-name">'. esc_html($template['post_title']) .'</span>';
-									echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
-									echo '<div class="template-controls-dropdown collapsed">';
-										echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
+						$saved_templates = new WP_Query(array(
+							'post_type' => 'template',
+							'post_status' => 'publish',
+							'posts_per_page' => 20,
+							'orderby' => 'title',
+							'order' => 'ASC',
+							'fields' => 'ids'
+						));
+						if (!empty($saved_templates->posts)) {
+							echo '<div class="template-items">';
+								foreach($saved_templates->posts as $template) {
+									echo '<div class="template-item" data-template-id="'. esc_attr($template) .'">';
+										echo '<span class="template-name">'. esc_html(get_the_title($template)) .'</span>';
+										echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
+										echo '<div class="template-controls-dropdown collapsed">';
+											echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
+										echo '</div>';
 									echo '</div>';
-								echo '</div>';
-							}
+								}
+							echo '</div>';
 						} else {
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
+						}
+						$total_templates = $saved_templates->found_posts;
+						if ($total_templates > 20) {
+							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">Load More</a>';
 						}
 						?>
 					</div>
