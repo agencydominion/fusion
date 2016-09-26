@@ -4,7 +4,7 @@
  */
 /**
  * Plugin Name: Fusion : Plugin
- * Plugin URI: http://agencydominion.com
+ * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
  * Version: 1.1.0
  * Author: Agency Dominion
