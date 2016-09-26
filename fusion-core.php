@@ -1557,7 +1557,7 @@ class FusionCore	{
 	 *
 	 * Query the database with AJAX and return a JSON array of results
 	 *
-	 * @since 1.0.9
+	 * @since 1.1.0
 	 *
 	 */
 	
