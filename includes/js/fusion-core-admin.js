@@ -590,9 +590,7 @@ function fsnInitUIevents(instance) {
 			tabs_nesting_level: tabsNestingLevel,
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
-		};				
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -660,9 +658,7 @@ function fsnInitUIevents(instance) {
 			saved_values: dataAttributes,
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
-		};				
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -759,8 +755,6 @@ function fsnInitUIevents(instance) {
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
 		};
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -851,8 +845,6 @@ function fsnInitUIevents(instance) {
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
 		};
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -943,8 +935,6 @@ function fsnInitUIevents(instance) {
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
 		};
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -1038,9 +1028,7 @@ function fsnInitUIevents(instance) {
 			saved_values: dataAttributes,
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
-		};				
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -1209,9 +1197,7 @@ function fsnInitUIevents(instance) {
 			action: 'save_template_modal',
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
-		};				
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -1225,7 +1211,6 @@ function fsnInitUIevents(instance) {
 			//update content variables
 			modalSelector.on('click', '.save-template', function(e) {
 				e.preventDefault();
-				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var templateName = modalSelector.find('input[name="template_name"]').val();
 				if (instance.attr('id') == 'fsn-main-ui') {
 					var templateData = tinyMCE.get('content').getContent();
@@ -1272,9 +1257,7 @@ function fsnInitUIevents(instance) {
 			action: 'load_template_modal',
 			post_id: postID,
 			security: fsnJS.fsnEditNonce
-		};				
-	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -1299,7 +1282,6 @@ function fsnInitUIevents(instance) {
 			//load template
 			modalSelector.on('click', '.template-item', function(e) {
 				e.preventDefault();
-				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var templateItem = jQuery(this);
 				var templateID = templateItem.attr('data-template-id');
 				
@@ -1347,7 +1329,6 @@ function fsnInitUIevents(instance) {
 			modalSelector.on('click', '.delete-template', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var templateItem = jQuery(this).closest('.template-item');
 				var templateID = templateItem.attr('data-template-id');
 				var data = {
@@ -1377,7 +1358,6 @@ function fsnInitUIevents(instance) {
 			//load more templates
 			modalSelector.on('click', '.fsn-load-more-templates', function(e) {
 				e.preventDefault();
-				// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 				var loadMoreBtn = jQuery(this);
 				var nextPage = (loadMoreBtn.data('paged') !== undefined) ? parseInt(loadMoreBtn.data('paged')) : 2;
 				var postsPerPage = 20;
@@ -3076,9 +3056,7 @@ function launchComponentsModal(id) {
 		component_id: id,
 		post_id: postID,
 		security: fsnJS.fsnEditNonce
-	};			
-
-	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+	};
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response == '-1') {
 			alert('Oops, something went wrong. Please reload the page and try again.');
@@ -3136,8 +3114,6 @@ jQuery(document).ready(function() {
 			component_content: componentContent,
 			security: fsnJS.fsnEditNonce
 		};
-		
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
 				alert('Oops, something went wrong. Please reload the page and try again.');
@@ -3198,9 +3174,7 @@ jQuery(document).ready(function() {
 				id: attachment.id,
 				post_id: postID,
 				security: fsnJS.fsnEditNonce
-			};				
-		
-			// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if (response == '-1') {
 					alert('Oops, something went wrong. Please reload the page and try again.');
@@ -3249,9 +3223,7 @@ jQuery(document).ready(function() {
 				id: attachment.id,
 				post_id: postID,
 				security: fsnJS.fsnEditNonce
-			};				
-		
-			// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if (response == '-1') {
 					alert('Oops, something went wrong. Please reload the page and try again.');
