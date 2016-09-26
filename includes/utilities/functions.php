@@ -460,4 +460,40 @@ function fsn_get_post_meta($args = false) {
 	return $output;
 }
 
+/**
+ * Get Post IDs by Type
+ *
+ * Function for getting and returning an array of post IDs by post type(s)
+ *
+ * @since 1.0.0
+ * @deprecated 1.1.0
+ * @see posts_search()
+ *
+ * @param mixed $post_types A string or array of post types to return
+ *
+ */
+ 
+function fsn_get_post_ids_by_type($post_types = false) {	
+	$post_ids = array();
+	return $post_ids;
+}
+
+/**
+ * Get Post IDs and Title by Type
+ *
+ * Function for getting and returning an array of post IDs and titles by post type(s)
+ *
+ * @since 1.0.0
+ * @deprecated 1.1.0
+ * @see posts_search()
+ *
+ * @param mixed $post_types A string or array of post types to return
+ *
+ */
+ 
+function fsn_get_post_ids_titles_by_type($post_types = false) {
+	$post_ids = array();
+	return $post_ids;
+}
+
 ?>
