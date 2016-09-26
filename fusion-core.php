@@ -12,7 +12,7 @@
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.1.1' );
+define( 'FSN_VERSION', '1.1.2' );
  
 /**
  * Fusion class.
