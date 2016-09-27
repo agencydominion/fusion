@@ -124,7 +124,7 @@ class FusionCoreComponents	{
 			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 			$input .= '<div class="component-select">';
-				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
+				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
 				$input .= '<option></option>';
 				if (!empty($param_value)) {
 					$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';

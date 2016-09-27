@@ -179,10 +179,10 @@ class FusionCoreCustomList	{
 						$param_name = $param['param_name'];
 						if (array_key_exists($param_name, $atts)) {
 							$param_value = stripslashes($atts[$param_name]);
-							if ($param['encode_base64'] == true) {
+							if (!empty($param['encode_base64'])) {
 								$param_value = wp_strip_all_tags($param_value);
 								$param_value = htmlentities(base64_decode($param_value));
-							} else if ($param['encode_url'] == true) {
+							} else if (!empty($param['encode_url'])) {
 								$param_value = wp_strip_all_tags($param_value);
 								$param_value = urldecode($param_value);
 							}

@@ -34,15 +34,15 @@ class FusionCoreButtonModal	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$current_link = esc_url_raw($_POST['current_link']);
-		$current_label = stripslashes(wp_filter_post_kses($_POST['current_label']));
-		$current_attached = intval($_POST['current_attached']);
-		$current_target = wp_filter_post_kses($_POST['current_target']);
-		$current_type = wp_filter_post_kses($_POST['current_type']);
-		$current_collapse_id = wp_filter_post_kses($_POST['current_collapse_id']);
-		$current_collapse_label_show = stripslashes(wp_filter_post_kses($_POST['current_collapse_label_show']));
-		$current_collapse_label_hide = stripslashes(wp_filter_post_kses($_POST['current_collapse_label_hide']));
-		$current_component_id = intval($_POST['current_component_id']);
+		$current_link = !empty($_POST['current_link']) ? esc_url_raw($_POST['current_link']) : '';
+		$current_label = !empty($_POST['current_label']) ? stripslashes(wp_filter_post_kses($_POST['current_label'])) : '';
+		$current_attached = !empty($_POST['current_attached']) ? intval($_POST['current_attached']) : '';
+		$current_target = !empty($_POST['current_target']) ? wp_filter_post_kses($_POST['current_target']) : '';
+		$current_type = !empty($_POST['current_type']) ? wp_filter_post_kses($_POST['current_type']) : '';
+		$current_collapse_id = !empty($_POST['current_collapse_id']) ? wp_filter_post_kses($_POST['current_collapse_id']) : '';
+		$current_collapse_label_show = !empty($_POST['current_collapse_label_show']) ? stripslashes(wp_filter_post_kses($_POST['current_collapse_label_show'])) : '';
+		$current_collapse_label_hide = !empty($_POST['current_collapse_label_hide']) ? stripslashes(wp_filter_post_kses($_POST['current_collapse_label_hide'])) : '';
+		$current_component_id = !empty($_POST['current_component_id']) ? intval($_POST['current_component_id']) : '';
 		?>
 		<div class="modal fade button-modal">
 			<div class="modal-dialog modal-lg">

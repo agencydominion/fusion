@@ -185,21 +185,21 @@ class FusionCoreExtend	{
 												$data_attribute_name = str_replace('_', '-', $param['param_name']);
 												if ( array_key_exists($data_attribute_name, $saved_values) ) {
 													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if ($param['encode_base64'] == true) {
+													if (!empty($param['encode_base64'])) {
 														$param_value = wp_strip_all_tags($param_value);
 														$param_value = htmlentities(base64_decode($param_value));
-													} else if ($param['encode_url'] == true) {
+													} else if (!empty($param['encode_url'])) {
 														$param_value = wp_strip_all_tags($param_value);
 														$param_value = urldecode($param_value);
 													}
 													//decode custom entities
 													$param_value = FusionCore::decode_custom_entities($param_value);
-												} elseif ($param['content_field'] == true || !empty($param['item_params'])) {
+												} elseif (!empty($param['content_field']) || !empty($param['item_params'])) {
 													$param_value = $content_html;
-													if ($param['content_field'] == true && $param['encode_base64'] == true) {
+													if (!empty($param['content_field']) && !empty($param['encode_base64'])) {
 														$param_value = wp_strip_all_tags($param_value);
 														$param_value = htmlentities(base64_decode($param_value));
-													} else if ($param['content_field'] == true && $param['encode_url'] == true) {
+													} else if (!empty($param['content_field']) && !empty($param['encode_url'])) {
 														$param_value = wp_strip_all_tags($param_value);
 														$param_value = urldecode($param_value);
 													}
