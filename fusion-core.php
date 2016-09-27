@@ -500,6 +500,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -667,6 +668,7 @@ class FusionCore	{
 		), $atts ) );
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -1286,24 +1288,24 @@ class FusionCore	{
 			case 'text':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="text" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') . ($param['encode_base64'] == true ? ' encode-base64' : '') . ($param['encode_url'] == true ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. esc_attr($param['placeholder']) .'"' : '') .'>';				
+				$input .= '<input type="text" class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') . (!empty($param['encode_base64']) ? ' encode-base64' : '') . (!empty($param['encode_url']) ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. esc_attr($param['placeholder']) .'"' : '') .'>';				
 				break;
 			case 'textarea':
-				if ($param['encode_base64'] == true || $param['encode_url'] == true) {
+				if (!empty($param['encode_base64']) || !empty($param['encode_url'])) {
 					$param_value = $param_value;
-				} elseif ($param['content_field'] == true && empty($param['encode_base64']) && empty($param['encode_url'])) {
+				} elseif (!empty($param['content_field']) && empty($param['encode_base64']) && empty($param['encode_url'])) {
 					$param_value = esc_textarea(fsn_unautop($param_value));
 				} else {
 					$param_value = esc_textarea($param_value);	
 				}
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<textarea class="form-control element-input'. ($param['content_field'] == true ? ' content-field' : '') .  ($param['nested'] == true ? ' nested' : '') . ($param['encode_base64'] == true ? ' encode-base64' : '') . ($param['encode_url'] == true ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" rows="5">'. $param_value .'</textarea>';
+				$input .= '<textarea class="form-control element-input'. (!empty($param['content_field']) ? ' content-field' : '') .  (!empty($param['nested']) ? ' nested' : '') . (!empty($param['encode_base64']) ? ' encode-base64' : '') . (!empty($param['encode_url']) ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" rows="5">'. $param_value .'</textarea>';
 				break;
 			case 'checkbox':
 				$input .= '<div class="checkbox">';
 					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">';
-						$input .= '<input type="checkbox" class="element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, 'on', false ) .'>';
+						$input .= '<input type="checkbox" class="element-input'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, 'on', false ) .'>';
 						$input .= esc_html($param['label']);
 					$input .= '</label>';
 				$input .= '</div>';
@@ -1320,7 +1322,7 @@ class FusionCore	{
 				foreach($param['options'] as $key => $value) {
 					$input .= '<div class="radio">';
 						$input .= '<label>';
-							$input .= '<input type="radio" class="element-input'. ($param['nested'] == true ? ' nested' : '') .'" value="'. esc_attr($key) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, $key, false ) .'>';
+							$input .= '<input type="radio" class="element-input'. (!empty($param['nested']) ? ' nested' : '') .'" value="'. esc_attr($key) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, $key, false ) .'>';
 							$input .= $value;
 						$input .= '</label>';
 			    	$input .= '</div>';
@@ -1329,7 +1331,7 @@ class FusionCore	{
 			case 'select':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<select class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'">';
+				$input .= '<select class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'">';
 					foreach($param['options'] as $key => $value) {
 						$input .= '<option value="'. esc_attr($key) .'"'. selected( $param_value, $key, false ) .'>'. esc_html($value) .'</option>';
 					}
@@ -1338,7 +1340,7 @@ class FusionCore	{
 			case 'select_post':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<select class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="'. (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post' ) .'">';
+				$input .= '<select class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="'. (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post' ) .'">';
 					$input .= '<option></option>';
 					if (!empty($param_value)) {
 						$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
@@ -1361,12 +1363,12 @@ class FusionCore	{
 			case 'colorpicker':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="text" class="form-control element-input ad-color-picker'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';				
+				$input .= '<input type="text" class="form-control element-input ad-color-picker'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';				
 				break;
 			case 'image':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
+				$input .= '<input type="hidden" class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				if ( !empty($param_value) ) {
 			    	$image_attrs = wp_get_attachment_image_src($param_value, 'medium');
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
@@ -1380,7 +1382,7 @@ class FusionCore	{
 			case 'video':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="hidden" class="form-control element-input'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
+				$input .= '<input type="hidden" class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				if ( !empty($param_value) ) {
 			    	$image_attrs = wp_get_attachment_image_src($param_value, 'thumbnail', true);
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
@@ -1470,7 +1472,7 @@ class FusionCore	{
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
 				$input .= '<a href="#" class="fsn-add-edit-button button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'">'. sprintf(__('<span class="button-verb">%1$s</span> Button', 'fusion'), $button_verb) .'</a>';
 				$input .= '<a href="#" class="fsn-remove-button button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Button', 'fusion') .'</a>';
-				$input .= '<input type="hidden" class="form-control element-input button-string'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
+				$input .= '<input type="hidden" class="form-control element-input button-string'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				break;
 			case 'box':
 				if (!empty($param_value)) {
@@ -1484,15 +1486,15 @@ class FusionCore	{
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 				$input .= '<div class="fsn-box-form">';
 					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'_top">Top</label>';
-					$input .= '<input type="text" class="form-control box-top" id="fsn_'. esc_attr($param['param_name']) .'_top" name="'. esc_attr($param['param_name']) .'_top" value="'. esc_attr($box_top) .'">';
+					$input .= '<input type="text" class="form-control box-top" id="fsn_'. esc_attr($param['param_name']) .'_top" name="'. esc_attr($param['param_name']) .'_top" value="'. (!empty($box_top) ? esc_attr($box_top) : '') .'">';
 					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'_right">Right</label>';
-					$input .= '<input type="text" class="form-control box-right" id="fsn_'. esc_attr($param['param_name']) .'_right" name="'. esc_attr($param['param_name']) .'_right" value="'. esc_attr($box_right) .'">';
+					$input .= '<input type="text" class="form-control box-right" id="fsn_'. esc_attr($param['param_name']) .'_right" name="'. esc_attr($param['param_name']) .'_right" value="'. (!empty($box_right) ? esc_attr($box_right) : '') .'">';
 					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'_bottom">Bottom</label>';
-					$input .= '<input type="text" class="form-control box-bottom" id="fsn_'. esc_attr($param['param_name']) .'_bottom" name="'. esc_attr($param['param_name']) .'_bottom" value="'. esc_attr($box_bottom) .'">';
+					$input .= '<input type="text" class="form-control box-bottom" id="fsn_'. esc_attr($param['param_name']) .'_bottom" name="'. esc_attr($param['param_name']) .'_bottom" value="'. (!empty($box_bottom) ? esc_attr($box_bottom) : '') .'">';
 					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'_left">Left</label>';
-					$input .= '<input type="text" class="form-control box-left" id="fsn_'. esc_attr($param['param_name']) .'_left" name="'. esc_attr($param['param_name']) .'_left" value="'. esc_attr($box_left) .'">';
+					$input .= '<input type="text" class="form-control box-left" id="fsn_'. esc_attr($param['param_name']) .'_left" name="'. esc_attr($param['param_name']) .'_left" value="'. (!empty($box_left) ? esc_attr($box_left) : '') .'">';
 				$input .= '</div>';
-				$input .= '<input type="hidden" class="form-control element-input box-string'. ($param['nested'] == true ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
+				$input .= '<input type="hidden" class="form-control element-input box-string'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				break;
 			case 'note':
 				$input .= '<p class="description">'. esc_html($param['help']) .'</p>';

@@ -31,6 +31,7 @@ class FusionCoreExtend	{
 		do_action('fsn_extension_init', $this);
 			
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -106,7 +107,7 @@ class FusionCoreExtend	{
 			die( '-1' );
 			
 		$content_html = stripslashes(wp_filter_post_kses($_POST['content_html']));
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {

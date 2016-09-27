@@ -47,6 +47,7 @@ class FusionCoreTabs	{
 		$fsn_tab_counter = 0;
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -185,6 +186,7 @@ class FusionCoreTabs	{
 		$fsn_tab_counter++;
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
