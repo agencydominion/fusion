@@ -14,6 +14,7 @@
  */
 
 //WordPress filters
+global $wp_embed;
 add_filter( 'fsn_the_content', array( $wp_embed, 'run_shortcode' ), 8 );
 add_filter( 'fsn_the_content', array( $wp_embed, 'autoembed' ), 8 );
 add_filter( 'fsn_the_content', 'wptexturize'                       );
