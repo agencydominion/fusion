@@ -177,31 +177,35 @@ class FusionCoreExtend	{
 											echo !empty($this->description) && $active_tab == true ? '<p class="fsn-element-description">'. esc_html($this->description) .'</p>' : '';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
-												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
-													$param['content_field'] = true;
-												} elseif (empty($param['content_field'])) {
-													$param['content_field'] = false;
-												}
-												$data_attribute_name = str_replace('_', '-', $param['param_name']);
-												if ( array_key_exists($data_attribute_name, $saved_values) ) {
-													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if (!empty($param['encode_base64'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if (!empty($param['encode_url'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+												if (!empty($param['param_name'])) {
+													if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+														$param['content_field'] = true;
+													} elseif (empty($param['content_field'])) {
+														$param['content_field'] = false;
 													}
-													//decode custom entities
-													$param_value = FusionCore::decode_custom_entities($param_value);
-												} elseif (!empty($param['content_field']) || !empty($param['item_params'])) {
-													$param_value = $content_html;
-													if (!empty($param['content_field']) && !empty($param['encode_base64'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if (!empty($param['content_field']) && !empty($param['encode_url'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+													$data_attribute_name = str_replace('_', '-', $param['param_name']);
+													if ( array_key_exists($data_attribute_name, $saved_values) ) {
+														$param_value = stripslashes($saved_values[$data_attribute_name]);
+														if (!empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+														//decode custom entities
+														$param_value = FusionCore::decode_custom_entities($param_value);
+													} elseif (!empty($param['content_field']) || !empty($param['item_params'])) {
+														$param_value = $content_html;
+														if (!empty($param['content_field']) && !empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['content_field']) && !empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+													} else {
+														$param_value = '';
 													}
 												} else {
 													$param_value = '';

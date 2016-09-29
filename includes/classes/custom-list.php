@@ -120,7 +120,7 @@ class FusionCoreCustomList	{
 			echo '<div class="custom-list-item-details">';				
 				foreach($params as $param) {
 					$param_value = '';
-					$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+					$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 					$param['nested'] = true;
 					//check for dependency
 					$dependency = !empty($param['dependency']) ? true : false;
@@ -176,18 +176,22 @@ class FusionCoreCustomList	{
 			$output .= '<div class="custom-list-item collapse-active">';					
 				$output .= '<div class="custom-list-item-details">';
 					foreach($fsn_custom_lists[$list_id]['params'] as $param) {
-						$param_name = $param['param_name'];
-						if (array_key_exists($param_name, $atts)) {
-							$param_value = stripslashes($atts[$param_name]);
-							if (!empty($param['encode_base64'])) {
-								$param_value = wp_strip_all_tags($param_value);
-								$param_value = htmlentities(base64_decode($param_value));
-							} else if (!empty($param['encode_url'])) {
-								$param_value = wp_strip_all_tags($param_value);
-								$param_value = urldecode($param_value);
+						if (!empty($param['param_name'])) {
+							$param_name = $param['param_name'];
+							if (array_key_exists($param_name, $atts)) {
+								$param_value = stripslashes($atts[$param_name]);
+								if (!empty($param['encode_base64'])) {
+									$param_value = wp_strip_all_tags($param_value);
+									$param_value = htmlentities(base64_decode($param_value));
+								} else if (!empty($param['encode_url'])) {
+									$param_value = wp_strip_all_tags($param_value);
+									$param_value = urldecode($param_value);
+								}
+								//decode custom entities
+								$param_value = FusionCore::decode_custom_entities($param_value);
+							} else {
+								$param_value = '';
 							}
-							//decode custom entities
-							$param_value = FusionCore::decode_custom_entities($param_value);
 						} else {
 							$param_value = '';
 						}

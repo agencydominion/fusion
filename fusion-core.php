@@ -909,7 +909,7 @@ class FusionCore	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {
@@ -1074,23 +1074,27 @@ class FusionCore	{
 										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'">';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
-												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
-													$param['content_field'] = true;
-												} elseif (empty($param['content_field'])) {
-													$param['content_field'] = false;
-												}
-												$data_attribute_name = str_replace('_', '-', $param['param_name']);
-												if ( array_key_exists($data_attribute_name, $saved_values) ) {
-													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if (!empty($param['encode_base64'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if (!empty($param['encode_url'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+												if (!empty($param['param_name'])) {
+													if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+														$param['content_field'] = true;
+													} elseif (empty($param['content_field'])) {
+														$param['content_field'] = false;
 													}
-													//decode custom entities
-													$param_value = FusionCore::decode_custom_entities($param_value);
+													$data_attribute_name = str_replace('_', '-', $param['param_name']);
+													if ( array_key_exists($data_attribute_name, $saved_values) ) {
+														$param_value = stripslashes($saved_values[$data_attribute_name]);
+														if (!empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+														//decode custom entities
+														$param_value = FusionCore::decode_custom_entities($param_value);
+													} else {
+														$param_value = '';
+													}
 												} else {
 													$param_value = '';
 												}
@@ -1146,7 +1150,7 @@ class FusionCore	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {
@@ -1211,25 +1215,29 @@ class FusionCore	{
 										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'">';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
-												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
-													$param['content_field'] = true;
-												} elseif (empty($param['content_field'])) {
-													$param['content_field'] = false;
-												}
-												$data_attribute_name = str_replace('_', '-', $param['param_name']);
-												if ( array_key_exists($data_attribute_name, $saved_values) ) {
-													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if (!empty($param['encode_base64'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if (!empty($param['encode_url'])) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+												if (!empty($param['param_name'])) {
+													if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+														$param['content_field'] = true;
+													} elseif (empty($param['content_field'])) {
+														$param['content_field'] = false;
 													}
-													//decode custom entities
-													$param_value = FusionCore::decode_custom_entities($param_value);
+													$data_attribute_name = str_replace('_', '-', $param['param_name']);
+													if ( array_key_exists($data_attribute_name, $saved_values) ) {
+														$param_value = stripslashes($saved_values[$data_attribute_name]);
+														if (!empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+														//decode custom entities
+														$param_value = FusionCore::decode_custom_entities($param_value);
+													} else {
+														$param_value = '';
+													}
 												} else {
-													$param_value = '';
+													$param_value = '';	
 												}
 												//check for dependency
 												$dependency = !empty($param['dependency']) ? true : false;
