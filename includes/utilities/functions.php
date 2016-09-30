@@ -355,13 +355,13 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
 	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
 	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
-	if ($button_type == 'collapse') {
+	if (!empty($button_type) && $button_type == 'collapse') {
 		$button_attributes .= ' data-toggle="collapse"';
 		if (!empty($button_label_show) && !empty($button_label_hide)) {
 			$button_attributes .= ' data-label-show="'. esc_attr($button_label_show) .'"';
 			$button_attributes .= ' data-label-hide="'. esc_attr($button_label_hide) .'"';
 		}
-	} elseif ($button_type == 'modal') {
+	} elseif (!empty($button_type) && $button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
 	}
 	return apply_filters('fsn_button_anchor_attribites', $button_attributes, $button_object, $classes);
