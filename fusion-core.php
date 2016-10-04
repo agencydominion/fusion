@@ -1528,8 +1528,13 @@ class FusionCore	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
-			die( '-1' );
+		if (!empty($_POST['post_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_theme_options' ) )
+				die( '-1' );
+		}
 			
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'medium');
@@ -1552,8 +1557,13 @@ class FusionCore	{
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
 		
 		//verify capabilities
-		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
-			die( '-1' );
+		if (!empty($_POST['post_id'])) {
+			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
+				die( '-1' );
+		} else {
+			if ( !current_user_can( 'edit_theme_options' ) )
+				die( '-1' );
+		}
 			
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
