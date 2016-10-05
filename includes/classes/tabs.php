@@ -67,13 +67,13 @@ class FusionCoreTabs	{
 			$output .= '<div class="tabs-container"'. $shortcode_atts_data .'>';
 				$output .= '<div class="tabs-header">';
 					$output .= '<div class="tabs-controls">';
-						$output .= '<span class="tabs-controls-toggle" title="Tabs Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+						$output .= '<span class="tabs-controls-toggle" title="'. __('Tabs Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 						$output .= '<div class="tabs-controls-dropdown collapsed">';
 							$output .= '<a href="#" class="edit-tabs">'. __('Edit', 'fusion') .'</a>';
 							$output .= '<a href="#" class="duplicate-tabs">'. __('Duplicate', 'fusion') .'</a>';
 							$output .= '<a href="#" class="delete-tabs">'. __('Delete', 'fusion') .'</a>';
 						$output .= '</div>';
-						$output .= '<a href="#" class="control-icon edit-tabs" title="Edit Tabs"><i class="material-icons md-18">&#xE3C9;</i></a>';
+						$output .= '<a href="#" class="control-icon edit-tabs" title="'. __('Edit Tabs', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 					$output .= '</div>';
 					$output .= '<h3 class="tabs-title">'. __('Tabs', 'fusion') .'</h3>';
 				$output .= '</div>';
@@ -97,7 +97,7 @@ class FusionCoreTabs	{
 									$output .= '<li'. ($i == 0 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" data-toggle="tab">'. esc_html($tab_title) .'</a></li>';
 									$i++;
 								}
-								$output .= '<li><a href="#" class="fsn-add-tab" title="Add Tab"><i class="material-icons md-18">&#xE147;</i></a></li>';								
+								$output .= '<li><a href="#" class="fsn-add-tab" title="'. __('Add Tab', 'fusion') .'"><i class="material-icons md-18">&#xE147;</i></a></li>';								
 							$output .= '</ul>';
 						}
 					$output .= '</div>';
@@ -177,7 +177,7 @@ class FusionCoreTabs	{
 	public function tab_shortcode($atts, $content = null) {
 		
 		extract( shortcode_atts( array(
-			'tab_title' => 'Tab',
+			'tab_title' => __('Tab', 'fusion'),
 			'tab_id' => 'tab-'. uniqid(),
 			'custom_tab_id' => ''
 		), $atts ) );
@@ -207,19 +207,19 @@ class FusionCoreTabs	{
 				$output .= '<div class="tab-container"'. $shortcode_atts_data .'>';
 					$output .= '<div class="tab-header">';
 						$output .= '<div class="tab-controls">';
-							$output .= '<span class="tab-controls-toggle" title="Tab Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+							$output .= '<span class="tab-controls-toggle" title="'. __('Tab Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 							$output .= '<div class="tab-controls-dropdown collapsed">';
 								$output .= '<a href="#" class="edit-tab">'. __('Edit', 'fusion') .'</a>';
 								$output .= '<a href="#" class="duplicate-tab">'. __('Duplicate', 'fusion') .'</a>';
 								$output .= '<a href="#" class="delete-tab">'. __('Delete', 'fusion') .'</a>';
 							$output .= '</div>';
-							$output .= '<a href="#" class="control-icon edit-tab" title="Edit Tab"><i class="material-icons md-18">&#xE3C9;</i></a>';
+							$output .= '<a href="#" class="control-icon edit-tab" title="'. __('Edit Tab', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 						$output .= '</div>';
 					$output .= '</div>';
 					$output .= '<div class="tab-wrapper">';
 						$output .= '<div class="tab">'. do_shortcode($content) .'</div>';
 					$output .= '</div>';
-					$output .= '<a href="#" class="fsn-add-element" data-container="tab" title="Add Element"><i class="material-icons md-18">&#xE147;</i></a>';
+					$output .= '<a href="#" class="fsn-add-element" data-container="tab" title="'. __('Add Element', 'fusion') .'"><i class="material-icons md-18">&#xE147;</i></a>';
 				$output .= '</div>';
 			$output .= '</div>';
 			
@@ -392,7 +392,7 @@ class FusionCoreTabs	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
@@ -500,7 +500,7 @@ class FusionCoreTabs	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>

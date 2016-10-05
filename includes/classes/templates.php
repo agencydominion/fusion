@@ -133,7 +133,7 @@ class FusionCoreTemplate	{
 									'label' => __('Template Name', 'fusion')
 								);
 								echo FusionCore::get_input_field($param);
-								echo '<a href="#" class="button button-primary save-template">Add</a>';
+								echo '<a href="#" class="button button-primary save-template">'. __('Add', 'fusion') .'</a>';
 							echo '</div>';
 						?>
 						</form>
@@ -214,7 +214,7 @@ class FusionCoreTemplate	{
 						$saved_templates = new WP_Query(array(
 							'post_type' => 'template',
 							'post_status' => 'publish',
-							'posts_per_page' => 20,
+							'posts_per_page' => 2,
 							'orderby' => 'title',
 							'order' => 'ASC',
 							'fields' => 'ids'
@@ -224,7 +224,7 @@ class FusionCoreTemplate	{
 								foreach($saved_templates->posts as $template) {
 									echo '<div class="template-item" data-template-id="'. esc_attr($template) .'">';
 										echo '<span class="template-name">'. esc_html(get_the_title($template)) .'</span>';
-										echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
+										echo '<span class="template-controls-toggle" title="'. __('Template Options', 'fusion') .'"><i class="material-icons">&#xE5D3;</i></span>';
 										echo '<div class="template-controls-dropdown collapsed">';
 											echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
 										echo '</div>';
@@ -235,8 +235,8 @@ class FusionCoreTemplate	{
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
 						}
 						$total_templates = $saved_templates->found_posts;
-						if ($total_templates > 20) {
-							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">Load More</a>';
+						if ($total_templates > 2) {
+							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">'. __('Load More', 'fusion') .'</a>';
 						}
 						?>
 					</div>

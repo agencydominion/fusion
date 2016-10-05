@@ -29,11 +29,11 @@ function fsnInitUI() {
 
 	var interfaceGrid = jQuery('.fsn-interface-grid');
 	if (interfaceGrid.is(':empty')) {
-		var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text')));
+		var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', string_translation.text_label)));
 		interfaceGrid.empty().append(fsnInitContent);
 	} else if (interfaceGrid.children().first().hasClass('row-container') === false) {
 		var initalContent = interfaceGrid.html();
-		var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text', initalContent)));
+		var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', string_translation.text_label, initalContent)));
 		interfaceGrid.empty().append(fsnInitContent);
 		editorToggleBtn.trigger('click');
 	}
@@ -113,7 +113,7 @@ function fsnGetRow(content) {
 	if (content == undefined) {
 		var content = '';
 	}
-	var output = '<div class="row-container clearfix"><div class="row-header"><div class="row-controls"><span class="row-controls-toggle" title="Row Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="row-controls-dropdown collapsed"><a href="#" class="edit-row">Edit</a><a href="#" class="duplicate-row">Duplicate</a><hr><a href="#" class="move-row" data-move="up">Move Up</a><a href="#" class="move-row" data-move="down">Move Down</a><a href="#" class="move-row" data-move="top">Move to Top</a><a href="#" class="move-row" data-move="bottom">Move to Bottom</a><hr><a href="#" class="delete-row">Delete</a></div><a href="#" class="control-icon edit-row" title="Edit Row"><i class="material-icons md-18">&#xE3C9;</i></a></div><a href="#" class="fsn-add-row" title="Add Row"><i class="material-icons md-18">&#xE147;</i></a></div><div class="row-wrapper"><div class="row">'+ content +'</div></div></div>';
+	var output = '<div class="row-container clearfix"><div class="row-header"><div class="row-controls"><span class="row-controls-toggle" title="'+ string_translation.row_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="row-controls-dropdown collapsed"><a href="#" class="edit-row">'+ string_translation.edit +'</a><a href="#" class="duplicate-row">'+ string_translation.duplicate +'</a><hr><a href="#" class="move-row" data-move="up">'+ string_translation.move_up +'</a><a href="#" class="move-row" data-move="down">'+ string_translation.move_down +'</a><a href="#" class="move-row" data-move="top">'+ string_translation.move_top +'</a><a href="#" class="move-row" data-move="bottom">'+ string_translation.move_bottom +'</a><hr><a href="#" class="delete-row">'+ string_translation.delete +'</a></div><a href="#" class="control-icon edit-row" title="'+ string_translation.row_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div><a href="#" class="fsn-add-row" title="'+ string_translation.row_add +'"><i class="material-icons md-18">&#xE147;</i></a></div><div class="row-wrapper"><div class="row">'+ content +'</div></div></div>';
 	return output;
 }
 
@@ -122,7 +122,7 @@ function fsnGetColumn(colsize, content) {
 	if (content == undefined) {
 		var content = '';
 	}
-	var output = '<div class="col-sm-'+ colsize +'" data-width="'+ colsize +'"><div class="column-container clearfix"><div class="column-header"><div class="column-controls"><span class="column-controls-toggle" title="Column Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="column-controls-dropdown collapsed"><a href="#" class="edit-col">Edit</a><a href="#" class="delete-col">Delete</a></div><a href="#" class="control-icon edit-col" title="Edit Column"><i class="material-icons md-18">&#xE3C9;</i></a></div><h3 class="column-title"><span class="column-width">'+ colsize +'</span> / 12</h3></div><div class="column-wrapper">'+ content +'</div><a href="#" class="fsn-add-element" data-container="column" title="Add Element"><i class="material-icons md-18">&#xE147;</i></a></div></div>';
+	var output = '<div class="col-sm-'+ colsize +'" data-width="'+ colsize +'"><div class="column-container clearfix"><div class="column-header"><div class="column-controls"><span class="column-controls-toggle" title="'+ string_translation.column_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="column-controls-dropdown collapsed"><a href="#" class="edit-col">'+ string_translation.edit +'</a><a href="#" class="delete-col">'+ string_translation.delete +'</a></div><a href="#" class="control-icon edit-col" title="'+ string_translation.column_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div><h3 class="column-title"><span class="column-width">'+ colsize +'</span> / 12</h3></div><div class="column-wrapper">'+ content +'</div><a href="#" class="fsn-add-element" data-container="column" title="'+ string_translation.element_add +'"><i class="material-icons md-18">&#xE147;</i></a></div></div>';
 	return output;
 }
 
@@ -133,7 +133,7 @@ function fsnGetTabs(content) {
 	}
 	var tab1ID = fsnUniqid('tab-');
 	var tab2ID = fsnUniqid('tab-');
-	var output = '<div class="tabs-container"><div class="tabs-header"><div class="tabs-controls"><span class="tabs-controls-toggle" title="Tabs Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="tabs-controls-dropdown collapsed"><a href="#" class="edit-tabs">Edit</a><a href="#" class="duplicate-tabs">Duplicate</a><a href="#" class="delete-tabs">Delete</a></div><a href="#" class="control-icon edit-tabs" title="Edit Tabs"><i class="material-icons md-18">&#xE3C9;</i></a></div><h3 class="tabs-title">Tabs</h3></div><div class="tabs-wrapper"><div class="tabs-nav"><ul class="nav nav-tabs"><li class="active"><a href="#'+ tab1ID +'" data-toggle="tab">Tab 1</a></li><li><a href="#'+ tab2ID +'" data-toggle="tab">Tab 2</a></li><li><a href="#" class="fsn-add-tab" title="Add Tab"><i class="material-icons md-18">&#xE147;</i></a></li></ul></div><div class="tab-content">'+ fsnGetTab('Tab 1', tab1ID, true) + fsnGetTab('Tab 2', tab2ID) +'</div></div></div>';
+	var output = '<div class="tabs-container"><div class="tabs-header"><div class="tabs-controls"><span class="tabs-controls-toggle" title="'+ string_translation.tabs_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="tabs-controls-dropdown collapsed"><a href="#" class="edit-tabs">'+ string_translation.edit +'</a><a href="#" class="duplicate-tabs">'+ string_translation.duplicate +'</a><a href="#" class="delete-tabs">'+ string_translation.delete +'</a></div><a href="#" class="control-icon edit-tabs" title="'+ string_translation.tabs_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div><h3 class="tabs-title">'+ string_translation.tabs_title +'</h3></div><div class="tabs-wrapper"><div class="tabs-nav"><ul class="nav nav-tabs"><li class="active"><a href="#'+ tab1ID +'" data-toggle="tab">'+ string_translation.tab_1_title +'</a></li><li><a href="#'+ tab2ID +'" data-toggle="tab">'+ string_translation.tab_2_title +'</a></li><li><a href="#" class="fsn-add-tab" title="'+ string_translation.tab_add +'"><i class="material-icons md-18">&#xE147;</i></a></li></ul></div><div class="tab-content">'+ fsnGetTab(string_translation.tab_1_title, tab1ID, true) + fsnGetTab(string_translation.tab_2_title, tab2ID) +'</div></div></div>';
 	return output;
 }
 
@@ -151,7 +151,7 @@ function fsnGetTab(title, tabID, active, content) {
 	if (content == undefined) {
 		var content = '';
 	}
-	var output = '<div class="tab-pane'+ (active === true ? ' active' : '') +'" id="'+ tabID +'"><div class="tab-container" data-tab-title="'+ title +'" data-tab-id="'+ tabID +'"><div class="tab-header"><div class="tab-controls"><span class="tab-controls-toggle" title="Tab Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="tab-controls-dropdown collapsed"><a href="#" class="edit-tab">Edit</a><a href="#" class="duplicate-tab">Duplicate</a><a href="#" class="delete-tab">Delete</a></div><a href="#" class="control-icon edit-tab" title="Edit Tab"><i class="material-icons md-18">&#xE3C9;</i></a></div></div><div class="tab-wrapper"><div class="tab">'+ content +'</div></div><a href="#" class="fsn-add-element" data-container="tab" title="Add Element"><i class="material-icons md-18">&#xE147;</i></a></div></div>';
+	var output = '<div class="tab-pane'+ (active === true ? ' active' : '') +'" id="'+ tabID +'"><div class="tab-container" data-tab-title="'+ title +'" data-tab-id="'+ tabID +'"><div class="tab-header"><div class="tab-controls"><span class="tab-controls-toggle" title="'+ string_translation.tab_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="tab-controls-dropdown collapsed"><a href="#" class="edit-tab">'+ string_translation.edit +'</a><a href="#" class="duplicate-tab">'+ string_translation.duplicate +'</a><a href="#" class="delete-tab">'+ string_translation.delete +'</a></div><a href="#" class="control-icon edit-tab" title="'+ string_translation.tab_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div></div><div class="tab-wrapper"><div class="tab">'+ content +'</div></div><a href="#" class="fsn-add-element" data-container="tab" title="'+ string_translation.element_add +'"><i class="material-icons md-18">&#xE147;</i></a></div></div>';
 	return output;
 }
 
@@ -160,7 +160,7 @@ function fsnGetElement(type, name, content) {
 	if (content == undefined || content === '<br />\n') {
 		var content = '';		
 	}
-	var output = '<div class="fsn-element '+ type +'" data-shortcode-tag="'+ type +'"><div class="element-controls"><span class="element-controls-toggle" title="Element Options"><i class="material-icons md-18">&#xE5D3;</i></span><div class="element-controls-dropdown collapsed"><a href="#" class="edit-element">Edit</a><a href="#" class="duplicate-element">Duplicate</a><a href="#" class="delete-element">Delete</a></div><a href="#" class="control-icon edit-element" title="Edit Element"><i class="material-icons md-18">&#xE3C9;</i></a></div><div class="element-label" title="'+ name +'">'+ name +'</div><div class="element-text-holder">'+ content +'</div></div>';
+	var output = '<div class="fsn-element '+ type +'" data-shortcode-tag="'+ type +'"><div class="element-controls"><span class="element-controls-toggle" title="'+ string_translation.element_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="element-controls-dropdown collapsed"><a href="#" class="edit-element">'+ string_translation.edit +'</a><a href="#" class="duplicate-element">'+ string_translation.duplicate +'</a><a href="#" class="delete-element">'+ string_translation.delete +'</a></div><a href="#" class="control-icon edit-element" title="'+ string_translation.element_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div><div class="element-label" title="'+ name +'">'+ name +'</div><div class="element-text-holder">'+ content +'</div></div>';
 	return output;		
 }
 
@@ -283,7 +283,7 @@ function fsnInitUIevents(instance) {
 			//update content
 			fsnUpdateContent(instance);
 			if (instance.is(':empty')) {
-				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text')));
+				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', string_translation.text_label)));
 				instance.empty().append(fsnInitContent);
 				//reinit sortables and resizables
 				initSortables(instance);
@@ -462,9 +462,9 @@ function fsnInitUIevents(instance) {
 		var tabsNav = trigger.closest('.nav-tabs');
 		var targetTabs = trigger.closest('.tabs-container');
 		var newTabID = fsnUniqid('tab-');
-		var newTab = fsnGetTab('New Tab', newTabID, true);
+		var newTab = fsnGetTab(string_translation.tab_new, newTabID, true);
 		targetTabs.find('.tab-content').append(newTab);
-		trigger.parent('li').before('<li><a href="#'+ newTabID +'" data-toggle="tab">New Tab</a></li>');
+		trigger.parent('li').before('<li><a href="#'+ newTabID +'" data-toggle="tab">'+ string_translation.tab_new +'</a></li>');
 		//reinit sortables and resizables
 		initSortables(instance);
 		initResizables(instance);
@@ -593,7 +593,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -661,7 +661,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -757,7 +757,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -847,7 +847,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -937,7 +937,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -1031,7 +1031,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -1200,7 +1200,7 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
@@ -1227,9 +1227,9 @@ function fsnInitUIevents(instance) {
 				jQuery.post(ajaxurl, savedata, function(response) {
 					modalSelector.find('.notice').remove();
 					if (response.status == 'success') {
-						modalSelector.find('.modal-body').prepend('<div class="notice notice-success is-dismissible"><p>Template Saved Successfully.</p><button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button></div>');
+						modalSelector.find('.modal-body').prepend('<div class="notice notice-success is-dismissible"><p>'+ string_translation.template_save_success +'</p><button class="notice-dismiss" type="button"><span class="screen-reader-text">'+ string_translation.notice_dismiss +'</span></button></div>');
 					} else if (response.status == 'error') {
-						modalSelector.find('.modal-body').prepend('<div class="notice notice-error is-dismissible"><p>There was an error saving the template. Please try again.</p><button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button></div>');
+						modalSelector.find('.modal-body').prepend('<div class="notice notice-error is-dismissible"><p>'+ string_translation.template_save_error +'</p><button class="notice-dismiss" type="button"><span class="screen-reader-text">'+ string_translation.notice_dismiss +'</span></button></div>');
 					}
 				});		
 			});
@@ -1260,14 +1260,14 @@ function fsnInitUIevents(instance) {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
 			var modalSelector = jQuery('#load_template_modal');
-			modalSelector.modal();			
+			modalSelector.modal();
 			//template options
 			modalSelector.on('shown.bs.modal', function(e) {
 				jQuery(this).on('click', '.template-controls-toggle', function(e) {
@@ -1293,7 +1293,7 @@ function fsnInitUIevents(instance) {
 				};
 				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
-						alert('Oops, something went wrong. Please reload the page and try again.');
+						alert(string_translation.error);
 						return false;
 					}
 					//hide modal					
@@ -1339,7 +1339,7 @@ function fsnInitUIevents(instance) {
 				};
 				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
-						alert('Oops, something went wrong. Please reload the page and try again.');
+						alert(string_translation.error);
 						return false;
 					}
 					//remove item
@@ -1347,11 +1347,11 @@ function fsnInitUIevents(instance) {
 						templateItem.fadeOut(300, function() {
 							jQuery(this).remove();
 							if (jQuery('.template-item').length == 0) {
-								modalSelector.find('.modal-body').append('<p>There are no saved templates remaining.</p>');
+								modalSelector.find('.modal-body').append('<p>'+ string_translation.template_delete_all +'</p>');
 							}
 						});
 					} else {
-						alert('There was an error deleting the template. Please try again.');
+						alert(string_translation.template_delete_error);
 					}
 				});		
 			});
@@ -1360,7 +1360,7 @@ function fsnInitUIevents(instance) {
 				e.preventDefault();
 				var loadMoreBtn = jQuery(this);
 				var nextPage = (loadMoreBtn.data('paged') !== undefined) ? parseInt(loadMoreBtn.data('paged')) : 2;
-				var postsPerPage = 20;
+				var postsPerPage = 2;
 				var totalPosts = parseInt(loadMoreBtn.data('total'));
 				var totalPages = Math.ceil(totalPosts/postsPerPage);
 				
@@ -1374,13 +1374,13 @@ function fsnInitUIevents(instance) {
 				};
 				jQuery.post(ajaxurl, data, function(response) {
 					if (response == '-1') {
-						alert('Oops, something went wrong. Please reload the page and try again.');
+						alert(string_translation.error);
 						return false;
 					}
 					//load tempaltes
 					var output = '';
 					for (i=0; i < response.items.length; i++) {
-						output += '<div class="template-item" data-template-id="'+ response.items[i].id +'"><span class="template-name">'+ response.items[i].text +'</span><span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span><div class="template-controls-dropdown collapsed"><a href="#" class="delete-template">Delete</a></div></div>';
+						output += '<div class="template-item" data-template-id="'+ response.items[i].id +'"><span class="template-name">'+ response.items[i].text +'</span><span class="template-controls-toggle" title="'+ string_translation.template_options +'"><i class="material-icons">&#xE5D3;</i></span><div class="template-controls-dropdown collapsed"><a href="#" class="delete-template">'+ string_translation.delete +'</a></div></div>';
 					}
 					loadMoreBtn.before(output);
 					//increment page
@@ -1410,7 +1410,7 @@ function fsnAddColFields(instance) {
 		var spaceAvailable = col.attr('data-offset');
 		var spaceAvailableWidth = (parseInt(col.css('margin-left')) - 8);
 		var addColLeft = ( col.offset().left - col.closest('.row').offset().left ) - spaceAvailableWidth - 4;
-		col.before('<div class="fsn-add-col" style="width:'+ spaceAvailableWidth +'px; left:'+ addColLeft +'px;" data-width="'+ spaceAvailable +'" title="Add Column"><i class="material-icons md-18">&#xE147;</i></div>');
+		col.before('<div class="fsn-add-col" style="width:'+ spaceAvailableWidth +'px; left:'+ addColLeft +'px;" data-width="'+ spaceAvailable +'" title="'+ string_translation.column_add +'"><i class="material-icons md-18">&#xE147;</i></div>');
 	});
 	//after last col
 	var rows = instance.find('.row');
@@ -1436,7 +1436,7 @@ function fsnAddColFields(instance) {
 			spaceAvailable = 12 - usedSpace;
 			spaceAvailableWidth = (jQuery(this).width() / 12) * spaceAvailable - 8;
 			addColLeft = (jQuery(this).width() / 12) * usedSpace + 4;
-			jQuery(this).append('<div class="fsn-add-col" style="width:'+ spaceAvailableWidth +'px; left:'+ addColLeft +'px;" data-width="'+ spaceAvailable +'" title="Add Column"><i class="material-icons md-18">&#xE147;</i></div>');
+			jQuery(this).append('<div class="fsn-add-col" style="width:'+ spaceAvailableWidth +'px; left:'+ addColLeft +'px;" data-width="'+ spaceAvailable +'" title="'+ string_translation.column_add +'"><i class="material-icons md-18">&#xE147;</i></div>');
 		}
 	});
 	//init tooltips
@@ -2031,7 +2031,7 @@ jQuery(document).ready(function() {
 		    },
 		    function( response ) {
 			    if (response == '-1') {
-					alert('Oops, something went wrong. Please reload the page and try again.');
+					alert(string_translation.error);
 					return false;
 				}
 		        jQuery('body').append(response);
@@ -2246,7 +2246,7 @@ jQuery(document).ready(function() {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			customListItemsContainer.append(response);
@@ -2463,7 +2463,7 @@ function fsnInitPostSelect() {
 			minimumInputLength: 1,
 			language: {
 				inputTooShort: function(args) {
-					return 'Start typing to search...';
+					return string_translation.search;
 				}
 			}
 		});
@@ -3059,7 +3059,7 @@ function launchComponentsModal(id) {
 	};
 	jQuery.post(ajaxurl, data, function(response) {
 		if (response == '-1') {
-			alert('Oops, something went wrong. Please reload the page and try again.');
+			alert(string_translation.error);
 			return false;
 		}
 		//append modal to body
@@ -3071,7 +3071,7 @@ function launchComponentsModal(id) {
 		componentsModal.on('shown.bs.modal', function(e) {
 			var componentInterfaceGrid = componentsModal.find('.fsn-interface-grid');
 			if (componentInterfaceGrid.is(':empty')) {
-				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', 'Text')));
+				var fsnInitContent = fsnGetRow(fsnGetColumn(12, fsnGetElement('fsn_text', string_translation.text_label)));
 				componentInterfaceGrid.empty().append(fsnInitContent);
 			}
 			fsnInitUIevents(componentInterfaceGrid);
@@ -3116,7 +3116,7 @@ jQuery(document).ready(function() {
 		};
 		jQuery.post(ajaxurl, data, function(response) {
 			if (response == '-1') {
-				alert('Oops, something went wrong. Please reload the page and try again.');
+				alert(string_translation.error);
 				return false;
 			}
 			//update message
@@ -3177,7 +3177,7 @@ jQuery(document).ready(function() {
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if (response == '-1') {
-					alert('Oops, something went wrong. Please reload the page and try again.');
+					alert(string_translation.error);
 					return false;
 				}
 				if (targetField.siblings('.image-field-preview').length != 0) {
@@ -3226,7 +3226,7 @@ jQuery(document).ready(function() {
 			};
 			jQuery.post(ajaxurl, data, function(response) {
 				if (response == '-1') {
-					alert('Oops, something went wrong. Please reload the page and try again.');
+					alert(string_translation.error);
 					return false;
 				}
 				if (targetField.siblings('.video-field-preview').length != 0) {

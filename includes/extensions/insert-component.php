@@ -21,7 +21,7 @@ function fsn_init_insert_component_element() {
 	if (function_exists('fsn_map')) {
 		
 		fsn_map(array(
-			'name' => 'Component',
+			'name' => __('Component', 'fusion'),
 			'shortcode_tag' => 'fsn_component',
 			'description' => __('Insert a Component. Components are re-usable Rows/Elements that can be placed anywhere throughout the site and are useful for pieces of a layout that will be repeated across several different pages.', 'fusion'),
 			'icon' => 'widgets',

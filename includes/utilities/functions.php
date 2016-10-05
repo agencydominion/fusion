@@ -259,10 +259,10 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 function fsn_get_image_sizes() {
 	$image_sizes = get_intermediate_image_sizes();
 	$image_sizes_array = array();
-	$image_sizes_array[''] = 'Choose image size.';
-	$image_sizes_array['full'] = 'Full';
+	$image_sizes_array[''] = __('Choose image size.', 'fusion');
+	$image_sizes_array['full'] = __('Full Size', 'fusion');
 	foreach ($image_sizes as $image_size) {
-		$image_sizes_array[$image_size] = ucwords(str_replace(array('-','_'), ' ', $image_size));
+		$image_sizes_array[$image_size] = __(ucwords(str_replace(array('-','_'), ' ', $image_size)), 'fusion');
 	}
 	$image_sizes_array = apply_filters('fsn_selectable_image_sizes', $image_sizes_array);
 	

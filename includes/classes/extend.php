@@ -75,13 +75,13 @@ class FusionCoreExtend	{
 		$element_label = !empty($atts['element_label']) ? FusionCore::decode_custom_entities($atts['element_label']) : $this->name;
 		$output = '<div class="fsn-element '. esc_attr($this->shortcode_tag) .'" data-shortcode-tag="'. esc_attr($this->shortcode_tag) .'">';
 			$output .= '<div class="element-controls">';
-				$output .= '<span class="element-controls-toggle" title="Element Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+				$output .= '<span class="element-controls-toggle" title="'. __('Element Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 				$output .= '<div class="element-controls-dropdown collapsed">';
 					$output .= '<a href="#" class="edit-element">'. __('Edit', 'fusion') .'</a>';
 					$output .= '<a href="#" class="duplicate-element">'. __('Duplicate', 'fusion') .'</a>';
 					$output .= '<a href="#" class="delete-element">'. __('Delete', 'fusion') .'</a>';
 				$output .= '</div>';
-				$output .= '<a href="#" class="control-icon edit-element" title="Edit Element"><i class="material-icons md-18">&#xE3C9;</i></a>';
+				$output .= '<a href="#" class="control-icon edit-element" title="'. __('Edit Element', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 			$output .= '</div>';
 			$output .= '<div class="element-label" title="'. esc_attr($this->name) . '">'. esc_html($element_label) . '</div>';
 			$output .= '<div class="element-text-holder"'. (!empty($shortcode_atts_data) ? $shortcode_atts_data : '') .'>';
@@ -240,7 +240,7 @@ class FusionCoreExtend	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>

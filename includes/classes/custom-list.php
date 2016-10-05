@@ -90,9 +90,9 @@ class FusionCoreCustomList	{
 			$input .= '<input type="hidden" class="form-control element-input content-field custom-list-items" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
 
 		    //add item button
-		    $input .= '<a href="#" class="button add-custom-list-item">Add Item</a>';
-		    $input .= '<a href="#" class="button expand-all-list-items">Expand All</a>';
-		    $input .= '<a href="#" class="button collapse-all-list-items">Collapse All</a>';
+		    $input .= '<a href="#" class="button add-custom-list-item">'. __('Add Item', 'fusion') .'</a>';
+		    $input .= '<a href="#" class="button expand-all-list-items">'. __('Expand All', 'fusion') .'</a>';
+		    $input .= '<a href="#" class="button collapse-all-list-items">'. __('Collapse All', 'fusion') .'</a>';
 		}
 		
 		return $input;
@@ -141,8 +141,8 @@ class FusionCoreCustomList	{
 						echo FusionCore::get_input_field($param, $param_value);
 					echo '</div>';
 				}
-				echo '<a href="#" class="collapse-custom-list-item">collapse</a>';
-	    		echo '<a href="#" class="remove-custom-list-item">remove</a>';
+				echo '<a href="#" class="collapse-custom-list-item">'. __('collapse', 'fusion') .'</a>';
+	    		echo '<a href="#" class="remove-custom-list-item">'. __('remove', 'fusion') .'</a>';
 			echo '</div>';
 		echo '</div>';
 		exit;
@@ -216,8 +216,8 @@ class FusionCoreCustomList	{
 							$output .= FusionCore::get_input_field($param, $param_value);
 						$output .= '</div>';
 					}
-		    		$output .= '<a href="#" class="collapse-custom-list-item">expand</a>';
-		    		$output .= '<a href="#" class="remove-custom-list-item">remove</a>';
+		    		$output .= '<a href="#" class="collapse-custom-list-item">'. __('expand', 'fusion') .'</a>';
+		    		$output .= '<a href="#" class="remove-custom-list-item">'. __('remove', 'fusion') .'</a>';
 	    		$output .= '</div>';
 			$output .= '</div>';
 		} else {
