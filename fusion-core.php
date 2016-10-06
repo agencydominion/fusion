@@ -215,9 +215,30 @@ class FusionCore	{
 				'template_delete_error' => __('There was an error deleting the template. Please try again.', 'fusion'),
 				'template_delete_all' => __('There are no saved templates remaining.', 'fusion'),
 				'template_options' => __('Template Options', 'fusion'),
+				'custom_list_item_collapse' => __('collapse', 'fusion'),
+				'custom_list_item_expand' => __('expand', 'fusion'),
 				'notice_dismiss' => __('Dismiss this notice.', 'fusion'),
+				'button_summary_type' => __('Type', 'fusion'),
+				'button_summary_external' => __('External Link', 'fusion'),
+				'button_summary_internal' => __('Internal Link', 'fusion'),
+				'button_summary_collapse' => __('Collapse', 'fusion'),
+				'button_summary_modal' => __('Modal', 'fusion'),
+				'button_summary_link' => __('Links to', 'fusion'),
+				'button_summary_label' => __('Label', 'fusion'),
+				'button_summary_target' => __('Opens in', 'fusion'),
+				'button_summary_target_blank' => __('New Window / Tab', 'fusion'),
+				'button_summary_target_parent' => __('Parent Frame', 'fusion'),
+				'button_summary_target_top' => __('Full Body of the Window', 'fusion'),
+				'button_summary_target_default' => __('Current Window / Tab', 'fusion'),
+				'button_summary_opens' => __('Opens', 'fusion'),
+				'button_summary_collapse_show' => __('Show Label', 'fusion'),
+				'button_summary_collapse_hide' => __('Hide Label', 'fusion'),
+				'media_image_select' => __('Select Image', 'fusion'),
+				'media_image_use' => __('Use This Image', 'fusion'),
+				'media_video_select' => __('Select Video', 'fusion'),
+				'media_video_use' => __('Use This Video', 'fusion')
 			);
-			wp_localize_script('fsn_core_admin', 'string_translation', $translation_array);
+			wp_localize_script('fsn_core_admin', 'fsnL10n', $translation_array);
 		}
 		//select2
 		wp_enqueue_script('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/js/select2.min.js', array('jquery'), '4.0.3', true);
@@ -894,12 +915,12 @@ class FusionCore	{
 		$nesting_level = intval($_POST['nesting_level']);
 		$tabs_nesting_level = intval($_POST['tabs_nesting_level']);
 		?>
-		<div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Add Element', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Add Element', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<div class="element-grid">
@@ -1084,12 +1105,12 @@ class FusionCore	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Row', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Row', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
@@ -1225,12 +1246,12 @@ class FusionCore	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Column', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Column', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
@@ -1386,7 +1407,7 @@ class FusionCore	{
 			case 'select_post':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<select class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="'. (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post' ) .'">';
+				$input .= '<select class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="'. (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post' ) .'" data-placeholder="'. __('Choose an Option.', 'fusion') .'">';
 					$input .= '<option></option>';
 					if (!empty($param_value)) {
 						$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
@@ -1409,7 +1430,7 @@ class FusionCore	{
 			case 'colorpicker':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="text" class="form-control element-input ad-color-picker'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';				
+				$input .= '<input type="text" class="form-control element-input fsn-color-picker'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';				
 				break;
 			case 'image':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
@@ -1689,13 +1710,13 @@ class FusionCore	{
 				}
 				if (!empty($attached_items)) {
 					$result['items'][] = array(
-						'text' => 'Items Attached to this Post',
+						'text' => __('Items Attached to this Post', 'fusion'),
 						'children' => $attached_items
 					);
 				}
 				if (!empty($nonattached_items)) {
 					$result['items'][] = array(
-						'text' => 'Other Items',
+						'text' => __('Other Items', 'fusion'),
 						'children' => $nonattached_items
 					);
 				}

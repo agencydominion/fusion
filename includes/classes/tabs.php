@@ -312,12 +312,12 @@ class FusionCoreTabs	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Edit Tabs', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tabs', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
@@ -425,12 +425,12 @@ class FusionCoreTabs	{
 			}
 		}
 		?>
-		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Edit Tab', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tab', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">						
 						<form role="form">							

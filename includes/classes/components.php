@@ -159,9 +159,9 @@ class FusionCoreComponents	{
 			
 		$component_id = intval($_POST['component_id']);
 		?>
-		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
-				<span class="components-modal-close" data-dismiss="modal" aria-label="Close">&times;</span>
+				<span class="components-modal-close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>">&times;</span>
 				<div id="components-modal-inner">
 					<h2><?php _e('Add / Edit Post Component', 'fusion'); ?></h2>
 					<form id="edit_component" method="post">
@@ -273,7 +273,7 @@ class FusionCoreComponents	{
 				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" class="component modal fade">';
 					echo '<div class="modal-component-inner container">';
 						echo '<div class="modal-component-controls clearfix">';
-							echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="material-icons md-48">&#xE5CD;</i></button>';
+							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><i class="material-icons md-48">&#xE5CD;</i></button>';
 						echo '</div>';
 						echo do_shortcode('[fsn_component component_id="'. esc_attr($attached_modal) .'"]');
 					echo '</div>';

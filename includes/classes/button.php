@@ -49,7 +49,7 @@ class FusionCoreButtonModal	{
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title"><?php _e('Button', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<form role="form">
