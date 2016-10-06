@@ -2464,6 +2464,9 @@ function fsnInitPostSelect() {
 				inputTooShort: function(args) {
 					return fsnL10n.search;
 				}
+			},
+			escapeMarkup: function (text) {
+				return text;
 			}
 		});
 	});	
