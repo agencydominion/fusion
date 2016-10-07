@@ -90,9 +90,9 @@ class FusionCoreCustomList	{
 			$input .= '<input type="hidden" class="form-control element-input content-field custom-list-items" name="'. $param['param_name'] .'" value="'. esc_attr($param_value) .'">';
 
 		    //add item button
-		    $input .= '<a href="#" class="button add-custom-list-item">Add Item</a>';
-		    $input .= '<a href="#" class="button expand-all-list-items">Expand All</a>';
-		    $input .= '<a href="#" class="button collapse-all-list-items">Collapse All</a>';
+		    $input .= '<a href="#" class="button add-custom-list-item">'. __('Add Item', 'fusion') .'</a>';
+		    $input .= '<a href="#" class="button expand-all-list-items">'. __('Expand All', 'fusion') .'</a>';
+		    $input .= '<a href="#" class="button collapse-all-list-items">'. __('Collapse All', 'fusion') .'</a>';
 		}
 		
 		return $input;
@@ -120,7 +120,7 @@ class FusionCoreCustomList	{
 			echo '<div class="custom-list-item-details">';				
 				foreach($params as $param) {
 					$param_value = '';
-					$param['param_name'] = $param['param_name']. '-paramid'. $uniqueID;
+					$param['param_name'] = (!empty($param['param_name']) ? $param['param_name'] : '') . '-paramid'. $uniqueID;
 					$param['nested'] = true;
 					//check for dependency
 					$dependency = !empty($param['dependency']) ? true : false;
@@ -141,8 +141,8 @@ class FusionCoreCustomList	{
 						echo FusionCore::get_input_field($param, $param_value);
 					echo '</div>';
 				}
-				echo '<a href="#" class="collapse-custom-list-item">collapse</a>';
-	    		echo '<a href="#" class="remove-custom-list-item">remove</a>';
+				echo '<a href="#" class="collapse-custom-list-item">'. __('collapse', 'fusion') .'</a>';
+	    		echo '<a href="#" class="remove-custom-list-item">'. __('remove', 'fusion') .'</a>';
 			echo '</div>';
 		echo '</div>';
 		exit;
@@ -163,6 +163,7 @@ class FusionCoreCustomList	{
 		$parent_shortcode = $fsn_custom_lists[$list_id]['parent'];
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -175,18 +176,22 @@ class FusionCoreCustomList	{
 			$output .= '<div class="custom-list-item collapse-active">';					
 				$output .= '<div class="custom-list-item-details">';
 					foreach($fsn_custom_lists[$list_id]['params'] as $param) {
-						$param_name = $param['param_name'];
-						if (array_key_exists($param_name, $atts)) {
-							$param_value = stripslashes($atts[$param_name]);
-							if ($param['encode_base64'] == true) {
-								$param_value = wp_strip_all_tags($param_value);
-								$param_value = htmlentities(base64_decode($param_value));
-							} else if ($param['encode_url'] == true) {
-								$param_value = wp_strip_all_tags($param_value);
-								$param_value = urldecode($param_value);
+						if (!empty($param['param_name'])) {
+							$param_name = $param['param_name'];
+							if (array_key_exists($param_name, $atts)) {
+								$param_value = stripslashes($atts[$param_name]);
+								if (!empty($param['encode_base64'])) {
+									$param_value = wp_strip_all_tags($param_value);
+									$param_value = htmlentities(base64_decode($param_value));
+								} else if (!empty($param['encode_url'])) {
+									$param_value = wp_strip_all_tags($param_value);
+									$param_value = urldecode($param_value);
+								}
+								//decode custom entities
+								$param_value = FusionCore::decode_custom_entities($param_value);
+							} else {
+								$param_value = '';
 							}
-							//decode custom entities
-							$param_value = FusionCore::decode_custom_entities($param_value);
 						} else {
 							$param_value = '';
 						}
@@ -211,8 +216,8 @@ class FusionCoreCustomList	{
 							$output .= FusionCore::get_input_field($param, $param_value);
 						$output .= '</div>';
 					}
-		    		$output .= '<a href="#" class="collapse-custom-list-item">expand</a>';
-		    		$output .= '<a href="#" class="remove-custom-list-item">remove</a>';
+		    		$output .= '<a href="#" class="collapse-custom-list-item">'. __('expand', 'fusion') .'</a>';
+		    		$output .= '<a href="#" class="remove-custom-list-item">'. __('remove', 'fusion') .'</a>';
 	    		$output .= '</div>';
 			$output .= '</div>';
 		} else {

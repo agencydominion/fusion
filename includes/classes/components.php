@@ -124,15 +124,15 @@ class FusionCoreComponents	{
 			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
 			$input .= '<div class="component-select">';
-				$input .= '<select data-placeholder="Choose a Component." class="form-control element-input select2-posts-element'. ($param['nested'] == true ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
+				$input .= '<select data-placeholder="'. __('Choose a Component.', 'fusion') .'" class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
 				$input .= '<option></option>';
 				if (!empty($param_value)) {
 					$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
 				}
 				$input .= '</select>';
 			$input .= '</div>';
-			$input .= '<a href="#" class="button component-add-new">Add New</a>';
-			$input .= '<a href="#" class="button component-edit">Edit Selected</a>';
+			$input .= '<a href="#" class="button component-add-new">'. __('Add New', 'fusion') .'</a>';
+			$input .= '<a href="#" class="button component-edit">'. __('Edit Selected', 'fusion') .'</a>';
 		}
 		
 		return $input;
@@ -159,17 +159,17 @@ class FusionCoreComponents	{
 			
 		$component_id = intval($_POST['component_id']);
 		?>
-		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
-				<span class="components-modal-close" data-dismiss="modal" aria-label="Close">&times;</span>
+				<span class="components-modal-close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>">&times;</span>
 				<div id="components-modal-inner">
-					<h2>Add / Edit Post Component</h2>
+					<h2><?php _e('Add / Edit Post Component', 'fusion'); ?></h2>
 					<form id="edit_component" method="post">
 						<?php
-						echo '<input type="text" id="component_title" name="component_title" '. (!empty($component_id) ? 'value="'. get_the_title($component_id) .'"' : 'value="" placeholder="New Component"') .'>';
+						echo '<input type="text" id="component_title" name="component_title" '. (!empty($component_id) ? 'value="'. get_the_title($component_id) .'"' : 'value="" placeholder="'. __('New Component', 'fusion') .'"') .'>';
 						echo '<input type="hidden" name="component_id" value="'. (!empty($component_id) ? esc_attr($component_id) : '') .'">';
 						echo '<div class="fsn-main-controls">';
-							echo '<p class="description">Click the "Save" button below to save changes to this Component.</p>';
+							echo '<p class="description">'. __('Click the "Save" button below to save changes to this Component.', 'fusion') .'</p>';
 							echo '<a href="#" class="button fsn-save-template">'. __('Save Template', 'fusion') .'</a>';
 							echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">'. __('Load Template', 'fusion') .'</a>';
 							//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
@@ -228,10 +228,10 @@ class FusionCoreComponents	{
 				'post_content' => $component_content
 			));
 			if (!empty($updated_component_id)) {
-				$notice = 'Component updated.';
+				$notice = __('Component updated.', 'fusion');
 				$notice_class = 'notice-success';
 			} else {
-				$notice = 'Error updating component. Please try again.';
+				$notice = __('Error updating component. Please try again.', 'fusion');
 				$notice_class = 'notice-error';
 			}
 		} else {
@@ -243,15 +243,15 @@ class FusionCoreComponents	{
 				'post_parent' => $post_id
 			));
 			if (!empty($new_component_id))	{
-				$notice = 'Component created.';	
+				$notice = __('Component created.', 'fusion');	
 				$notice_class = 'notice-success';
 			} else {
-				$notice = 'Error creating component. Please try again.';
+				$notice = __('Error creating component. Please try again.', 'fusion');
 				$notice_class = 'notice-error';
 			}
 		}
 		
-		echo '<div class="notice '. esc_attr($notice_class) .' is-dismissible"'. (!empty($new_component_id) ? ' data-new-component-id="'. esc_attr($new_component_id) .'"' : '') .'><p>'. $notice .' <a href="#" data-dismiss="modal">Done Editing</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
+		echo '<div class="notice '. esc_attr($notice_class) .' is-dismissible"'. (!empty($new_component_id) ? ' data-new-component-id="'. esc_attr($new_component_id) .'"' : '') .'><p>'. $notice .' <a href="#" data-dismiss="modal">'. __('Done Editing', 'fusion') .'</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">'. __('Dismiss this notice.', 'fusion') .'</span></button></div>';
 		
 		exit;
 	}
@@ -273,7 +273,7 @@ class FusionCoreComponents	{
 				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" class="component modal fade">';
 					echo '<div class="modal-component-inner container">';
 						echo '<div class="modal-component-controls clearfix">';
-							echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="material-icons md-48">&#xE5CD;</i></button>';
+							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><i class="material-icons md-48">&#xE5CD;</i></button>';
 						echo '</div>';
 						echo do_shortcode('[fsn_component component_id="'. esc_attr($attached_modal) .'"]');
 					echo '</div>';

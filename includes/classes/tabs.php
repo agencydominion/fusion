@@ -47,6 +47,7 @@ class FusionCoreTabs	{
 		$fsn_tab_counter = 0;
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -66,13 +67,13 @@ class FusionCoreTabs	{
 			$output .= '<div class="tabs-container"'. $shortcode_atts_data .'>';
 				$output .= '<div class="tabs-header">';
 					$output .= '<div class="tabs-controls">';
-						$output .= '<span class="tabs-controls-toggle" title="Tabs Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+						$output .= '<span class="tabs-controls-toggle" title="'. __('Tabs Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 						$output .= '<div class="tabs-controls-dropdown collapsed">';
 							$output .= '<a href="#" class="edit-tabs">'. __('Edit', 'fusion') .'</a>';
 							$output .= '<a href="#" class="duplicate-tabs">'. __('Duplicate', 'fusion') .'</a>';
 							$output .= '<a href="#" class="delete-tabs">'. __('Delete', 'fusion') .'</a>';
 						$output .= '</div>';
-						$output .= '<a href="#" class="control-icon edit-tabs" title="Edit Tabs"><i class="material-icons md-18">&#xE3C9;</i></a>';
+						$output .= '<a href="#" class="control-icon edit-tabs" title="'. __('Edit Tabs', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 					$output .= '</div>';
 					$output .= '<h3 class="tabs-title">'. __('Tabs', 'fusion') .'</h3>';
 				$output .= '</div>';
@@ -96,7 +97,7 @@ class FusionCoreTabs	{
 									$output .= '<li'. ($i == 0 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" data-toggle="tab">'. esc_html($tab_title) .'</a></li>';
 									$i++;
 								}
-								$output .= '<li><a href="#" class="fsn-add-tab" title="Add Tab"><i class="material-icons md-18">&#xE147;</i></a></li>';								
+								$output .= '<li><a href="#" class="fsn-add-tab" title="'. __('Add Tab', 'fusion') .'"><i class="material-icons md-18">&#xE147;</i></a></li>';								
 							$output .= '</ul>';
 						}
 					$output .= '</div>';
@@ -176,7 +177,7 @@ class FusionCoreTabs	{
 	public function tab_shortcode($atts, $content = null) {
 		
 		extract( shortcode_atts( array(
-			'tab_title' => 'Tab',
+			'tab_title' => __('Tab', 'fusion'),
 			'tab_id' => 'tab-'. uniqid(),
 			'custom_tab_id' => ''
 		), $atts ) );
@@ -185,6 +186,7 @@ class FusionCoreTabs	{
 		$fsn_tab_counter++;
 		
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -205,19 +207,19 @@ class FusionCoreTabs	{
 				$output .= '<div class="tab-container"'. $shortcode_atts_data .'>';
 					$output .= '<div class="tab-header">';
 						$output .= '<div class="tab-controls">';
-							$output .= '<span class="tab-controls-toggle" title="Tab Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+							$output .= '<span class="tab-controls-toggle" title="'. __('Tab Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 							$output .= '<div class="tab-controls-dropdown collapsed">';
 								$output .= '<a href="#" class="edit-tab">'. __('Edit', 'fusion') .'</a>';
 								$output .= '<a href="#" class="duplicate-tab">'. __('Duplicate', 'fusion') .'</a>';
 								$output .= '<a href="#" class="delete-tab">'. __('Delete', 'fusion') .'</a>';
 							$output .= '</div>';
-							$output .= '<a href="#" class="control-icon edit-tab" title="Edit Tab"><i class="material-icons md-18">&#xE3C9;</i></a>';
+							$output .= '<a href="#" class="control-icon edit-tab" title="'. __('Edit Tab', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 						$output .= '</div>';
 					$output .= '</div>';
 					$output .= '<div class="tab-wrapper">';
 						$output .= '<div class="tab">'. do_shortcode($content) .'</div>';
 					$output .= '</div>';
-					$output .= '<a href="#" class="fsn-add-element" data-container="tab" title="Add Element"><i class="material-icons md-18">&#xE147;</i></a>';
+					$output .= '<a href="#" class="fsn-add-element" data-container="tab" title="'. __('Add Element', 'fusion') .'"><i class="material-icons md-18">&#xE147;</i></a>';
 				$output .= '</div>';
 			$output .= '</div>';
 			
@@ -269,7 +271,7 @@ class FusionCoreTabs	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {
@@ -310,12 +312,12 @@ class FusionCoreTabs	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Edit Tabs', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tabs', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
@@ -338,23 +340,27 @@ class FusionCoreTabs	{
 										echo '<div role="tabpanel" class="tab-pane'. ($active_tab == true ? ' active' : '') .'" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'">';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
-												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
-													$param['content_field'] = true;
-												} elseif (empty($param['content_field'])) {
-													$param['content_field'] = false;
-												}
-												$data_attribute_name = str_replace('_', '-', $param['param_name']);
-												if ( array_key_exists($data_attribute_name, $saved_values) ) {
-													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if ($param['encode_base64'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if ($param['encode_url'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+												if (!empty($param['param_name'])) {
+													if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+														$param['content_field'] = true;
+													} elseif (empty($param['content_field'])) {
+														$param['content_field'] = false;
 													}
-													//decode custom entities
-													$param_value = FusionCore::decode_custom_entities($param_value);
+													$data_attribute_name = str_replace('_', '-', $param['param_name']);
+													if ( array_key_exists($data_attribute_name, $saved_values) ) {
+														$param_value = stripslashes($saved_values[$data_attribute_name]);
+														if (!empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+														//decode custom entities
+														$param_value = FusionCore::decode_custom_entities($param_value);
+													} else {
+														$param_value = '';
+													}
 												} else {
 													$param_value = '';
 												}
@@ -386,7 +392,7 @@ class FusionCoreTabs	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
@@ -410,7 +416,7 @@ class FusionCoreTabs	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 			
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {
@@ -419,12 +425,12 @@ class FusionCoreTabs	{
 			}
 		}
 		?>
-		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Edit Tab', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tab', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">						
 						<form role="form">							
@@ -450,18 +456,22 @@ class FusionCoreTabs	{
 							if (!empty($params)) {
 								foreach($params as $param) {
 									//check for saved values								
-									$data_attribute_name = str_replace('_', '-', $param['param_name']);								
-									if ( array_key_exists($data_attribute_name, $saved_values) ) {									
-										$param_value = stripslashes($saved_values[$data_attribute_name]);
-										if ($param['encode_base64'] == true) {
-											$param_value = wp_strip_all_tags($param_value);
-											$param_value = htmlentities(base64_decode($param_value));
-										} else if ($param['encode_url'] == true) {
-											$param_value = wp_strip_all_tags($param_value);
-											$param_value = urldecode($param_value);
+									if (!empty($param['param_name'])) {
+										$data_attribute_name = str_replace('_', '-', $param['param_name']);								
+										if ( array_key_exists($data_attribute_name, $saved_values) ) {									
+											$param_value = stripslashes($saved_values[$data_attribute_name]);
+											if (!empty($param['encode_base64'])) {
+												$param_value = wp_strip_all_tags($param_value);
+												$param_value = htmlentities(base64_decode($param_value));
+											} else if (!empty($param['encode_url'])) {
+												$param_value = wp_strip_all_tags($param_value);
+												$param_value = urldecode($param_value);
+											}
+											//decode custom entities
+											$param_value = FusionCore::decode_custom_entities($param_value);
+										} else {
+											$param_value = '';
 										}
-										//decode custom entities
-										$param_value = FusionCore::decode_custom_entities($param_value);
 									} else {
 										$param_value = '';
 									}
@@ -490,7 +500,7 @@ class FusionCoreTabs	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>

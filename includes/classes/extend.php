@@ -31,6 +31,7 @@ class FusionCoreExtend	{
 		do_action('fsn_extension_init', $this);
 			
 		//if running AJAX, get action being run
+		$ajax_action = false;
 		if (is_admin() || (defined('DOING_AJAX') && DOING_AJAX)) {
 			if (!empty($_POST['action'])) {
 				$ajax_action = sanitize_text_field($_POST['action']);
@@ -74,13 +75,13 @@ class FusionCoreExtend	{
 		$element_label = !empty($atts['element_label']) ? FusionCore::decode_custom_entities($atts['element_label']) : $this->name;
 		$output = '<div class="fsn-element '. esc_attr($this->shortcode_tag) .'" data-shortcode-tag="'. esc_attr($this->shortcode_tag) .'">';
 			$output .= '<div class="element-controls">';
-				$output .= '<span class="element-controls-toggle" title="Element Options"><i class="material-icons md-18">&#xE5D3;</i></span>';
+				$output .= '<span class="element-controls-toggle" title="'. __('Element Options', 'fusion') .'"><i class="material-icons md-18">&#xE5D3;</i></span>';
 				$output .= '<div class="element-controls-dropdown collapsed">';
 					$output .= '<a href="#" class="edit-element">'. __('Edit', 'fusion') .'</a>';
 					$output .= '<a href="#" class="duplicate-element">'. __('Duplicate', 'fusion') .'</a>';
 					$output .= '<a href="#" class="delete-element">'. __('Delete', 'fusion') .'</a>';
 				$output .= '</div>';
-				$output .= '<a href="#" class="control-icon edit-element" title="Edit Element"><i class="material-icons md-18">&#xE3C9;</i></a>';
+				$output .= '<a href="#" class="control-icon edit-element" title="'. __('Edit Element', 'fusion') .'"><i class="material-icons md-18">&#xE3C9;</i></a>';
 			$output .= '</div>';
 			$output .= '<div class="element-label" title="'. esc_attr($this->name) . '">'. esc_html($element_label) . '</div>';
 			$output .= '<div class="element-text-holder"'. (!empty($shortcode_atts_data) ? $shortcode_atts_data : '') .'>';
@@ -106,7 +107,7 @@ class FusionCoreExtend	{
 			die( '-1' );
 			
 		$content_html = stripslashes(wp_filter_post_kses($_POST['content_html']));
-		$saved_values = $_POST['saved_values'];
+		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
 		} else {
@@ -152,7 +153,7 @@ class FusionCoreExtend	{
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
 						<h4 class="modal-title"><?php echo esc_html($this->name); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 							$active_tab = true;
@@ -176,31 +177,35 @@ class FusionCoreExtend	{
 											echo !empty($this->description) && $active_tab == true ? '<p class="fsn-element-description">'. esc_html($this->description) .'</p>' : '';
 											foreach($fsn_param_sections[$i]['params'] as $param) {
 												//check for saved values
-												if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
-													$param['content_field'] = true;
-												} elseif (empty($param['content_field'])) {
-													$param['content_field'] = false;
-												}
-												$data_attribute_name = str_replace('_', '-', $param['param_name']);
-												if ( array_key_exists($data_attribute_name, $saved_values) ) {
-													$param_value = stripslashes($saved_values[$data_attribute_name]);
-													if ($param['encode_base64'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if ($param['encode_url'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+												if (!empty($param['param_name'])) {
+													if (!isset($param['content_field']) && $param['param_name'] == 'fsncontent') {
+														$param['content_field'] = true;
+													} elseif (empty($param['content_field'])) {
+														$param['content_field'] = false;
 													}
-													//decode custom entities
-													$param_value = FusionCore::decode_custom_entities($param_value);
-												} elseif ($param['content_field'] == true || !empty($param['item_params'])) {
-													$param_value = $content_html;
-													if ($param['content_field'] == true && $param['encode_base64'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = htmlentities(base64_decode($param_value));
-													} else if ($param['content_field'] == true && $param['encode_url'] == true) {
-														$param_value = wp_strip_all_tags($param_value);
-														$param_value = urldecode($param_value);
+													$data_attribute_name = str_replace('_', '-', $param['param_name']);
+													if ( array_key_exists($data_attribute_name, $saved_values) ) {
+														$param_value = stripslashes($saved_values[$data_attribute_name]);
+														if (!empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+														//decode custom entities
+														$param_value = FusionCore::decode_custom_entities($param_value);
+													} elseif (!empty($param['content_field']) || !empty($param['item_params'])) {
+														$param_value = $content_html;
+														if (!empty($param['content_field']) && !empty($param['encode_base64'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = htmlentities(base64_decode($param_value));
+														} else if (!empty($param['content_field']) && !empty($param['encode_url'])) {
+															$param_value = wp_strip_all_tags($param_value);
+															$param_value = urldecode($param_value);
+														}
+													} else {
+														$param_value = '';
 													}
 												} else {
 													$param_value = '';
@@ -235,7 +240,7 @@ class FusionCoreExtend	{
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice">Changes will be saved on close.</span>
+						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
 						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
 					</div>
 				</div>

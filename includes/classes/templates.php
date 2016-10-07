@@ -116,12 +116,12 @@ class FusionCoreTemplate	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
-		<div class="modal fade" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Save Template', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Save Template', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">						
 						<form role="form">							
@@ -133,7 +133,7 @@ class FusionCoreTemplate	{
 									'label' => __('Template Name', 'fusion')
 								);
 								echo FusionCore::get_input_field($param);
-								echo '<a href="#" class="button button-primary save-template">Add</a>';
+								echo '<a href="#" class="button button-primary save-template">'. __('Add', 'fusion') .'</a>';
 							echo '</div>';
 						?>
 						</form>
@@ -202,19 +202,19 @@ class FusionCoreTemplate	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
-		<div class="modal fade" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal fade" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
-						<h4 class="modal-title" id="myModalLabel"><?php _e('Page Templates', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Page Templates', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">						
 						<?php
 						$saved_templates = new WP_Query(array(
 							'post_type' => 'template',
 							'post_status' => 'publish',
-							'posts_per_page' => 20,
+							'posts_per_page' => 2,
 							'orderby' => 'title',
 							'order' => 'ASC',
 							'fields' => 'ids'
@@ -224,7 +224,7 @@ class FusionCoreTemplate	{
 								foreach($saved_templates->posts as $template) {
 									echo '<div class="template-item" data-template-id="'. esc_attr($template) .'">';
 										echo '<span class="template-name">'. esc_html(get_the_title($template)) .'</span>';
-										echo '<span class="template-controls-toggle" title="Template Options"><i class="material-icons">&#xE5D3;</i></span>';
+										echo '<span class="template-controls-toggle" title="'. __('Template Options', 'fusion') .'"><i class="material-icons">&#xE5D3;</i></span>';
 										echo '<div class="template-controls-dropdown collapsed">';
 											echo '<a href="#" class="delete-template">'. __('Delete', 'fusion') .'</a>';
 										echo '</div>';
@@ -235,8 +235,8 @@ class FusionCoreTemplate	{
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
 						}
 						$total_templates = $saved_templates->found_posts;
-						if ($total_templates > 20) {
-							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">Load More</a>';
+						if ($total_templates > 2) {
+							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">'. __('Load More', 'fusion') .'</a>';
 						}
 						?>
 					</div>

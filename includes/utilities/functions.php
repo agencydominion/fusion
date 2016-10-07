@@ -14,6 +14,7 @@
  */
 
 //WordPress filters
+global $wp_embed;
 add_filter( 'fsn_the_content', array( $wp_embed, 'run_shortcode' ), 8 );
 add_filter( 'fsn_the_content', array( $wp_embed, 'autoembed' ), 8 );
 add_filter( 'fsn_the_content', 'wptexturize'                       );
@@ -258,10 +259,10 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 function fsn_get_image_sizes() {
 	$image_sizes = get_intermediate_image_sizes();
 	$image_sizes_array = array();
-	$image_sizes_array[''] = 'Choose image size.';
-	$image_sizes_array['full'] = 'Full';
+	$image_sizes_array[''] = __('Choose image size.', 'fusion');
+	$image_sizes_array['full'] = __('Full Size', 'fusion');
 	foreach ($image_sizes as $image_size) {
-		$image_sizes_array[$image_size] = ucwords(str_replace(array('-','_'), ' ', $image_size));
+		$image_sizes_array[$image_size] = __(ucwords(str_replace(array('-','_'), ' ', $image_size)), 'fusion');
 	}
 	$image_sizes_array = apply_filters('fsn_selectable_image_sizes', $image_sizes_array);
 	
@@ -354,13 +355,13 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
 	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
 	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
-	if ($button_type == 'collapse') {
+	if (!empty($button_type) && $button_type == 'collapse') {
 		$button_attributes .= ' data-toggle="collapse"';
 		if (!empty($button_label_show) && !empty($button_label_hide)) {
 			$button_attributes .= ' data-label-show="'. esc_attr($button_label_show) .'"';
 			$button_attributes .= ' data-label-hide="'. esc_attr($button_label_hide) .'"';
 		}
-	} elseif ($button_type == 'modal') {
+	} elseif (!empty($button_type) && $button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
 	}
 	return apply_filters('fsn_button_anchor_attribites', $button_attributes, $button_object, $classes);

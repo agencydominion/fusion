@@ -35,7 +35,7 @@ class FusionCoreSettings	{
 			<form action="options.php" method="post">
 				<?php settings_fields('fsn_options'); ?>
 				<?php do_settings_sections('fsn_settings'); ?>
-				<?php submit_button('Save Changes', 'primary'); ?>
+				<?php submit_button(__('Save Changes', 'fusion'), 'primary'); ?>
 			</form>
 		</div>
 		<?php
