@@ -1360,7 +1360,7 @@ function fsnInitUIevents(instance) {
 				e.preventDefault();
 				var loadMoreBtn = jQuery(this);
 				var nextPage = (loadMoreBtn.data('paged') !== undefined) ? parseInt(loadMoreBtn.data('paged')) : 2;
-				var postsPerPage = 2;
+				var postsPerPage = 20;
 				var totalPosts = parseInt(loadMoreBtn.data('total'));
 				var totalPages = Math.ceil(totalPosts/postsPerPage);
 				

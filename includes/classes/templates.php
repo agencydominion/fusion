@@ -214,7 +214,7 @@ class FusionCoreTemplate	{
 						$saved_templates = new WP_Query(array(
 							'post_type' => 'template',
 							'post_status' => 'publish',
-							'posts_per_page' => 2,
+							'posts_per_page' => 20,
 							'orderby' => 'title',
 							'order' => 'ASC',
 							'fields' => 'ids'
@@ -235,7 +235,7 @@ class FusionCoreTemplate	{
 							echo '<p>'. __('There are no saved templates yet.', 'fusion') .'</p>';
 						}
 						$total_templates = $saved_templates->found_posts;
-						if ($total_templates > 2) {
+						if ($total_templates > 20) {
 							echo '<a href="#" class="button fsn-load-more-templates" data-total="'. $total_templates .'">'. __('Load More', 'fusion') .'</a>';
 						}
 						?>
