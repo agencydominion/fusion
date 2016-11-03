@@ -3160,15 +3160,23 @@ jQuery(document).ready(function() {
 		var buttonTrigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
-	    var custom_uploader = wp.media({
+	    
+	    // If the media frame already exists, reopen it.
+	    if ( frame ) {
+			frame.open();
+			return;
+	    }
+	    // Create a new media frame
+	    var frame = wp.media({
 	        title: fsnL10n.media_image_select,
 	        button: {
 	            text: fsnL10n.media_image_use,
 	        },
 	        multiple: false // Set this to true to allow multiple files to be selected
-	    })
-	    .on('select', function() {
-	        var attachment = custom_uploader.state().get('selection').first().toJSON();	        
+	    });
+	    // Select Image
+	    frame.on('select', function() {
+	        var attachment = frame.state().get('selection').first().toJSON();	        
 	        targetField.val(attachment.id);
 	        //data to pass to AJAX function
 			var data = {
@@ -3190,8 +3198,18 @@ jQuery(document).ready(function() {
 		        buttonTrigger.find('.button-verb').html(buttonTrigger.attr('data-isset'));
 		        buttonTrigger.siblings('.fsn-remove-image').removeClass('deactivated');
 			});
-	    })
-	    .open();
+	    });
+	    //Preselect Image if already set
+	    frame.on('open', function() {
+            var selection = frame.state().get('selection');
+            var id = targetField.val();
+            if ( '' !== id && -1 !== id ) {
+				attachment = wp.media.attachment(id);
+				attachment.fetch();
+				selection.reset( attachment ? [ attachment ] : [] );
+            }
+	    });
+	    frame.open();
     });
     //remove image button
     jQuery('body').on('click', '.fsn-remove-image', function(e) {
@@ -3203,21 +3221,31 @@ jQuery(document).ready(function() {
 	    button.siblings('.image-field-preview').remove();
 	    button.siblings('.element-input').val('');
     });
+    
+    
     //add video button
 	jQuery('body').on('click', '.fsn_upload_video', function(e) {
 		e.preventDefault();
 		var buttonTrigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
-	    var custom_uploader = wp.media({
+		
+		// If the media frame already exists, reopen it.
+	    if ( frame ) {
+			frame.open();
+			return;
+	    }
+	    // Create a new media frame
+	    var frame = wp.media({
 	        title: fsnL10n.media_video_select,
 	        button: {
 	            text: fsnL10n.media_video_select,
 	        },
 	        multiple: false // Set this to true to allow multiple files to be selected
-	    })
-	    .on('select', function() {
-	        var attachment = custom_uploader.state().get('selection').first().toJSON();	        
+	    });
+	    // Select Video
+	    frame.on('select', function() {
+	        var attachment = frame.state().get('selection').first().toJSON();	        
 	        targetField.val(attachment.id);
 	        //data to pass to AJAX function
 			var data = {
@@ -3239,8 +3267,18 @@ jQuery(document).ready(function() {
 		        buttonTrigger.find('.button-verb').html(buttonTrigger.attr('data-isset'));
 		        buttonTrigger.siblings('.fsn-remove-video').removeClass('deactivated');
 			});
-	    })
-	    .open();
+	    });
+	    //Preselect Video if already set
+	    frame.on('open', function() {
+            var selection = frame.state().get('selection');
+            var id = targetField.val();
+            if ( '' !== id && -1 !== id ) {
+				attachment = wp.media.attachment(id);
+				attachment.fetch();
+				selection.reset( attachment ? [ attachment ] : [] );
+            }
+	    });
+	    frame.open();
     });
     //remove video button
     jQuery('body').on('click', '.fsn-remove-video', function(e) {
