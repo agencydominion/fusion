@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.1.4
+ * Version: 1.1.5
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.1.4' );
+define( 'FSN_VERSION', '1.1.5' );
  
 /**
  * Fusion class.
@@ -160,8 +160,6 @@ class FusionCore	{
 		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && ( (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) ) {
 			//bootstrap
 			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.3.5', true );
-			//google material icons
-			wp_enqueue_style( 'material_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons' );
 			//jQuery UI
 			wp_enqueue_style( 'jquery-ui-custom', plugin_dir_url( __FILE__ ) . 'includes/css/jquery-ui-1.11.4.custom/jquery-ui.min.css', false, '1.11.4' );
 			wp_enqueue_script('jquery-ui-sortable');
@@ -1441,7 +1439,7 @@ class FusionCore	{
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Change', 'fusion');
+				$button_verb_isset = __('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
 				$input .= '<a href="#" class="fsn_upload_image button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'"><span class="button-verb">'. $button_verb .'</span> '. __('Image', 'fusion') .'</a>';
 				$input .= '<a href="#" class="fsn-remove-image button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Image', 'fusion') .'</a>';
@@ -1455,7 +1453,7 @@ class FusionCore	{
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Change', 'fusion');
+				$button_verb_isset = __('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
 				$input .= '<a href="#" class="fsn_upload_video button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'"><span class="button-verb">'. $button_verb .'</span> '. __('Video', 'fusion') .'</a>';
 				$input .= '<a href="#" class="fsn-remove-video button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Video', 'fusion') .'</a>';
