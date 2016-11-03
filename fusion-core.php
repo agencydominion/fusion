@@ -1439,7 +1439,7 @@ class FusionCore	{
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Change', 'fusion');
+				$button_verb_isset = __('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
 				$input .= '<a href="#" class="fsn_upload_image button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'"><span class="button-verb">'. $button_verb .'</span> '. __('Image', 'fusion') .'</a>';
 				$input .= '<a href="#" class="fsn-remove-image button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Image', 'fusion') .'</a>';
@@ -1453,7 +1453,7 @@ class FusionCore	{
 			    	$input .= '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
 				}
 				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Change', 'fusion');
+				$button_verb_isset = __('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
 				$input .= '<a href="#" class="fsn_upload_video button-secondary" data-empty="'. esc_attr($button_verb_empty) .'" data-isset="'. esc_attr($button_verb_isset) .'"><span class="button-verb">'. $button_verb .'</span> '. __('Video', 'fusion') .'</a>';
 				$input .= '<a href="#" class="fsn-remove-video button-secondary'. (empty($param_value) ? ' deactivated' : '') .'">'. __('Remove Video', 'fusion') .'</a>';
