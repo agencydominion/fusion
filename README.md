@@ -12,6 +12,6 @@ Fusion also allows you to create Components and Templates. Components are pieces
 
 Fusion is designed to be developer friendly, making it possible for WordPress plugin and theme developers to add, modify, and expand the Fusion ecosystem to limitless horizons.
 
-[Learn more about using and developing for Fusion in the User Guide](https://agencydominion.zendesk.com/hc/en-us)
+[Learn more about using and developing for Fusion in the User Guide](http://agencydominion.helpscoutdocs.com/)
 
 **[Download from WordPress.org](https://wordpress.org/plugins/fusion/)**
