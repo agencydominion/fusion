@@ -170,6 +170,7 @@ function fsn_style_params_class($atts) {
 		!empty($color) ? $fsn_style_output[$style_params_class]['color'] = $color : '';
 		!empty($background_color) ? $fsn_style_output[$style_params_class]['background_color'] = $background_color : '';
 		!empty($background_color_opacity) ? $fsn_style_output[$style_params_class]['background_color_opacity'] = $background_color_opacity : '';
+		$fsn_style_output = apply_filters('fsn_style_output', $fsn_style_output, $style_params_class, $atts);
 		//add visibility classes
 		$style_params_class .= !empty($hidden_xs) ? ' hidden-xs' : '';
 		$style_params_class .= !empty($visible_xs) ? ' visible-xs-block' : '';
@@ -177,7 +178,7 @@ function fsn_style_params_class($atts) {
 		$style_params_class .= !empty($user_classes) ? ' '. $user_classes : '';
 	}
 	
-	return esc_attr($style_params_class);
+	return esc_attr( apply_filters('fsn_style_params_class', $style_params_class, $atts) );
 }
 
 /**
