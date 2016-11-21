@@ -2232,12 +2232,17 @@ jQuery(document).ready(function() {
 jQuery(document).ready(function() {	
 	//add custom list item
 	jQuery('body').on('click', '.add-custom-list-item', function(e) {
-	
+		e.preventDefault();
+		
 		var customListItemsContainer = jQuery(this).siblings('.custom-list-sort');
 		var customListID = customListItemsContainer.attr('data-list-id');
 		var postID = jQuery('input#post_ID').val();
 		
-		e.preventDefault();
+		//check if list is sortable and initialize if not
+		if (customListItemsContainer.sortable('instance') === undefined) {
+			customListItemsContainer.sortable();
+		}
+		
 		var data = {
 			action: 'custom_list_add_item',
 			listID: customListID,
