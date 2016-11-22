@@ -2542,15 +2542,16 @@ function fsnUniqid(prefix, more_entropy) {
 //resizing
 jQuery(document).ready(function() {
 	fsnResize();
-	jQuery(window).on('resize', function() {
-		fsnResize();
-		var interfaceUIs = jQuery('.fsn-interface-grid');
-		interfaceUIs.each(function() {
-			var instance = jQuery(this);
-			fsnAddColFields(instance);
-		});
-	});
+	jQuery(window).on('resize', fsnDebounce(fsnResize, 50));
+	jQuery(window).on('resize', fsnThrottle(fsnResizeColFields, 100));
 });
+function fsnResizeColFields() {
+	var interfaceUIs = jQuery('.fsn-interface-grid');
+	interfaceUIs.each(function() {
+		var instance = jQuery(this);
+		fsnAddColFields(instance);
+	});
+}
 function fsnResize() {
 	var interfaceUIs = jQuery('.fsn-interface-grid');
 	interfaceUIs.each(function() {
@@ -3296,3 +3297,31 @@ jQuery(document).ready(function() {
 	    button.siblings('.element-input').val('');
     });
 });
+
+//In throttling, the code execution is limited to once in a specified time period.
+function fsnThrottle(callback, wait) {  
+    var time,
+    go = true;
+    return function() {
+        if(go) {
+            go = false;
+            time = setTimeout(function(){
+                time = null;
+                go = true;
+                callback.call();
+            }, wait);
+        }
+    }
+}
+
+//In debouncing, the code is not executed until the event has not been fired for a set amount of time.
+function fsnDebounce(callback, wait) {  
+    var time;
+    return function() {
+        clearTimeout(time);
+        time = setTimeout(function() {
+            time = null;
+            callback.call();
+        }, wait);
+    }
+}
