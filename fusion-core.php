@@ -376,9 +376,9 @@ class FusionCore	{
 					'section' => 'style'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
-						'' => __('Inherit', 'fusion'),
+						'inherit' => __('Inherit', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
@@ -388,9 +388,9 @@ class FusionCore	{
 					'section' => 'style'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
-						'' => __('Inherit', 'fusion'),
+						'inherit' => __('Inherit', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
