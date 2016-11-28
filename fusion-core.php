@@ -546,7 +546,7 @@ class FusionCore	{
 		extract( shortcode_atts( array(
 			'row_style' => '',
 			'row_function' => '',
-			'row_width' => '',
+			'row_width' => 'container',
 			'seamless' => '',
 			'background_image' => '',
 			'background_repeat' => 'repeat',
@@ -661,7 +661,7 @@ class FusionCore	{
 			$output = '';
 			
 			//open row container
-			if (empty($row_width)) {	
+			if ($row_width == 'container') {	
 				$output .= '<div '. (!empty($id) ? 'id="'. esc_attr($id) .'" ' : '') .'class="fsn-row full-width-row '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'"'. (!empty($style) ? ' style="'. esc_attr($style) .'"' : '') .'>';
 					//action executed before the front-end row shortcode container output
 					ob_start();
@@ -691,7 +691,7 @@ class FusionCore	{
 			$output .= ob_get_clean();
 			
 			//close row container
-			if (empty($row_width)) {
+			if ($row_width == 'container') {
 					$output .= '</div>'; //close container
 					//action executed after the front-end row shortcode container output
 					ob_start();
@@ -1005,7 +1005,7 @@ class FusionCore	{
 			array(
 				'type' => 'radio',
 				'options' => array(
-					'' => __('Container', 'fusion'),
+					'container' => __('Container', 'fusion'),
 					'full-width' => __('Full Width','fusion')
 				),
 				'param_name' => 'row_width',
