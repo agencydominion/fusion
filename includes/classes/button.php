@@ -68,7 +68,7 @@ class FusionCoreButtonModal	{
 						//map button parameters
 						$params = array(
 							array(
-								'type' => 'radio',
+								'type' => 'select',
 								'options' => array(
 									'external' => __('External', 'fusion'),
 									'internal' => __('Internal', 'fusion'),
