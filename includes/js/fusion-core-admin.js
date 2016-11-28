@@ -707,7 +707,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -797,7 +797,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -887,7 +887,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -969,7 +969,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
