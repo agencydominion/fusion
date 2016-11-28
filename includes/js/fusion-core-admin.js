@@ -2068,7 +2068,7 @@ jQuery(document).ready(function() {
 			        var buttonLinkVal = buttonLink.val();
 			        var buttonLabelVal = buttonLabel.val();
 			        var attachedItem = jQuery('[name="button_attached"]').find('option:selected');
-			        var buttonTargetVal = buttonTarget.val();
+			        var buttonTargetVal = buttonTarget.val() != '' ? buttonTarget.val() : '_self';
 			        var buttonTypeVal = buttonType.find('option:selected').val();
 			        var buttonCollapseIDval = buttonCollapseID.val();
 			        var buttonCollapseLabelShowVal = buttonCollapseLabelShow.val();

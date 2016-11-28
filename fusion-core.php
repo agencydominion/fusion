@@ -378,19 +378,18 @@ class FusionCore	{
 				array(
 					'type' => 'select',
 					'options' => array(
-						'inherit' => __('Inherit', 'fusion'),
+						'' => __('Choose Text Alignment.', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
 					),
 					'param_name' => 'text_align',
-					'label' => __('Text Align', 'fusion'),
 					'section' => 'style'
 				),
 				array(
 					'type' => 'select',
 					'options' => array(
-						'inherit' => __('Inherit', 'fusion'),
+						'' => __('Choose Text Alignment.', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
@@ -976,7 +975,8 @@ class FusionCore	{
 			}
 		}
 		$row_style_options = array(
-			'' => __('Light', 'fusion'),
+			'' => __('Choose Style.', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$row_style_options = apply_filters('fsn_row_style_options', $row_style_options);
@@ -988,18 +988,19 @@ class FusionCore	{
 				'options' => $row_style_options,
 				'param_name' => 'row_style',
 				'label' => __('Style', 'fusion'),
-				'help' => __('Choose Row style. Light will inherit globally set text color. Dark will adopt text color set within this Row for headlines and links.', 'fusion'),
+				'help' => __('Default is Light. Light will inherit globally set text color. Dark will adopt text color set within this Row for headlines and links.', 'fusion'),
 				'section' => 'advanced'
 			),
 			array(
 				'type' => 'select',
 				'options' => array(
-					'' => __('Default', 'fusion'),
+					'' => __('Choose Function.', 'fusion'),
+					'default' => __('Default', 'fusion'),
 					'collapse' => __('Collapse', 'fusion')
 				),
 				'param_name' => 'row_function',
 				'label' => __('Function', 'fusion'),
-				'help' => __('Choose Row function. "Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
+				'help' => __('Default is "Default" - a standard row. "Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
 				'section' => 'advanced'
 			),
 			array(
@@ -1026,15 +1027,18 @@ class FusionCore	{
 			array(
 				'type' => 'select',
 				'options' => array(
+					'' => __('Choose Background Image Repeat.','fusion'),
 					'repeat' => __('Repeat','fusion'),
 					'no-repeat' => __('No Repeat', 'fusion')
 				),
 				'param_name' => 'background_repeat',
 				'label' => __('Background Image Repeat', 'fusion'),
+				'help' => __('Default is "Repeat".', 'fusion')
 			),
 			array(
 				'type' => 'select',
 				'options' => array(
+					'' => __('Choose Background Image Position.','fusion'),
 					'left top' => __('Top Left', 'fusion'),
 					'center top' => __('Top Center', 'fusion'),
 					'right top' => __('Top Right', 'fusion'),
@@ -1048,6 +1052,7 @@ class FusionCore	{
 				),
 				'param_name' => 'background_position',
 				'label' => __('Background Image Position', 'fusion'),
+				'help' => __('Default is "Top Left".', 'fusion')
 			),
 			array(
 				'type' => 'text',
@@ -1062,21 +1067,25 @@ class FusionCore	{
 			array(
 				'type' => 'select',
 				'options' => array(
+					'' => __('Choose Background Image Attachment.', 'fusion'),
 					'scroll' => __('Scroll', 'fusion'),
 					'fixed' => __('Fixed', 'fusion')
 				),
 				'param_name' => 'background_attachment',
-				'label' => __('Background Image Attachment', 'fusion')
+				'label' => __('Background Image Attachment', 'fusion'),
+				'help' => __('Default is "Scroll".', 'fusion')
 			),
 			array(
 				'type' => 'select',
 				'options' => array(
+					'' => __('Choose Background Image Size.', 'fusion'),
 					'auto' => __('Auto', 'fusion'),
 					'cover' => __('Cover', 'fusion'),
 					'contain' => __('Contain', 'fusion')
 				),
 				'param_name' => 'background_size',
-				'label' => __('Background Image Size', 'fusion')
+				'label' => __('Background Image Size', 'fusion'),
+				'help' => __('Default is "Auto".', 'fusion')
 			),
 			array(
 				'type' => 'text',
@@ -1217,7 +1226,8 @@ class FusionCore	{
 			}
 		}
 		$column_style_options = array(
-			'' => __('Light', 'fusion'),
+			'' => __('Choose Style.', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$column_style_options = apply_filters('fsn_column_style_options', $column_style_options);
@@ -1228,7 +1238,7 @@ class FusionCore	{
 				'options' => $column_style_options,
 				'param_name' => 'column_style',
 				'label' => __('Style', 'fusion'),
-				'help' => __('Choose Column style. Light will inherit globally set text color. Dark will adopt text color set within this Column for headlines and links.', 'fusion'),
+				'help' => __('Light will inherit globally set text color. Dark will adopt text color set within this Column for headlines and links.', 'fusion'),
 				'section' => 'advanced'
 			)
 		);

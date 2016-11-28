@@ -39,7 +39,7 @@ class FusionCoreTabs	{
 	public function tabs_shortcode($atts, $content = null) {
 				
 		extract( shortcode_atts( array(
-			'tabs_layout' => '',
+			'tabs_layout' => 'default',
 			'tabs_fade' => ''
 		), $atts ) );
 		
@@ -281,7 +281,8 @@ class FusionCoreTabs	{
 		}
 		//tabs layouts
 		$tabs_layouts_array = array(
-			'' => __('Default', 'fusion')
+			'' => __('Choose Layout.', 'fusion'),
+			'default' => __('Default', 'fusion')
 		);
 		$tabs_layouts_array = apply_filters('fsn_tabs_layouts', $tabs_layouts_array);
 		//map tabs parameters

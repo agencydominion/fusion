@@ -70,6 +70,7 @@ class FusionCoreButtonModal	{
 							array(
 								'type' => 'select',
 								'options' => array(
+									'' => __('Choose Type.', 'fusion'),
 									'external' => __('External', 'fusion'),
 									'internal' => __('Internal', 'fusion'),
 									'collapse' => __('Collapse', 'fusion'),
@@ -149,13 +150,15 @@ class FusionCoreButtonModal	{
 							array(
 								'type' => 'select',
 								'options' => array(
-									'' => __('_self', 'fusion'),
+									'' => __('Choose Target.', 'fusion'),
+									'_self' => __('_self', 'fusion'),
 									'_blank' => __('_blank (new tab / window)', 'fusion'),
 									'_parent' => __('_parent (parent frame)', 'fusion'),
 									'_top' => __('_top (full body of the window)', 'fusion')
 								),
 								'param_name' => 'button_target',
 								'label' => __('Target', 'fusion'),
+								'help' => __('Default is "_self".', 'fusion'),
 								'dependency' => array(
 									'param_name' => 'button_type',
 									'value' => array('external','internal')
