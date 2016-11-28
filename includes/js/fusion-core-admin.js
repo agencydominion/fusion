@@ -2069,7 +2069,7 @@ jQuery(document).ready(function() {
 			        var buttonLabelVal = buttonLabel.val();
 			        var attachedItem = jQuery('[name="button_attached"]').find('option:selected');
 			        var buttonTargetVal = buttonTarget.val();
-			        var buttonTypeVal = buttonType.filter(':checked').val();
+			        var buttonTypeVal = buttonType.find('option:selected').val();
 			        var buttonCollapseIDval = buttonCollapseID.val();
 			        var buttonCollapseLabelShowVal = buttonCollapseLabelShow.val();
 			        var buttonCollapseLabelHideVal = buttonCollapseLabelHide.val();
