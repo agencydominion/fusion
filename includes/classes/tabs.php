@@ -281,7 +281,7 @@ class FusionCoreTabs	{
 		}
 		//tabs layouts
 		$tabs_layouts_array = array(
-			'' => __('Default', 'fusion')
+			'' => __('Choose tabs layout.', 'fusion')
 		);
 		$tabs_layouts_array = apply_filters('fsn_tabs_layouts', $tabs_layouts_array);
 		//map tabs parameters

@@ -544,7 +544,7 @@ class FusionCore	{
 	public function row_shortcode($atts, $content = null) {
 				
 		extract( shortcode_atts( array(
-			'row_style' => '',
+			'row_style' => 'light',
 			'row_function' => '',
 			'row_width' => 'container',
 			'seamless' => '',
@@ -722,7 +722,7 @@ class FusionCore	{
 		extract( shortcode_atts( array(
 			'width' => '12',
 			'offset' => false,
-			'column_style' => ''
+			'column_style' => 'light'
 		), $atts ) );
 		
 		//if running AJAX, get action being run
@@ -976,7 +976,7 @@ class FusionCore	{
 			}
 		}
 		$row_style_options = array(
-			'' => __('Light', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$row_style_options = apply_filters('fsn_row_style_options', $row_style_options);
@@ -994,12 +994,12 @@ class FusionCore	{
 			array(
 				'type' => 'select',
 				'options' => array(
-					'' => __('Default', 'fusion'),
+					'' => __('Choose row function.', 'fusion'),
 					'collapse' => __('Collapse', 'fusion')
 				),
 				'param_name' => 'row_function',
 				'label' => __('Function', 'fusion'),
-				'help' => __('Choose Row function. "Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
+				'help' => __('"Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
 				'section' => 'advanced'
 			),
 			array(
@@ -1217,7 +1217,7 @@ class FusionCore	{
 			}
 		}
 		$column_style_options = array(
-			'' => __('Light', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$column_style_options = apply_filters('fsn_column_style_options', $column_style_options);
