@@ -378,7 +378,7 @@ class FusionCore	{
 				array(
 					'type' => 'select',
 					'options' => array(
-						'inherit' => __('Inherit', 'fusion'),
+						'' => __('Choose text alignment.', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
@@ -390,7 +390,7 @@ class FusionCore	{
 				array(
 					'type' => 'select',
 					'options' => array(
-						'inherit' => __('Inherit', 'fusion'),
+						'' => __('Choose text alignment.', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
