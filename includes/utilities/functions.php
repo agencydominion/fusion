@@ -164,8 +164,8 @@ function fsn_style_params_class($atts) {
 		!empty($padding) ? $fsn_style_output[$style_params_class]['padding'] = FusionCore::decode_custom_entities($padding) : '';
 		!empty($padding_xs_custom) ? $fsn_style_output[$style_params_class]['padding_xs_custom'] = $padding_xs_custom : '';
 		!empty($padding_xs) ? $fsn_style_output[$style_params_class]['padding_xs'] = FusionCore::decode_custom_entities($padding_xs) : '';
-		!empty($text_align) && $text_align != 'inherit' ? $fsn_style_output[$style_params_class]['text_align'] = $text_align : '';
-		!empty($text_align_xs) && $text_align_xs != 'inherit' ? $fsn_style_output[$style_params_class]['text_align_xs'] = $text_align_xs : '';
+		!empty($text_align) ? $fsn_style_output[$style_params_class]['text_align'] = $text_align : '';
+		!empty($text_align_xs) ? $fsn_style_output[$style_params_class]['text_align_xs'] = $text_align_xs : '';
 		!empty($font_size) ? $fsn_style_output[$style_params_class]['font_size'] = $font_size : '';
 		!empty($color) ? $fsn_style_output[$style_params_class]['color'] = $color : '';
 		!empty($background_color) ? $fsn_style_output[$style_params_class]['background_color'] = $background_color : '';
