@@ -707,7 +707,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -797,7 +797,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -887,7 +887,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -969,7 +969,7 @@ function fsnInitUIevents(instance) {
 							break;
 						case 'radio':
 							var radioGroupName = jQuery(this).attr('name');
-							var checkedRadio = jQuery('input[type="radio"][name="'+ radioGroupName +'"]:checked');
+							var checkedRadio = modalSelector.find('input[type="radio"][name="'+ radioGroupName +'"]:checked');
 							newParamValue = checkedRadio.val();
 							break;
 						default:
@@ -2069,7 +2069,7 @@ jQuery(document).ready(function() {
 			        var buttonLabelVal = buttonLabel.val();
 			        var attachedItem = jQuery('[name="button_attached"]').find('option:selected');
 			        var buttonTargetVal = buttonTarget.val();
-			        var buttonTypeVal = buttonType.filter(':checked').val();
+			        var buttonTypeVal = buttonType.find('option:selected').val();
 			        var buttonCollapseIDval = buttonCollapseID.val();
 			        var buttonCollapseLabelShowVal = buttonCollapseLabelShow.val();
 			        var buttonCollapseLabelHideVal = buttonCollapseLabelHide.val();

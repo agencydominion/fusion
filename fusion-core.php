@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.1.7' );
+define( 'FSN_VERSION', '1.1.8' );
  
 /**
  * Fusion class.
@@ -376,9 +376,9 @@ class FusionCore	{
 					'section' => 'style'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
-						'' => __('Inherit', 'fusion'),
+						'inherit' => __('Inherit', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
@@ -388,9 +388,9 @@ class FusionCore	{
 					'section' => 'style'
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'select',
 					'options' => array(
-						'' => __('Inherit', 'fusion'),
+						'inherit' => __('Inherit', 'fusion'),
 						'left' => __('Left', 'fusion'),
 						'center' => __('Center', 'fusion'),
 						'right' => __('Right', 'fusion')
@@ -544,9 +544,9 @@ class FusionCore	{
 	public function row_shortcode($atts, $content = null) {
 				
 		extract( shortcode_atts( array(
-			'row_style' => '',
+			'row_style' => 'light',
 			'row_function' => '',
-			'row_width' => '',
+			'row_width' => 'container',
 			'seamless' => '',
 			'background_image' => '',
 			'background_repeat' => 'repeat',
@@ -661,7 +661,7 @@ class FusionCore	{
 			$output = '';
 			
 			//open row container
-			if (empty($row_width)) {	
+			if ($row_width == 'container') {	
 				$output .= '<div '. (!empty($id) ? 'id="'. esc_attr($id) .'" ' : '') .'class="fsn-row full-width-row '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'"'. (!empty($style) ? ' style="'. esc_attr($style) .'"' : '') .'>';
 					//action executed before the front-end row shortcode container output
 					ob_start();
@@ -691,7 +691,7 @@ class FusionCore	{
 			$output .= ob_get_clean();
 			
 			//close row container
-			if (empty($row_width)) {
+			if ($row_width == 'container') {
 					$output .= '</div>'; //close container
 					//action executed after the front-end row shortcode container output
 					ob_start();
@@ -722,7 +722,7 @@ class FusionCore	{
 		extract( shortcode_atts( array(
 			'width' => '12',
 			'offset' => false,
-			'column_style' => ''
+			'column_style' => 'light'
 		), $atts ) );
 		
 		//if running AJAX, get action being run
@@ -976,7 +976,7 @@ class FusionCore	{
 			}
 		}
 		$row_style_options = array(
-			'' => __('Light', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$row_style_options = apply_filters('fsn_row_style_options', $row_style_options);
@@ -994,18 +994,18 @@ class FusionCore	{
 			array(
 				'type' => 'select',
 				'options' => array(
-					'' => __('Default', 'fusion'),
+					'' => __('Choose row function.', 'fusion'),
 					'collapse' => __('Collapse', 'fusion')
 				),
 				'param_name' => 'row_function',
 				'label' => __('Function', 'fusion'),
-				'help' => __('Choose Row function. "Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
+				'help' => __('"Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
 				'section' => 'advanced'
 			),
 			array(
 				'type' => 'radio',
 				'options' => array(
-					'' => __('Container', 'fusion'),
+					'container' => __('Container', 'fusion'),
 					'full-width' => __('Full Width','fusion')
 				),
 				'param_name' => 'row_width',
@@ -1217,7 +1217,7 @@ class FusionCore	{
 			}
 		}
 		$column_style_options = array(
-			'' => __('Light', 'fusion'),
+			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$column_style_options = apply_filters('fsn_column_style_options', $column_style_options);
