@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.1.8
+ * Version: 1.1.9
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.1.8' );
+define( 'FSN_VERSION', '1.1.9' );
  
 /**
  * Fusion class.
@@ -311,6 +311,10 @@ class FusionCore	{
 			array(
 				'id' => 'style',
 				'name' => __('Style', 'fusion')
+			),
+			array(
+				'id' => 'animation',
+				'name' => __('Animation', 'fusion')
 			)
 		);
 		$fsn_param_sections = apply_filters('fsn_param_sections', $fsn_param_sections);
@@ -1092,13 +1096,13 @@ class FusionCore	{
 			)
 		);
 		
+		//filter row params
+		$params = apply_filters('fsn_row_params', $params);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter row params
-		$params = apply_filters('fsn_row_params', $params);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
@@ -1117,6 +1121,8 @@ class FusionCore	{
 								if (count($fsn_param_sections[$i]['params']) > 0) {
 							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 							    	$active_tab = false;
+						    	} else {
+							    	echo '<li role="presentation" style="display:none;"><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 						    	}
 							}
 						echo '</ul>';	
@@ -1177,6 +1183,8 @@ class FusionCore	{
 											}
 										echo '</div>';
 										$active_tab = false;
+									} else {
+										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';	
 									}
 								}
 							echo '</div>';
@@ -1233,13 +1241,13 @@ class FusionCore	{
 			)
 		);
 		
+		//filter column params
+		$params = apply_filters('fsn_column_params', $params);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter column params
-		$params = apply_filters('fsn_column_params', $params);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
@@ -1258,6 +1266,8 @@ class FusionCore	{
 								if (count($fsn_param_sections[$i]['params']) > 0) {
 							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 							    	$active_tab = false;
+						    	} else {
+							    	echo '<li role="presentation" style="display:none;"><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 						    	}
 							}
 						echo '</ul>';	
@@ -1318,6 +1328,8 @@ class FusionCore	{
 											}
 										echo '</div>';
 										$active_tab = false;
+									} else {
+										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';	
 									}
 								}
 							echo '</div>';
@@ -1563,7 +1575,8 @@ class FusionCore	{
 				$input .= '<input type="hidden" class="form-control element-input box-string'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				break;
 			case 'note':
-				$input .= '<p class="description">'. esc_html($param['help']) .'</p>';
+				$input .= !empty($param['label']) ? '<h3 class="fsn-element-note-heading">'. esc_html($param['label']) .'</h3>' : '';
+				$input .= !empty($param['help']) ? '<p class="fsn-element-note-description description">'. esc_html($param['help']) .'</p>' : '';
 				break;
 		}
 		
