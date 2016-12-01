@@ -1567,7 +1567,8 @@ class FusionCore	{
 				$input .= '<input type="hidden" class="form-control element-input box-string'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				break;
 			case 'note':
-				$input .= '<p class="description">'. esc_html($param['help']) .'</p>';
+				$input .= !empty($param['label']) ? '<h3 class="fsn-element-note-heading">'. esc_html($param['label']) .'</h3>' : '';
+				$input .= !empty($param['help']) ? '<p class="fsn-element-note-description description">'. esc_html($param['help']) .'</p>' : '';
 				break;
 		}
 		

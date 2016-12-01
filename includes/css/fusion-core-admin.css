@@ -1581,6 +1581,10 @@ a img.aligncenter {
 	margin-top:0;
 }
 
+.fsn-element-note-heading + .fsn-element-note-description	{
+	margin-top:-10px;
+} 
+
 /**
  * Custom List field type
  */
