@@ -1096,13 +1096,13 @@ class FusionCore	{
 			)
 		);
 		
+		//filter row params
+		$params = apply_filters('fsn_row_params', $params);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter row params
-		$params = apply_filters('fsn_row_params', $params);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
@@ -1237,13 +1237,13 @@ class FusionCore	{
 			)
 		);
 		
+		//filter column params
+		$params = apply_filters('fsn_column_params', $params);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter column params
-		$params = apply_filters('fsn_column_params', $params);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);

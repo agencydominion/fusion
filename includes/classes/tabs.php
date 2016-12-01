@@ -300,13 +300,13 @@ class FusionCoreTabs	{
 			)
 		);
 		
+		//filter tabs params
+		$params = apply_filters('fsn_tabs_params', $params);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter tabs params
-		$params = apply_filters('fsn_tabs_params', $params);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);

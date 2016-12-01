@@ -128,6 +128,9 @@ class FusionCoreExtend	{
 			'section' => 'advanced'
 		);
 		
+		//filter element params
+		$params = apply_filters('fsn_element_params', $params, $this->shortcode_tag, $saved_values);
+		
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
@@ -140,9 +143,6 @@ class FusionCoreExtend	{
 			}
 		}
 		$params = array_merge_recursive($params, $style_params);
-		
-		//filter element params
-		$params = apply_filters('fsn_element_params', $params, $this->shortcode_tag, $saved_values);
 		
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
