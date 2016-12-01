@@ -311,6 +311,10 @@ class FusionCore	{
 			array(
 				'id' => 'style',
 				'name' => __('Style', 'fusion')
+			),
+			array(
+				'id' => 'animation',
+				'name' => __('Animation', 'fusion')
 			)
 		);
 		$fsn_param_sections = apply_filters('fsn_param_sections', $fsn_param_sections);
