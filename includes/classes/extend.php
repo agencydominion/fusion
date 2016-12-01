@@ -161,6 +161,8 @@ class FusionCoreExtend	{
 								if (count($fsn_param_sections[$i]['params']) > 0) {
 							    	echo '<li role="presentation"'. ($active_tab == true ? ' class="active"' : '') .'><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 							    	$active_tab = false;
+						    	} else {
+							    	echo '<li role="presentation" style="display:none;"><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 						    	}
 							}
 						echo '</ul>';	
@@ -233,6 +235,8 @@ class FusionCoreExtend	{
 											}
 										echo '</div>';
 										$active_tab = false;
+									} else {
+										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';	
 									}
 								}
 							echo '</div>';
