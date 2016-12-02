@@ -279,25 +279,31 @@ class FusionCoreTabs	{
 				$saved_values[$key] = wp_filter_post_kses($value);
 			}
 		}
+		
+		$params = array();
+		
 		//tabs layouts
 		$tabs_layouts_array = array(
 			'' => __('Choose tabs layout.', 'fusion')
 		);
 		$tabs_layouts_array = apply_filters('fsn_tabs_layouts', $tabs_layouts_array);
+		
 		//map tabs parameters
-		$params = array(
-			array(
+		if (count($tabs_layouts_array) > 1) {
+			$params[] = array(
 				'type' => 'select',
 				'options' => $tabs_layouts_array,
 				'param_name' => 'tabs_layout',
 				'label' => __('Tabs Layout', 'fusion')
-			),
-			array(
-				'type' => 'checkbox',
-				'param_name' => 'tabs_fade',
-				'label' => __('Fade', 'fusion'),
-				'help' => __('Check to enable tab fade transitions.', 'fusion')
-			)
+			);
+		}
+		
+		$params[] = array(
+			'type' => 'checkbox',
+			'param_name' => 'tabs_fade',
+			'label' => __('Fade', 'fusion'),
+			'help' => __('Check to enable tab fade transitions.', 'fusion'),
+			'section' => 'animation'
 		);
 		
 		//filter tabs params

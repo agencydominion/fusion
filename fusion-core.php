@@ -988,25 +988,6 @@ class FusionCore	{
 		//map row parameters
 		$params = array(
 			array(
-				'type' => 'select',
-				'options' => $row_style_options,
-				'param_name' => 'row_style',
-				'label' => __('Style', 'fusion'),
-				'help' => __('Choose Row style. Light will inherit globally set text color. Dark will adopt text color set within this Row for headlines and links.', 'fusion'),
-				'section' => 'advanced'
-			),
-			array(
-				'type' => 'select',
-				'options' => array(
-					'' => __('Choose row function.', 'fusion'),
-					'collapse' => __('Collapse', 'fusion')
-				),
-				'param_name' => 'row_function',
-				'label' => __('Function', 'fusion'),
-				'help' => __('"Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
-				'section' => 'advanced'
-			),
-			array(
 				'type' => 'radio',
 				'options' => array(
 					'container' => __('Container', 'fusion'),
@@ -1023,9 +1004,35 @@ class FusionCore	{
 				'help' => __('Check to enable seamless Columns with no left/right margins for Row.', 'fusion')
 			),
 			array(
+				'type' => 'select',
+				'options' => array(
+					'' => __('Choose row function.', 'fusion'),
+					'collapse' => __('Collapse', 'fusion')
+				),
+				'param_name' => 'row_function',
+				'label' => __('Function', 'fusion'),
+				'help' => __('"Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
+				'section' => 'advanced'
+			),array(
+				'type' => 'text',
+				'param_name' => 'id',
+				'label' => __('ID', 'fusion'),
+				'help' => __('Input row ID. Rows can be targeted by their ID for triggering collapsed Rows or anchor links.', 'fusion'),
+				'section' => 'advanced'
+			),
+			array(
+				'type' => 'select',
+				'options' => $row_style_options,
+				'param_name' => 'row_style',
+				'label' => __('Theme', 'fusion'),
+				'help' => __('Choose Row theme. Light will inherit globally set text color. Dark will adopt text color set within this Row for headlines and links.', 'fusion'),
+				'section' => 'style'
+			),
+			array(
 				'type' => 'image',			
 				'param_name' => 'background_image',
 				'label' => __('Background Image', 'fusion'),
+				'section' => 'style'
 			),
 			array(
 				'type' => 'select',
@@ -1035,6 +1042,7 @@ class FusionCore	{
 				),
 				'param_name' => 'background_repeat',
 				'label' => __('Background Image Repeat', 'fusion'),
+				'section' => 'style'
 			),
 			array(
 				'type' => 'select',
@@ -1052,12 +1060,14 @@ class FusionCore	{
 				),
 				'param_name' => 'background_position',
 				'label' => __('Background Image Position', 'fusion'),
+				'section' => 'style'
 			),
 			array(
 				'type' => 'text',
 				'param_name' => 'background_position_custom',
 				'label' => __('Custom Background Image Position', 'fusion'),
 				'help' => __('Input background image x-y position (e.g. 20px 20px).', 'fusion'),
+				'section' => 'style',
 				'dependency' => array(
 					'param_name' => 'background_position',
 					'value' => 'custom'
@@ -1070,7 +1080,8 @@ class FusionCore	{
 					'fixed' => __('Fixed', 'fusion')
 				),
 				'param_name' => 'background_attachment',
-				'label' => __('Background Image Attachment', 'fusion')
+				'label' => __('Background Image Attachment', 'fusion'),
+				'section' => 'style'
 			),
 			array(
 				'type' => 'select',
@@ -1080,14 +1091,8 @@ class FusionCore	{
 					'contain' => __('Contain', 'fusion')
 				),
 				'param_name' => 'background_size',
-				'label' => __('Background Image Size', 'fusion')
-			),
-			array(
-				'type' => 'text',
-				'param_name' => 'id',
-				'label' => __('ID', 'fusion'),
-				'help' => __('Input row ID. Rows can be targeted by their ID for triggering collapsed Rows or anchor links.', 'fusion'),
-				'section' => 'advanced'
+				'label' => __('Background Image Size', 'fusion'),
+				'section' => 'style'
 			),
 			array(
 				'type' => 'note',
@@ -1235,9 +1240,9 @@ class FusionCore	{
 				'type' => 'select',
 				'options' => $column_style_options,
 				'param_name' => 'column_style',
-				'label' => __('Style', 'fusion'),
-				'help' => __('Choose Column style. Light will inherit globally set text color. Dark will adopt text color set within this Column for headlines and links.', 'fusion'),
-				'section' => 'advanced'
+				'label' => __('Theme', 'fusion'),
+				'help' => __('Choose Column theme. Light will inherit globally set text color. Dark will adopt text color set within this Column for headlines and links.', 'fusion'),
+				'section' => 'style'
 			)
 		);
 		
