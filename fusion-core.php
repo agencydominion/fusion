@@ -530,6 +530,13 @@ class FusionCore	{
 					}
 				}
 			}
+			/**
+			 * Append Style Output
+			 *
+			 * @since 1.1.11
+			 *
+			 */
+			do_action('fsn_style_append');
 		echo '</style>';
 	}
 	
