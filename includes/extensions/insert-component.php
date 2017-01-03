@@ -63,7 +63,7 @@ function fsn_component_shortcode( $atts, $content ) {
 	
 	if (!empty($component_id)) {
 		$component = get_post($component_id);
-		if (!empty($component)) {
+		if (!empty($component) && $component->post_status == 'publish') {
 			$output .= '<div id="component-'. esc_attr($component_id) .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
 				$output .= apply_filters('fsn_the_content', $component->post_content);
 			$output .= '</div>';
