@@ -55,15 +55,10 @@ class FusionCoreButtonModal	{
 						<form role="form">
 						<?php
 						//get registered post types
-						$post_types = get_post_types();		
+						$post_types = get_post_types(array('public' => true));		
 						unset($post_types['attachment']);
-						unset($post_types['revision']);
-						unset($post_types['nav_menu_item']);
 						unset($post_types['component']);
 						unset($post_types['template']);
-						if (isset($post_types['notification'])) {
-							unset($post_types['notification']);	
-						}
 
 						//map button parameters
 						$params = array(

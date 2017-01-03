@@ -267,7 +267,7 @@ class FusionCoreTemplate	{
 		$template_id = intval($_POST['template_id']);
 		$template = get_post($template_id);
 		
-		if (!empty($template)) {
+		if (!empty($template) && $template->post_status == 'publish') {
 			echo do_shortcode($template->post_content);
 		}
 		
