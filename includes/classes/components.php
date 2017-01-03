@@ -184,7 +184,9 @@ class FusionCoreComponents	{
 							echo '<div class="fsn-interface-grid">';			
 								if (!empty($component_id)) {
 									$component = get_post($component_id);
-									echo do_shortcode($component->post_content);
+									if (!empty($component) && $component->post_status == 'publish') {
+										echo do_shortcode($component->post_content);
+									}
 								}
 							echo '</div>';
 						echo '</div>';	
