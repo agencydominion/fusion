@@ -86,10 +86,8 @@ class FusionCoreSettings	{
 		// get option value from the database
 		$options = get_option( 'fsn_options' );
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : array();
-		$post_types = get_post_types();				
+		$post_types = get_post_types(array('public' => true));				
 		unset($post_types['attachment']);
-		unset($post_types['revision']);
-		unset($post_types['nav_menu_item']);
 		// echo the fields
 		foreach ($post_types as $post_type) {
 			$post_type_object = get_post_type_object( $post_type );
