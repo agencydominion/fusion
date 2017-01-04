@@ -156,6 +156,13 @@
 	color:#ccc;
 }
 
+/*Undo outdated normalize.css handling of search inputs*/
+input[type="search"] {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
 /* Extra small devices (phones, less than 768px) */
 /* This is the default viewport */
 @media (max-width: 767px) {

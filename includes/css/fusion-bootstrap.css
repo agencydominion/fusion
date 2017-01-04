@@ -16,6 +16,7 @@
 .fsn-row .btn:focus, .fsn-row .btn:hover	{
 	border-width:1px;
 	border-style:solid;
+	box-shadow:none;
 }
 
 .fsn-row .btn {
