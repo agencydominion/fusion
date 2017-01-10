@@ -259,8 +259,6 @@ class FusionCore	{
 			wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/front/css/bootstrap.min.css', false, '3.3.5' );
 			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.0.0' );
 		}
-		//google material icons
-		wp_enqueue_style( 'material_icons', 'https://fonts.googleapis.com/icon?family=Material+Icons' );
 		//modernizr
 		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-2.8.3-respond-1.4.2.min.js', false, '2.8.3');
 		//imagesLoaded
