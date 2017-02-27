@@ -283,7 +283,9 @@ class FusionCore	{
 	 */
 	
 	public function include_mobile_detect_function() {
-		include 'includes/utilities/mobile-detect/Mobile_Detect.php';
+		if (!class_exists('Mobile_Detect')) {
+			include 'includes/utilities/mobile-detect/Mobile_Detect.php';
+		}
 	}
 
 	/**
