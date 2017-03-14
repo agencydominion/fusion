@@ -6,13 +6,13 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.1.14
+ * Version: 1.1.15
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
  */
  
-define( 'FSN_VERSION', '1.1.14' );
+define( 'FSN_VERSION', '1.1.15' );
  
 /**
  * Fusion class.
@@ -260,7 +260,7 @@ class FusionCore	{
 			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.0.0' );
 		}
 		//modernizr
-		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-2.8.3-respond-1.4.2.min.js', false, '2.8.3');
+		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1');
 		//imagesLoaded
 		wp_enqueue_script('images_loaded', plugin_dir_url( __FILE__ ) .'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
