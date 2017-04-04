@@ -565,6 +565,7 @@ class FusionCore	{
 			'background_position_custom' => '',
 			'background_attachment' => 'scroll',
 			'background_size' => 'auto',
+			'background_image_xs' => 'show',
 			'id' => false
 		), $atts ) );
 		
@@ -660,6 +661,11 @@ class FusionCore	{
 			//seamless rows
 			if (!empty($seamless)) {
 				$classes_array[] = 'seamless';
+			}
+			
+			//hide mobile background
+			if ($background_image_xs == 'hide') {
+				$classes_array[] = 'background-image-hidden-xs';
 			}
 			
 			//filter for adding classes
@@ -1099,6 +1105,16 @@ class FusionCore	{
 				),
 				'param_name' => 'background_size',
 				'label' => __('Background Image Size', 'fusion'),
+				'section' => 'style'
+			),
+			array(
+				'type' => 'select',
+				'options' => array(
+					'show' => __('Show','fusion'),
+					'hide' => __('Hide', 'fusion')
+				),
+				'param_name' => 'background_image_xs',
+				'label' => __('Background Image Mobile', 'fusion'),
 				'section' => 'style'
 			),
 			array(

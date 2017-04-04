@@ -197,6 +197,9 @@ input[type="search"] {
 		padding-left:0 !important;
 		padding-right:0 !important;
 	}
+	.background-image-hidden-xs	{
+		background-image:none !important;
+	}
 }
 
 /* Small devices (tablets, 768px and up) */
