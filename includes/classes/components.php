@@ -275,7 +275,7 @@ class FusionCoreComponents	{
 				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" class="component modal fade">';
 					echo '<div class="modal-component-inner container">';
 						echo '<div class="modal-component-controls clearfix">';
-							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><i class="material-icons md-48">&#xE5CD;</i></button>';
+							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><span class="material-icons md-48">&#xE5CD;</span></button>';
 						echo '</div>';
 						echo do_shortcode('[fsn_component component_id="'. esc_attr($attached_modal) .'"]');
 					echo '</div>';
