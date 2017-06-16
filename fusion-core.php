@@ -67,9 +67,6 @@ class FusionCore	{
 		// Initialize Screen Options
 		add_action('load-post.php', array($this, 'add_screen_options'));
 		
-		// Filter Image Sizes
-		add_filter('fsn_selectable_image_sizes', array($this, 'selectable_image_sizes'));
-		
 		// Initialize AJAX modals
 		add_action( 'wp_ajax_add_element_modal', array($this, 'render_add_element_modal'));
 		add_action( 'wp_ajax_edit_row_modal', array($this, 'render_edit_row_modal'));
@@ -81,12 +78,6 @@ class FusionCore	{
 		
 		// Lookup Posts from Select2 boxes
 		add_action( 'wp_ajax_fsn_posts_search', array($this, 'posts_search') );
-		
-		//add hi-res image size
-		if ( function_exists( 'add_image_size' ) ) { 
-			add_image_size('hi-res', 2560, 9999);
-			add_image_size('mobile', 640, 9999);
-		}
 		
 	}
 	
@@ -896,20 +887,6 @@ class FusionCore	{
 		$expand .= __('Disable Fusion tooltips.', 'fusion') . '</label></fieldset>';
 		$screen_settings .= $expand;
 		return $screen_settings;
-	}
-	
-	/**
-	 * Filter image sizes
-	 *
-	 * Filter out image sizes that should not be user-selectable
-	 *
-	 * @since 1.0.0
-	 */
-	 
-	public function selectable_image_sizes($fsn_selectable_image_sizes) {
-		//unset WordPress medium large image size
-		unset($fsn_selectable_image_sizes['medium_large']);
-		return $fsn_selectable_image_sizes;
 	}
 	
 	/**
@@ -1803,6 +1780,9 @@ require_once('includes/classes/button.php');
 
 //include custom lists class
 require_once('includes/classes/custom-list.php');
+
+//include images class
+require_once('includes/classes/images.php');
 
 //ELEMENTS
 
