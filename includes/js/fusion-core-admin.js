@@ -2065,7 +2065,7 @@ jQuery(document).ready(function() {
 		        
 		        //save modal
 		        buttonModal.on('hide.bs.modal', function(e) {
-			        var buttonLinkVal = buttonLink.val();
+			        var buttonLinkVal = String.prototype.trim ? buttonLink.val().trim() : buttonLink.val().replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
 			        var buttonLabelVal = buttonLabel.val();
 			        var attachedItem = jQuery('[name="button_attached"]').find('option:selected');
 			        var buttonTargetVal = buttonTarget.val();
