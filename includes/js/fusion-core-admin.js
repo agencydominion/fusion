@@ -339,20 +339,28 @@ function fsnInitUIevents(instance) {
 		var moveTo = trigger.data('move');
 		switch(moveTo) {
 			case 'up':
-				var previousRow = targetRow.prev('.row-container');
-				targetRow.detach().insertBefore(previousRow);
+				var previousRow = targetRow.prev('div');
+				if (previousRow.length > 0) {
+					targetRow.detach().insertBefore(previousRow);
+				}
 				break;
 			case 'down':
-				var nextRow = targetRow.next('.row-container');
-				targetRow.detach().insertAfter(nextRow);
+				var nextRow = targetRow.next('div');
+				if (nextRow.length > 0) {
+					targetRow.detach().insertAfter(nextRow);
+				}
 				break;
 			case 'top':
-				var topRow = targetRow.siblings('.row-container').first();
-				targetRow.detach().insertBefore(topRow);
+				var topRow = targetRow.siblings('div').first();
+				if (topRow.length > 0) {
+					targetRow.detach().insertBefore(topRow);
+				}
 				break;
 			case 'bottom':
-				var bottomRow = targetRow.siblings('.row-container').last();
-				targetRow.detach().insertAfter(bottomRow);
+				var bottomRow = targetRow.siblings('div').last();
+				if (bottomRow.length > 0) {
+					targetRow.detach().insertAfter(bottomRow);
+				}
 				break;
 		}
 		//update content
