@@ -38,7 +38,10 @@ function fsnInitUI() {
 		editorToggleBtn.trigger('click');
 	}
 	//prevent scroll to top on first action
-	jQuery(window).trigger('resize');
+	jQuery( document ).on( 'tinymce-editor-init', function( event, editor ) {
+	    jQuery(window).trigger('resize');
+	});
+	
 	//init events
 	fsnInitUIevents(interfaceGrid);
 }
