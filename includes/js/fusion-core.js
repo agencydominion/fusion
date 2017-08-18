@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
 });
  
 //set images
-jQuery(window).load(function() {
+jQuery(window).on('load', function() {
 	var size = jQuery('body').attr('data-view');
 	ADimageSwap(size);
 });
