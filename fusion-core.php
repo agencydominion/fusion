@@ -26,7 +26,7 @@ class FusionCore	{
 	public function __construct() {
 					
 		// Initialize the language files
-		load_plugin_textdomain( 'fusion', false, plugin_dir_url( __FILE__ ) . 'languages' );
+		add_action('plugins_loaded', array($this, 'load_textdomain'));
 		
 		// Add default settings on plugin activation
 		register_activation_hook( __FILE__, array($this, 'settings_defaults') );
@@ -89,6 +89,18 @@ class FusionCore	{
 		}
 		
 	}
+	
+	/**
+	 * Load Textdomain
+	 *
+	 * @since 1.2.4
+	 *
+	 */
+	 
+	public function load_textdomain() {
+		load_plugin_textdomain( 'fusion', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+	}
+	
 	
 	/**
 	 * Set default settings
