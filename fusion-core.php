@@ -9,8 +9,9 @@
  * Version: 1.2.4
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
+ * Text Domain: fusion
+ * Domain Path: /languages/
  * License: GPL2
- * Text Domain: Fusion
  */
  
 define( 'FSN_VERSION', '1.2.4' );
