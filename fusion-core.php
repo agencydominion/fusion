@@ -10,6 +10,7 @@
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * License: GPL2
+ * Text Domain: Fusion
  */
  
 define( 'FSN_VERSION', '1.2.4' );
