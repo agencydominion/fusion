@@ -475,71 +475,73 @@ class FusionCore	{
 	public function output_style() {
 		global $fsn_style_output;
 		echo '<style>';
-			foreach($fsn_style_output as $key => $value) {
-				if (!empty($value)) {
-					$selector = '.'. $key;
-					echo $selector . ' {';
-						if (!empty($value['margin'])) {
-							$margin = json_decode($value['margin'], true);
-							echo !empty($margin['top']) ? 'margin-top:'. $margin['top'] .';' : '';
-							echo !empty($margin['right']) ? 'margin-right:'. $margin['right'] .';' : '';
-							echo !empty($margin['bottom']) ? 'margin-bottom:'. $margin['bottom'] .';' : '';
-							echo !empty($margin['left']) ? 'margin-left:'. $margin['left'] .';' : '';
-						}
-						if (!empty($value['padding'])) {
-							$padding = json_decode($value['padding'], true);
-							echo !empty($padding['top']) ? 'padding-top:'. $padding['top'] .';' : '';
-							echo !empty($padding['right']) ? 'padding-right:'. $padding['right'] .';' : '';
-							echo !empty($padding['bottom']) ? 'padding-bottom:'. $padding['bottom'] .';' : '';
-							echo !empty($padding['left']) ? 'padding-left:'. $padding['left'] .';' : '';
-						}
-						if (!empty($value['text_align'])) {
-							$text_align = $value['text_align'];
-							echo 'text-align:'. $text_align .';';
-						}
-						if (!empty($value['font_size'])) {
-							$font_size = $value['font_size'];
-							echo 'font-size:'. $font_size .';';
-						}
-						if (!empty($value['color'])) {
-							$color = $value['color'];
-							echo 'color:'. $color .';';
-						}
-						if (!empty($value['background_color'])) {
-							$background_color = $value['background_color'];
-							if (!empty($value['background_color_opacity'])) {
-								$background_color_opacity = $value['background_color_opacity'];
-								$rgb = fsn_hex2rgb($background_color);
-								echo 'background-color:'. $background_color .';';
-								echo 'background-color:rgba('. $rgb[0] .','. $rgb[1] .','. $rgb[2] .','. $background_color_opacity .');';
-							} else {
-								echo 'background-color:'. $background_color .';';
-							}
-						}
-						do_action('fsn_style_append_delcaration_block', $value);
-					echo '}';
-					if ( (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) || (!empty($value['padding_xs_custom']) && !empty($value['padding_xs']) || !empty($value['text_align_xs'])) ) {
+			if (!empty($fsn_style_output)) {
+				foreach($fsn_style_output as $key => $value) {
+					if (!empty($value)) {
 						$selector = '.'. $key;
-						echo '@media (max-width: 767px) {'. $selector . '{';
-							if (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) {
-								$margin_xs = json_decode($value['margin_xs'], true);
-								echo !empty($margin_xs['top']) ? 'margin-top:'. $margin_xs['top'] .';' : '';
-								echo !empty($margin_xs['right']) ? 'margin-right:'. $margin_xs['right'] .';' : '';
-								echo !empty($margin_xs['bottom']) ? 'margin-bottom:'. $margin_xs['bottom'] .';' : '';
-								echo !empty($margin_xs['left']) ? 'margin-left:'. $margin_xs['left'] .';' : '';
+						echo $selector . ' {';
+							if (!empty($value['margin'])) {
+								$margin = json_decode($value['margin'], true);
+								echo !empty($margin['top']) ? 'margin-top:'. $margin['top'] .';' : '';
+								echo !empty($margin['right']) ? 'margin-right:'. $margin['right'] .';' : '';
+								echo !empty($margin['bottom']) ? 'margin-bottom:'. $margin['bottom'] .';' : '';
+								echo !empty($margin['left']) ? 'margin-left:'. $margin['left'] .';' : '';
 							}
-							if (!empty($value['padding_xs_custom']) && !empty($value['padding_xs'])) {
-								$padding_xs = json_decode($value['padding_xs'], true);
-								echo !empty($padding_xs['top']) ? 'padding-top:'. $padding_xs['top'] .';' : '';
-								echo !empty($padding_xs['right']) ? 'padding-right:'. $padding_xs['right'] .';' : '';
-								echo !empty($padding_xs['bottom']) ? 'padding-bottom:'. $padding_xs['bottom'] .';' : '';
-								echo !empty($padding_xs['left']) ? 'padding-left:'. $padding_xs['left'] .';' : '';
+							if (!empty($value['padding'])) {
+								$padding = json_decode($value['padding'], true);
+								echo !empty($padding['top']) ? 'padding-top:'. $padding['top'] .';' : '';
+								echo !empty($padding['right']) ? 'padding-right:'. $padding['right'] .';' : '';
+								echo !empty($padding['bottom']) ? 'padding-bottom:'. $padding['bottom'] .';' : '';
+								echo !empty($padding['left']) ? 'padding-left:'. $padding['left'] .';' : '';
 							}
-							if (!empty($value['text_align_xs'])) {
-								$text_align = $value['text_align_xs'];
+							if (!empty($value['text_align'])) {
+								$text_align = $value['text_align'];
 								echo 'text-align:'. $text_align .';';
 							}
-						echo '}}';
+							if (!empty($value['font_size'])) {
+								$font_size = $value['font_size'];
+								echo 'font-size:'. $font_size .';';
+							}
+							if (!empty($value['color'])) {
+								$color = $value['color'];
+								echo 'color:'. $color .';';
+							}
+							if (!empty($value['background_color'])) {
+								$background_color = $value['background_color'];
+								if (!empty($value['background_color_opacity'])) {
+									$background_color_opacity = $value['background_color_opacity'];
+									$rgb = fsn_hex2rgb($background_color);
+									echo 'background-color:'. $background_color .';';
+									echo 'background-color:rgba('. $rgb[0] .','. $rgb[1] .','. $rgb[2] .','. $background_color_opacity .');';
+								} else {
+									echo 'background-color:'. $background_color .';';
+								}
+							}
+							do_action('fsn_style_append_delcaration_block', $value);
+						echo '}';
+						if ( (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) || (!empty($value['padding_xs_custom']) && !empty($value['padding_xs']) || !empty($value['text_align_xs'])) ) {
+							$selector = '.'. $key;
+							echo '@media (max-width: 767px) {'. $selector . '{';
+								if (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) {
+									$margin_xs = json_decode($value['margin_xs'], true);
+									echo !empty($margin_xs['top']) ? 'margin-top:'. $margin_xs['top'] .';' : '';
+									echo !empty($margin_xs['right']) ? 'margin-right:'. $margin_xs['right'] .';' : '';
+									echo !empty($margin_xs['bottom']) ? 'margin-bottom:'. $margin_xs['bottom'] .';' : '';
+									echo !empty($margin_xs['left']) ? 'margin-left:'. $margin_xs['left'] .';' : '';
+								}
+								if (!empty($value['padding_xs_custom']) && !empty($value['padding_xs'])) {
+									$padding_xs = json_decode($value['padding_xs'], true);
+									echo !empty($padding_xs['top']) ? 'padding-top:'. $padding_xs['top'] .';' : '';
+									echo !empty($padding_xs['right']) ? 'padding-right:'. $padding_xs['right'] .';' : '';
+									echo !empty($padding_xs['bottom']) ? 'padding-bottom:'. $padding_xs['bottom'] .';' : '';
+									echo !empty($padding_xs['left']) ? 'padding-left:'. $padding_xs['left'] .';' : '';
+								}
+								if (!empty($value['text_align_xs'])) {
+									$text_align = $value['text_align_xs'];
+									echo 'text-align:'. $text_align .';';
+								}
+							echo '}}';
+						}
 					}
 				}
 			}
