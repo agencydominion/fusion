@@ -53,6 +53,23 @@ jQuery(document).ready(function() {
 		}, 1000);
 	});
 });
+
+//deep linking
+jQuery(window).load(function() {
+	var targetID = window.location.hash
+	var targetTabTrigger = jQuery('a[data-toggle="tab"][href="'+ targetID +'"]');
+	if (targetTabTrigger.length > 0) {
+		if (jQuery('body').hasClass('admin-bar') && jQuery(window).width() >= 768) {
+			var offset = targetTabTrigger.offset().top - 132;
+		} else {
+			var offset = targetTabTrigger.offset().top - 100;
+		}
+		setTimeout(function() {
+			jQuery(window).scrollTop(offset);
+		}, 100);
+		targetTabTrigger.trigger('click');
+	}
+});
  
 /**
  * JavaScript Media Queries
