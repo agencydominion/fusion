@@ -59,7 +59,7 @@ jQuery(window).load(function() {
 	var targetID = window.location.hash
 	var targetTabTrigger = jQuery('a[data-toggle="tab"][href="'+ targetID +'"]');
 	if (targetTabTrigger.length > 0) {
-		if (jQuery('body').hasClass('admin-bar')) {
+		if (jQuery('body').hasClass('admin-bar') && jQuery(window).width() >= 768) {
 			var offset = targetTabTrigger.offset().top - 132;
 		} else {
 			var offset = targetTabTrigger.offset().top - 100;
