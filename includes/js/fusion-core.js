@@ -29,7 +29,7 @@ jQuery(document).ready(function() {
 });
  
 //set images
-jQuery(window).on('load', function() {
+jQuery(window).on('load.fusion', function() {
 	var size = jQuery('body').attr('data-view');
 	ADimageSwap(size);
 });
@@ -55,21 +55,53 @@ jQuery(document).ready(function() {
 });
 
 //deep linking
-jQuery(window).load(function() {
+jQuery(window).on('load.fusion', function() {
 	var targetID = window.location.hash
 	var targetTabTrigger = jQuery('a[data-toggle="tab"][href="'+ targetID +'"]');
 	if (targetTabTrigger.length > 0) {
-		if (jQuery('body').hasClass('admin-bar') && jQuery(window).width() >= 768) {
-			var offset = targetTabTrigger.offset().top - 132;
-		} else {
-			var offset = targetTabTrigger.offset().top - 100;
-		}
+		var offset = fsnTabsGetOffset(targetTabTrigger);
 		setTimeout(function() {
 			jQuery(window).scrollTop(offset);
 		}, 100);
 		targetTabTrigger.trigger('click');
 	}
 });
+
+//control tabs from WordPress menus
+jQuery(document).ready(function() {
+	jQuery('body').on('click.fusion', '.menu-item-type-custom > a', function(e) {
+		if (e.target.hash != '') {
+			var targetTabTrigger = jQuery('a[data-toggle="tab"][href="'+ e.target.hash +'"]');
+			if (targetTabTrigger.length > 0) {
+				e.preventDefault();
+				var offset = fsnTabsGetOffset(targetTabTrigger);
+				jQuery(window).scrollTop(offset);
+				targetTabTrigger.trigger('click');
+				//update hash
+				if (Modernizr.history) {
+					history.replaceState(null, null, e.target.hash);
+				}
+				//collapse mobile nav menu
+				var mobileNavMenu = jQuery(e.target).closest('.navbar-collapse');
+				if (mobileNavMenu.length > 0 && mobileNavMenu.is('.in')) {
+					mobileNavMenu.collapse('hide');
+				}
+			}
+		}
+	});
+});
+
+function fsnTabsGetOffset(targetTabTrigger) {
+	if (jQuery('body').hasClass('admin-bar') && jQuery(window).width() >= 768) {
+		var offset = targetTabTrigger.offset().top - 132;
+	} else {
+		var offset = targetTabTrigger.offset().top - 100;
+	}
+	if (jQuery(window).width() >= 768 && jQuery('.locking-menu').length > 0) {
+		offset = offset - 80;
+	}
+	return offset;
+}
  
 /**
  * JavaScript Media Queries
