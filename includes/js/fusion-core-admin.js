@@ -1388,7 +1388,7 @@ function fsnInitUIevents(instance) {
 						alert(fsnL10n.error);
 						return false;
 					}
-					//load tempaltes
+					//load templates
 					var output = '';
 					for (i=0; i < response.items.length; i++) {
 						output += '<div class="template-item" data-template-id="'+ response.items[i].id +'"><span class="template-name">'+ response.items[i].text +'</span><span class="template-controls-toggle" title="'+ fsnL10n.template_options +'"><i class="material-icons">&#xE5D3;</i></span><div class="template-controls-dropdown collapsed"><a href="#" class="delete-template">'+ fsnL10n.delete +'</a></div></div>';
