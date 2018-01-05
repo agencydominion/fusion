@@ -182,15 +182,16 @@ class FusionCore	{
 			wp_enqueue_script( 'wp-color-picker' );
 			wp_enqueue_style( 'wp-color-picker' );
 			//plugin
-			wp_enqueue_script( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-admin.js', array('jquery'), '1.0.0', true );
-			wp_enqueue_style( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core-admin.css', false, '1.0.0' );
+			wp_enqueue_script( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-admin.js', array('jquery'), '1.3.0', true );
+			wp_enqueue_style( 'fsn_core_admin', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core-admin.css', false, '1.3.0' );
 			if ($user_admin_color != 'fresh') {
-				wp_enqueue_style( 'fsn_core_admin_color_scheme', plugin_dir_url( __FILE__ ) . 'includes/css/colors/'. $user_admin_color .'/colors.css', false, '1.0.0' );
+				wp_enqueue_style( 'fsn_core_admin_color_scheme', plugin_dir_url( __FILE__ ) . 'includes/css/colors/'. $user_admin_color .'/colors.css', false, '1.3.0' );
 			}
 			wp_localize_script( 'fsn_core_admin', 'fsnJS', array(
 					'fsnEditNonce' => wp_create_nonce('fsn-admin-edit')
 				)
 			);
+			
 			//add translation strings to script
 			$translation_array = array(
 				'error' => __('Oops, something went wrong. Please reload the page and try again.','fusion'),
@@ -251,6 +252,14 @@ class FusionCore	{
 			);
 			wp_localize_script('fsn_core_admin', 'fsnL10n', $translation_array);
 		}
+		//fusion core query
+		wp_register_script( 'fsn_core_query', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.0', true );
+		wp_localize_script( 'fsn_core_query', 'fsnQuery', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'fsnQueryNonce' => wp_create_nonce('fsn-query'),
+				'fsnQueryError' => __('Oops, something went wrong with your query. Please reload the page and try again.','fusion'),
+			)
+		);
 		//select2
 		wp_enqueue_script('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/js/select2.min.js', array('jquery'), '4.0.3', true);
 		wp_enqueue_style('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/css/select2.min.css');
@@ -270,20 +279,28 @@ class FusionCore	{
 		if (!empty($bootstrap_enable)) {
 			wp_enqueue_script( 'bootstrap', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/front/js/bootstrap.min.js', false, '3.3.5', true );
 			wp_enqueue_style( 'bootstrap', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/front/css/bootstrap.min.css', false, '3.3.5' );
-			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.0.0' );
+			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.3.0' );
 		}
 		//modernizr
 		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1');
 		//imagesLoaded
 		wp_enqueue_script('images_loaded', plugin_dir_url( __FILE__ ) .'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
-		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.0.0', true );
-		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.0.0' );
+		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.3.0', true );
+		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.3.0' );
 		
 		//setup front end script for use with AJAX
 		wp_localize_script( 'fsn_core', 'fsnAjax', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				'pluginurl' =>  plugin_dir_url( __FILE__ )
+			)
+		);
+		//fusion core query
+		wp_register_script( 'fsn_core_query', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.0', true );
+		wp_localize_script( 'fsn_core_query', 'fsnQuery', array(
+				'ajaxurl' => admin_url( 'admin-ajax.php' ),
+				'fsnQueryNonce' => wp_create_nonce('fsn-query'),
+				'fsnQueryError' => __('Oops, something went wrong with your query. Please reload the page and try again.','fusion'),
 			)
 		);
 	}
@@ -1797,6 +1814,9 @@ $fsn_core = new FusionCore();
 
 //include settings page
 require_once('includes/classes/settings.php');
+
+//include query class
+require_once('includes/classes/query.php');
 
 //include templates class
 require_once('includes/classes/templates.php');
