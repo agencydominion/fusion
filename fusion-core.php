@@ -6,16 +6,16 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * Text Domain: fusion
  * Domain Path: /languages/
  * License: GPL2
  */
- 
-define( 'FSN_VERSION', '1.3.0' );
- 
+
+define( 'FSN_VERSION', '1.3.1' );
+
 /**
  * Fusion class.
  *
@@ -26,90 +26,90 @@ define( 'FSN_VERSION', '1.3.0' );
 
 class FusionCore	{
 	public function __construct() {
-					
+
 		// Initialize the language files
 		add_action('plugins_loaded', array($this, 'load_textdomain'));
-		
+
 		// Add default settings on plugin activation
 		register_activation_hook( __FILE__, array($this, 'settings_defaults') );
-		
+
 		// Check and update version number option
 		add_action('admin_init', array($this, 'set_version_number'));
-		
+
 		// Enqueue admin scripts and styles
 		add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts_styles'));
-		
+
 		// Enqueue front end scripts and styles
 		add_action('wp_enqueue_scripts', array($this, 'front_enqueue_scripts_styles'));
-		
+
 		// Add Mobile Detection script
 		add_action('init', array($this, 'include_mobile_detect_function'));
-		
+
 		// Register Param Sections
 		add_action('init', array($this, 'register_param_sections'));
-		
+
 		// Populate Style Params global
 		add_action('init', array($this, 'init_style_global'));
-		
+
 		// Output Style
 		add_action('wp_footer', array($this, 'output_style'), 11);
-		
+
 		// Add shortcodes
 		add_shortcode('fsn_row', array($this, 'row_shortcode'));
 		add_shortcode('fsn_row_inner', array($this, 'row_shortcode'));
 		add_shortcode('fsn_column', array($this, 'column_shortcode'));
 		add_shortcode('fsn_column_inner', array($this, 'column_shortcode'));
-		
+
 		// Replace Custom HTML entities
 		add_filter('the_content', array($this, 'decode_custom_entities'), 12); //after shortcode parsing
-		
+
 		// Initialize the editor
 		add_action('edit_form_after_title', array($this, 'render_editor'));
-		
+
 		// Initialize Screen Options
 		add_action('load-post.php', array($this, 'add_screen_options'));
-		
+
 		// Filter Image Sizes
 		add_filter('fsn_selectable_image_sizes', array($this, 'selectable_image_sizes'));
-		
+
 		// Initialize AJAX modals
 		add_action( 'wp_ajax_add_element_modal', array($this, 'render_add_element_modal'));
 		add_action( 'wp_ajax_edit_row_modal', array($this, 'render_edit_row_modal'));
 		add_action( 'wp_ajax_edit_column_modal', array($this, 'render_edit_column_modal'));
-		
+
 		// Update media previews
 		add_action( 'wp_ajax_update_image_preview', array($this, 'update_image_preview') );
 		add_action( 'wp_ajax_update_video_preview', array($this, 'update_video_preview') );
-		
+
 		// Lookup Posts from Select2 boxes
 		add_action( 'wp_ajax_fsn_posts_search', array($this, 'posts_search') );
-		
+
 		//add hi-res image size
-		if ( function_exists( 'add_image_size' ) ) { 
+		if ( function_exists( 'add_image_size' ) ) {
 			add_image_size('hi-res', 2560, 9999);
 			add_image_size('mobile', 640, 9999);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Load Textdomain
 	 *
 	 * @since 1.2.4
 	 *
 	 */
-	 
+
 	public function load_textdomain() {
 		load_plugin_textdomain( 'fusion', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
 	}
-	
+
 	/**
 	 * Set default settings
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	
+
 	public function settings_defaults() {
 		$options = get_option('fsn_options');
 		$current_version = get_option('fsn_current_version');
@@ -137,7 +137,7 @@ class FusionCore	{
 		//set version number
 		update_option('fsn_current_version', FSN_VERSION);
 	}
-	
+
 	/**
 	 * Set version number
 	 *
@@ -146,14 +146,14 @@ class FusionCore	{
 	 * @since 1.0.3
 	 *
 	 */
-	
+
 	public function set_version_number() {
 		$current_version = get_option('fsn_current_version');
 		if (empty($current_version) || $current_version != FSN_VERSION) 	{
 			update_option('fsn_current_version', FSN_VERSION);
 		}
 	}
-	
+
 	/**
 	 * Enqueue JavaScript and CSS on Admin pages.
 	 *
@@ -161,14 +161,14 @@ class FusionCore	{
 	 *
 	 * @param string $hook_suffix The current admin page.
 	 */
-	 
+
 	public function admin_enqueue_scripts_styles($hook_suffix) {
 		global $post;
-		
+
 		$options = get_option('fsn_options');
 		$user_admin_color = get_user_option( 'admin_color' );
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
-		
+
 		// Editor scripts and styles
 		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && ( (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) ) {
 			//bootstrap
@@ -191,7 +191,7 @@ class FusionCore	{
 					'fsnEditNonce' => wp_create_nonce('fsn-admin-edit')
 				)
 			);
-			
+
 			//add translation strings to script
 			$translation_array = array(
 				'error' => __('Oops, something went wrong. Please reload the page and try again.','fusion'),
@@ -264,14 +264,14 @@ class FusionCore	{
 		wp_enqueue_script('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/js/select2.min.js', array('jquery'), '4.0.3', true);
 		wp_enqueue_style('select2', plugin_dir_url( __FILE__ ) . 'includes/utilities/select2/css/select2.min.css');
 	}
-	
+
 	/**
 	 * Enqueue JavaScript and CSS on Front End pages.
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function front_enqueue_scripts_styles() {
 		//bootstrap
 		$options = get_option('fsn_options');
@@ -288,7 +288,7 @@ class FusionCore	{
 		//plugin
 		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.3.0', true );
 		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.3.0' );
-		
+
 		//setup front end script for use with AJAX
 		wp_localize_script( 'fsn_core', 'fsnAjax', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -304,14 +304,14 @@ class FusionCore	{
 			)
 		);
 	}
-	
+
 	/**
 	 * Add Mobile Detect Script
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	
+
 	public function include_mobile_detect_function() {
 		if (!class_exists('Mobile_Detect')) {
 			include 'includes/utilities/mobile-detect/Mobile_Detect.php';
@@ -326,7 +326,7 @@ class FusionCore	{
 	 * @since 1.0.0
 	 *
 	 */
-	
+
 	public function register_param_sections() {
 		global $fsn_param_sections;
 		$fsn_param_sections = array(
@@ -349,14 +349,14 @@ class FusionCore	{
 		);
 		$fsn_param_sections = apply_filters('fsn_param_sections', $fsn_param_sections);
 	}
-	
+
 	/**
 	 * Populate Style params global
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	
+
 	public function init_style_global() {
 		if (is_admin()) {
 			global $fsn_style_params;
@@ -481,14 +481,14 @@ class FusionCore	{
 			);
 		}
 	}
-	
+
 	/**
 	 * Output Style
 	 *
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function output_style() {
 		global $fsn_style_output;
 		echo '<style>';
@@ -571,7 +571,7 @@ class FusionCore	{
 			do_action('fsn_style_append');
 		echo '</style>';
 	}
-	
+
 	/**
 	 * The Row shortcode.
 	 *
@@ -583,9 +583,9 @@ class FusionCore	{
 	 * @param string $content Optional. Shortcode content.
 	 * @return string
 	 */
-	
+
 	public function row_shortcode($atts, $content = null) {
-				
+
 		extract( shortcode_atts( array(
 			'row_style' => 'light',
 			'row_function' => '',
@@ -600,7 +600,7 @@ class FusionCore	{
 			'background_image_xs' => 'show',
 			'id' => false
 		), $atts ) );
-		
+
 		//if running AJAX, get action being run
 		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
@@ -608,14 +608,14 @@ class FusionCore	{
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
-		
+
 		//build output
 		if ( is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX || (!empty($ajax_action) && $ajax_action == 'load_template' || $ajax_action == 'components_modal')) ) {
 			$shortcode_atts_data = '';
 			if (!empty($atts)) {
 				foreach($atts as $key => $value) {
 					$att_name = str_replace('_','-', $key);
-					$shortcode_atts_data .= ' data-'. esc_attr($att_name) .'="'. esc_attr($value) .'"';	
+					$shortcode_atts_data .= ' data-'. esc_attr($att_name) .'="'. esc_attr($value) .'"';
 				}
 			}
 			$output = '';
@@ -642,12 +642,12 @@ class FusionCore	{
 					$output .= '<div class="row"'. $shortcode_atts_data .'>'. do_shortcode($content) .'</div>';
 				$output .= '</div>';
 			$output .= '</div>';
-			
+
 		} else {
-			
+
 			//build style
 			$style = '';
-			
+
 			//background image
 			if (!empty($background_image)) {
 				$image_attrs = wp_get_attachment_image_src($background_image, 'hi-res');
@@ -660,9 +660,9 @@ class FusionCore	{
 			//background position
 			if (!empty($background_position)) {
 				if ($background_position == 'custom' && !empty($background_position_custom)) {
-					$style .= 'background-position:'. $background_position_custom .';';	
+					$style .= 'background-position:'. $background_position_custom .';';
 				} else {
-					$style .= 'background-position:'. $background_position .';';	
+					$style .= 'background-position:'. $background_position .';';
 				}
 			}
 			//background attachment
@@ -673,44 +673,44 @@ class FusionCore	{
 			if (!empty($background_size)) {
 				$style .= 'background-size:'. $background_size .';';
 			}
-			
+
 			//filter for modifying style
-			$style = apply_filters('fsn_row_style', $style, $atts);			
-			
+			$style = apply_filters('fsn_row_style', $style, $atts);
+
 			//build classes
 			$classes_array = array();
-			
+
 			//row style
 			if (!empty($row_style)) {
 				$classes_array[] = $row_style;
 			}
-			
+
 			//row function
 			if (!empty($row_function)) {
 				$classes_array[] = $row_function;
 			}
-			
+
 			//seamless rows
 			if (!empty($seamless)) {
 				$classes_array[] = 'seamless';
 			}
-			
+
 			//hide mobile background
 			if ($background_image_xs == 'hide') {
 				$classes_array[] = 'background-image-hidden-xs';
 			}
-			
+
 			//filter for adding classes
 			$classes_array = apply_filters('fsn_row_classes', $classes_array, $atts);
-			
+
 			if (!empty($classes_array)) {
 				$classes = implode(' ', $classes_array);
 			}
-		
+
 			$output = '';
-			
+
 			//open row container
-			if ($row_width == 'container') {	
+			if ($row_width == 'container') {
 				$output .= '<div '. (!empty($id) ? 'id="'. esc_attr($id) .'" ' : '') .'class="fsn-row full-width-row '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'"'. (!empty($style) ? ' style="'. esc_attr($style) .'"' : '') .'>';
 					//action executed before the front-end row shortcode container output
 					ob_start();
@@ -726,19 +726,19 @@ class FusionCore	{
 			} elseif ($row_width == 'full-width') {
 				$output .= '<div '. (!empty($id) ? 'id="'. esc_attr($id) .'" ' : '') .' class="fsn-row full-width-container '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'"'. (!empty($style) ? ' style="'. esc_attr($style) .'"' : '') .'>';
 			}
-			
+
 			//action executed before the front-end row shortcode output
 			ob_start();
 			do_action('fsn_before_row', $atts);
 			$output .= ob_get_clean();
 
 			$output .= '<div class="row">'. do_shortcode($content) .'</div>';
-			
+
 			//action executed after the front-end row shortcode output
 			ob_start();
 			do_action('fsn_after_row', $atts);
 			$output .= ob_get_clean();
-			
+
 			//close row container
 			if ($row_width == 'container') {
 					$output .= '</div>'; //close container
@@ -751,10 +751,10 @@ class FusionCore	{
 				$output .= '</div>'; //close full width container
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * The Column shortcode.
 	 *
@@ -766,14 +766,14 @@ class FusionCore	{
 	 * @param string $content Optional. Shortcode content.
 	 * @return string
 	 */
-	
+
 	public function column_shortcode($atts, $content = null) {
 		extract( shortcode_atts( array(
 			'width' => '12',
 			'offset' => false,
 			'column_style' => 'light'
 		), $atts ) );
-		
+
 		//if running AJAX, get action being run
 		$ajax_action = false;
 		if (defined('DOING_AJAX') && DOING_AJAX) {
@@ -781,7 +781,7 @@ class FusionCore	{
 				$ajax_action = sanitize_text_field($_POST['action']);
 			}
 		}
-		
+
 		//build output
 		if ( is_admin() && (!defined('DOING_AJAX') || !DOING_AJAX || (!empty($ajax_action) && $ajax_action == 'load_template' || $ajax_action == 'components_modal')) ) {
 			$shortcode_atts_data = '';
@@ -812,45 +812,45 @@ class FusionCore	{
 				$output .= '</div>';
 			$output .= '</div>';
 		} else {
-			
+
 			//build style
 			$style = '';
-			
+
 			//filter for modifying style
 			$style = apply_filters('fsn_column_style', $style, $atts);
-			
+
 			//build classes
 			$classes_array = array();
-			
+
 			//column style
 			if (!empty($column_style)) {
 				$classes_array[] = $column_style;
 			}
-			
+
 			//filter for adding classes
 			$classes_array = apply_filters('fsn_column_classes', $classes_array, $atts);
-			
+
 			if (!empty($classes_array)) {
 				$classes = implode(' ', $classes_array);
 			}
-		
+
 			$output = '';
 			//action executed before the front-end column shortcode output
 			ob_start();
 			do_action('fsn_before_column', $atts);
 			$output .= ob_get_clean();
-			
+
 			$output .= '<div class="col-sm-'. esc_attr($width) . (!empty($offset) ? ' col-sm-offset-'. esc_attr($offset) : '') .'"><div class="fsn-column-inner '. fsn_style_params_class($atts) . (!empty($classes) ? ' '. esc_attr($classes) : '') .'"'. (!empty($style) ? ' style="'. esc_attr($style) .'"' : '') .'>'. do_shortcode($content) .'</div></div>';
-			
+
 			//action executed after the front-end column shortcode output
 			ob_start();
 			do_action('fsn_after_column', $atts);
 			$output .= ob_get_clean();
 		}
-		
+
 		return $output;
 	}
-	
+
 	/**
 	 * Decode Custom HTML Entities
 	 *
@@ -861,17 +861,17 @@ class FusionCore	{
 	 * @param string $content the content to be modified
 	 * @return string
 	 */
-	 
+
 	public static function decode_custom_entities($content) {
-	
+
 		$custom_entities = array('#fsnquot;','#fsnsqbl;','#fsnsqbr;','#fsnlt;','#fsngt;');
 		$html_entities = array('"','[',']','<','>');
-		
+
 		$content = str_replace($custom_entities, $html_entities, $content);
-		
+
 		return $content;
 	}
-	
+
 	/**
 	 * Render Fusion editor
 	 *
@@ -881,7 +881,7 @@ class FusionCore	{
 	 *
 	 * @param WP_Post $post The post object.
 	 */
-	
+
 	public function render_editor($post) {
 		$options = get_option('fsn_options');
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
@@ -895,16 +895,16 @@ class FusionCore	{
 					echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">'. __('Load Template', 'fusion') .'</a>';
 					//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
 				echo '</div>';
-				echo '<div class="fsn-interface-container">';			
+				echo '<div class="fsn-interface-container">';
 					//output grid content
-					echo '<div id="fsn-main-ui" class="fsn-interface-grid">';			
+					echo '<div id="fsn-main-ui" class="fsn-interface-grid">';
 						echo do_shortcode($post->post_content);
 					echo '</div>';
 				echo '</div>';
 			echo '</div>';
 		}
 	}
-	
+
 	/**
 	 * Add Screen Options
 	 *
@@ -912,7 +912,7 @@ class FusionCore	{
 	 *
 	 * @since 1.0.0
 	 */
-	
+
 	public function add_screen_options() {
 		$current_screen = get_current_screen();
 		$options = get_option('fsn_options');
@@ -921,7 +921,7 @@ class FusionCore	{
 			add_filter( 'screen_settings', array($this, 'filter_screen_settings'), 10, 2 );
 		}
 	}
-	
+
 	public function filter_screen_settings($screen_settings, $screen_object) {
 		$expand = '<fieldset class="editor-expand"><legend>' . __('Fusion settings', 'fusion') . '</legend><label for="fsn_disable_tooltips">';
 		$expand .= '<input type="checkbox" id="fsn_disable_tooltips"' . checked( get_user_setting( 'fsn_disable_tooltips', false ), 'on', false ) . ' />';
@@ -929,7 +929,7 @@ class FusionCore	{
 		$screen_settings .= $expand;
 		return $screen_settings;
 	}
-	
+
 	/**
 	 * Filter image sizes
 	 *
@@ -937,27 +937,27 @@ class FusionCore	{
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function selectable_image_sizes($fsn_selectable_image_sizes) {
 		//unset WordPress medium large image size
 		unset($fsn_selectable_image_sizes['medium_large']);
 		return $fsn_selectable_image_sizes;
 	}
-	
+
 	/**
 	 * Render add content modal.
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function render_add_element_modal() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		//get elements global
 		global $fsn_elements;
 		$nesting_level = intval($_POST['nesting_level']);
@@ -966,7 +966,7 @@ class FusionCore	{
 		<div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header">						
+					<div class="modal-header">
 						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Add Element', 'fusion'); ?></h4>
 						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
@@ -1001,21 +1001,21 @@ class FusionCore	{
 		<?php
 		exit;
 	}
-	
+
 	/**
 	 * Render edit row modal.
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function render_edit_row_modal() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
@@ -1024,12 +1024,19 @@ class FusionCore	{
 				$saved_values[$key] = wp_filter_post_kses($value);
 			}
 		}
+
+    $row_function_options = array(
+      '' => __('Choose row function.', 'fusion'),
+      'collapse' => __('Collapse', 'fusion')
+    );
+		$row_function_options = apply_filters('fsn_row_function_options', $row_function_options);
+
 		$row_style_options = array(
 			'light' => __('Light', 'fusion'),
 			'dark' => __('Dark', 'fusion')
 		);
 		$row_style_options = apply_filters('fsn_row_style_options', $row_style_options);
-		
+
 		//map row parameters
 		$params = array(
 			array(
@@ -1050,10 +1057,7 @@ class FusionCore	{
 			),
 			array(
 				'type' => 'select',
-				'options' => array(
-					'' => __('Choose row function.', 'fusion'),
-					'collapse' => __('Collapse', 'fusion')
-				),
+				'options' => $row_function_options,
 				'param_name' => 'row_function',
 				'label' => __('Function', 'fusion'),
 				'help' => __('"Collapse" will hide row and allow it to be triggered and revealed by a button.', 'fusion'),
@@ -1074,7 +1078,7 @@ class FusionCore	{
 				'section' => 'style'
 			),
 			array(
-				'type' => 'image',			
+				'type' => 'image',
 				'param_name' => 'background_image',
 				'label' => __('Background Image', 'fusion'),
 				'section' => 'style'
@@ -1155,15 +1159,15 @@ class FusionCore	{
 				'section' => 'style'
 			)
 		);
-		
+
 		//filter row params
 		$params = apply_filters('fsn_row_params', $params);
-		
+
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
+
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
@@ -1171,7 +1175,7 @@ class FusionCore	{
 		<div class="modal fade" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header has-tabs">						
+					<div class="modal-header has-tabs">
 						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Row', 'fusion'); ?></h4>
 						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
@@ -1185,10 +1189,10 @@ class FusionCore	{
 							    	echo '<li role="presentation" style="display:none;"><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 						    	}
 							}
-						echo '</ul>';	
+						echo '</ul>';
 						?>
 					</div>
-					<div class="modal-body">						
+					<div class="modal-body">
 						<form role="form">
 							<?php
 							echo '<div class="tab-content">';
@@ -1244,11 +1248,11 @@ class FusionCore	{
 										echo '</div>';
 										$active_tab = false;
 									} else {
-										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';	
+										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';
 									}
 								}
 							echo '</div>';
-							?>							
+							?>
 						</form>
 					</div>
 					<div class="modal-footer">
@@ -1261,21 +1265,21 @@ class FusionCore	{
 		<?php
 		exit;
 	}
-	
+
 	/**
 	 * Render edit column modal.
 	 *
 	 * @since 1.0.0
 	 */
-	 
+
 	public function render_edit_column_modal() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		$saved_values = !empty($_POST['saved_values']) ? $_POST['saved_values'] : '';
 		if (empty($saved_values)) {
 			$saved_values = array();
@@ -1300,15 +1304,15 @@ class FusionCore	{
 				'section' => 'style'
 			)
 		);
-		
+
 		//filter column params
 		$params = apply_filters('fsn_column_params', $params);
-		
+
 		//add style params
 		global $fsn_style_params;
 		$style_params = $fsn_style_params;
 		$params = array_merge_recursive($params, $style_params);
-		
+
 		//sort params into sections
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
@@ -1316,7 +1320,7 @@ class FusionCore	{
 		<div class="modal fade" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header has-tabs">						
+					<div class="modal-header has-tabs">
 						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Column', 'fusion'); ?></h4>
 						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
@@ -1330,10 +1334,10 @@ class FusionCore	{
 							    	echo '<li role="presentation" style="display:none;"><a href="#'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" aria-controls="options" role="tab" data-toggle="tab">'. esc_html($fsn_param_sections[$i]['name']) .'</a></li>';
 						    	}
 							}
-						echo '</ul>';	
+						echo '</ul>';
 						?>
 					</div>
-					<div class="modal-body">						
+					<div class="modal-body">
 						<form role="form">
 							<?php
 							echo '<div class="tab-content">';
@@ -1365,7 +1369,7 @@ class FusionCore	{
 														$param_value = '';
 													}
 												} else {
-													$param_value = '';	
+													$param_value = '';
 												}
 												//check for dependency
 												$dependency = !empty($param['dependency']) ? true : false;
@@ -1389,7 +1393,7 @@ class FusionCore	{
 										echo '</div>';
 										$active_tab = false;
 									} else {
-										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';	
+										echo '<div role="tabpanel" class="tab-pane" id="'. esc_attr($fsn_param_sections[$i]['id']) .'-'. esc_attr($tabset_id) .'" data-section-id="'. esc_attr($fsn_param_sections[$i]['id']) .'"></div>';
 									}
 								}
 							echo '</div>';
@@ -1406,7 +1410,7 @@ class FusionCore	{
 		<?php
 		exit;
 	}
-		
+
 	/**
 	 * Get input field for compontent modals.
 	 *
@@ -1416,7 +1420,7 @@ class FusionCore	{
 	 * @param string $param_name The name to be assigned to the input field.
 	 * @param string $param_value The input field's value (if already set).
 	 */
-	
+
 	public static function get_input_field($param, $param_value = '') {
 		if (!isset($param['content_field'])) {
 			$param['content_field'] = false;
@@ -1426,7 +1430,7 @@ class FusionCore	{
 			case 'text':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="text" class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') . (!empty($param['encode_base64']) ? ' encode-base64' : '') . (!empty($param['encode_url']) ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. esc_attr($param['placeholder']) .'"' : '') .'>';				
+				$input .= '<input type="text" class="form-control element-input'. (!empty($param['nested']) ? ' nested' : '') . (!empty($param['encode_base64']) ? ' encode-base64' : '') . (!empty($param['encode_url']) ? ' encode-url' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'"'. (!empty($param['placeholder']) ? ' placeholder="'. esc_attr($param['placeholder']) .'"' : '') .'>';
 				break;
 			case 'textarea':
 				if (!empty($param['encode_base64']) || !empty($param['encode_url'])) {
@@ -1434,7 +1438,7 @@ class FusionCore	{
 				} elseif (!empty($param['content_field']) && empty($param['encode_base64']) && empty($param['encode_url'])) {
 					$param_value = esc_textarea(fsn_unautop($param_value));
 				} else {
-					$param_value = esc_textarea($param_value);	
+					$param_value = esc_textarea($param_value);
 				}
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
@@ -1464,7 +1468,7 @@ class FusionCore	{
 							$input .= $value;
 						$input .= '</label>';
 			    	$input .= '</div>';
-		    	}		    	
+		    	}
 		    	break;
 			case 'select':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
@@ -1473,7 +1477,7 @@ class FusionCore	{
 					foreach($param['options'] as $key => $value) {
 						$input .= '<option value="'. esc_attr($key) .'"'. selected( $param_value, $key, false ) .'>'. esc_html($value) .'</option>';
 					}
-				$input .= '</select>';				
+				$input .= '</select>';
 				break;
 			case 'select_post':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
@@ -1483,8 +1487,8 @@ class FusionCore	{
 					if (!empty($param_value)) {
 						$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
 					}
-				$input .= '</select>';				
-				break;			
+				$input .= '</select>';
+				break;
 			case 'textarea_rte':
 				$input .= '<label>'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
@@ -1496,12 +1500,12 @@ class FusionCore	{
 					ob_start();
 					wp_editor($param_value, 'fsncontent');
 					$input .= ob_get_clean();
-				}				
+				}
 				break;
 			case 'colorpicker':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
-				$input .= '<input type="text" class="form-control element-input fsn-color-picker'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';				
+				$input .= '<input type="text" class="form-control element-input fsn-color-picker'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'" value="'. esc_attr($param_value) .'">';
 				break;
 			case 'image':
 				$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
@@ -1639,12 +1643,12 @@ class FusionCore	{
 				$input .= !empty($param['help']) ? '<p class="fsn-element-note-description description">'. esc_html($param['help']) .'</p>' : '';
 				break;
 		}
-		
+
 		$input = apply_filters('fsn_input_types', $input, $param, $param_value);
-		
+
 		return $input;
 	}
-	
+
 	/**
 	 * Update image field preview
 	 *
@@ -1653,11 +1657,11 @@ class FusionCore	{
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function update_image_preview() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if (!empty($_POST['post_id'])) {
 			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
@@ -1666,14 +1670,14 @@ class FusionCore	{
 			if ( !current_user_can( 'edit_theme_options' ) )
 				die( '-1' );
 		}
-			
+
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'medium');
     	echo '<img src="'. esc_url($image_attrs[0]) .'" class="image-field-preview" alt="">';
-		
-		exit;	
+
+		exit;
 	}
-	
+
 	/**
 	 * Update video field preview
 	 *
@@ -1682,11 +1686,11 @@ class FusionCore	{
 	 * @since 1.0.0
 	 *
 	 */
-	 
+
 	public function update_video_preview() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if (!empty($_POST['post_id'])) {
 			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
@@ -1695,14 +1699,14 @@ class FusionCore	{
 			if ( !current_user_can( 'edit_theme_options' ) )
 				die( '-1' );
 		}
-			
+
 		$attachment_id = intval($_POST['id']);
 		$image_attrs = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
     	echo '<img src="'. esc_url($image_attrs[0]) .'" class="video-field-preview" alt="">';
-		
-		exit;	
+
+		exit;
 	}
-	
+
 	/**
 	 * Posts Search
 	 *
@@ -1711,11 +1715,11 @@ class FusionCore	{
 	 * @since 1.1.0
 	 *
 	 */
-	
+
 	public function posts_search() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if (!empty($_POST['post_id'])) {
 			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
@@ -1724,7 +1728,7 @@ class FusionCore	{
 			if ( !current_user_can( 'edit_theme_options' ) )
 				die( '-1' );
 		}
-		
+
 		$posts_per_page = !empty($_POST['posts_per_page']) ? $_POST['posts_per_page'] : get_option('posts_per_page');
 		$paged = !empty($_POST['page']) ? intval($_POST['page']) : 1;
 		$post_type = !empty($_POST['postType']) ? $_POST['postType'] : 'post';
@@ -1735,7 +1739,7 @@ class FusionCore	{
 		} else {
 			sanitize_text_field($post_type);
 		}
-		
+
 		if (!empty($_POST['q'])) {
 			global $wpdb;
 			$search = esc_sql( $wpdb->esc_like( sanitize_text_field($_POST['q']) ) );
@@ -1744,7 +1748,7 @@ class FusionCore	{
 				return $where;
 			});
 		}
-		
+
 		$query_args = array(
 			'post_type' => $post_type,
 			'post_status' => 'publish',
@@ -1754,14 +1758,14 @@ class FusionCore	{
 			'order' => 'ASC',
 			'fields' => 'id=>parent'
 		);
-		
+
 		$matching_items = new WP_Query($query_args);
-		
+
 		$result = array(
 			'items' => array(),
 			'total_count' => 0
 		);
-				
+
 		if (!empty($matching_items->posts)) {
 			$result['items'] = array();
 			if (!empty($_POST['post_id']) && !empty($_POST['hierarchical'])) {
@@ -1802,12 +1806,12 @@ class FusionCore	{
 			}
 			$result['total_count'] = $matching_items->found_posts;
 		}
-		
+
 		echo json_encode($result);
-		
+
 		exit;
 	}
-	
+
 }
 
 $fsn_core = new FusionCore();
