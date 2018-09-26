@@ -1446,7 +1446,7 @@ class FusionCore	{
 				break;
 			case 'checkbox':
 				$input .= '<div class="checkbox">';
-					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">';
+					$input .= '<label>';
 						$input .= '<input type="checkbox" class="element-input'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, 'on', false ) .'>';
 						$input .= esc_html($param['label']);
 					$input .= '</label>';
