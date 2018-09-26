@@ -2325,9 +2325,10 @@ jQuery(document).ready(function() {
 	});
 	//generate custom list item shortcode (uses custom save event)
 	jQuery('body').on('fsnSave', function(e, shortcodeTag) {
-		var customList = jQuery('.custom-list-sort');
+    var modal = jQuery(e.target);
+		var customList = modal.find('.custom-list-sort');
 		if (customList.length > 0) {
-			customListItemShortcodes();
+			customListItemShortcodes(modal);
 		}
 	});
 	//Init select2 fields inside custom list items
@@ -2336,8 +2337,8 @@ jQuery(document).ready(function() {
 	});
 });
 
-function customListItemShortcodes() {
-	var customListItemsContainer = jQuery('.custom-list-sort');
+function customListItemShortcodes(modal) {
+	var customListItemsContainer = modal.find('.custom-list-sort');
 	var customListID = customListItemsContainer.attr('data-list-id');
 	var shortcodesString = '';
 	var customListItems = jQuery('.custom-list-item');
@@ -2388,7 +2389,7 @@ function customListItemShortcodes() {
 		});
 		shortcodesString += ']';
 	});
-	var customListInput = jQuery('.custom-list-items');
+	var customListInput = modal.find('.custom-list-items');
 	customListInput.val(shortcodesString);
 }
 
