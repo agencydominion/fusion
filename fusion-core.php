@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * Text Domain: fusion
@@ -14,7 +14,7 @@
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.3.3' );
+define( 'FSN_VERSION', '1.3.4' );
 
 /**
  * Fusion class.
@@ -1446,7 +1446,7 @@ class FusionCore	{
 				break;
 			case 'checkbox':
 				$input .= '<div class="checkbox">';
-					$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">';
+					$input .= '<label>';
 						$input .= '<input type="checkbox" class="element-input'. (!empty($param['nested']) ? ' nested' : '') .'" id="fsn_'. esc_attr($param['param_name']) .'" name="'. esc_attr($param['param_name']) .'"'. checked( $param_value, 'on', false ) .'>';
 						$input .= esc_html($param['label']);
 					$input .= '</label>';
