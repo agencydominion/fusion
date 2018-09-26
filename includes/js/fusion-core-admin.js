@@ -7,7 +7,7 @@
  *
  * @package Fusion
  */
- 
+
 //init Fusion
 jQuery(document).ready(function() {
 	fsnInitUI();
@@ -41,7 +41,7 @@ function fsnInitUI() {
 	jQuery( document ).on( 'tinymce-editor-init', function( event, editor ) {
 	    jQuery(window).trigger('resize');
 	});
-	
+
 	//init events
 	fsnInitUIevents(interfaceGrid);
 }
@@ -105,7 +105,7 @@ function fsnDestroyTooltips(instance) {
 	var targets = instance.find('.fsn-add-row, .fsn-add-col, .fsn-add-element, .fsn-add-tab, .row-controls-toggle, .column-controls-toggle, .tabs-controls-toggle, .tab-controls-toggle, .element-controls-toggle, .control-icon');
 	targets.each(function() {
 		var target = jQuery(this);
-		try {		
+		try {
 			target.tooltip('destroy');
 		} catch(err) {}
 	});
@@ -161,10 +161,10 @@ function fsnGetTab(title, tabID, active, content) {
 //get new element
 function fsnGetElement(type, name, content) {
 	if (content == undefined || content === '<br />\n') {
-		var content = '';		
+		var content = '';
 	}
 	var output = '<div class="fsn-element '+ type +'" data-shortcode-tag="'+ type +'"><div class="element-controls"><span class="element-controls-toggle" title="'+ fsnL10n.element_options +'"><i class="material-icons md-18">&#xE5D3;</i></span><div class="element-controls-dropdown collapsed"><a href="#" class="edit-element">'+ fsnL10n.edit +'</a><a href="#" class="duplicate-element">'+ fsnL10n.duplicate +'</a><a href="#" class="delete-element">'+ fsnL10n.delete +'</a></div><a href="#" class="control-icon edit-element" title="'+ fsnL10n.element_edit +'"><i class="material-icons md-18">&#xE3C9;</i></a></div><div class="element-label" title="'+ name +'">'+ name +'</div><div class="element-text-holder">'+ content +'</div></div>';
-	return output;		
+	return output;
 }
 
 //global events
@@ -190,14 +190,14 @@ function fsnCloseDropdowns(trigger, target) {
 
 //instance events
 function fsnInitUIevents(instance) {
-	
+
 	//get instance parent
 	if (instance.attr('id') == 'fsn-main-ui') {
 		instanceParent = jQuery('.fsn-editor');
 	} else {
 		instanceParent = jQuery('#edit_component');
 	}
-	
+
 	//toggle row controls
 	instance.on('click', '.row-controls-toggle', function(e) {
 		e.stopPropagation();
@@ -207,7 +207,7 @@ function fsnInitUIevents(instance) {
 		trigger.toggleClass('open');
 		target.toggleClass('collapsed');
 	});
-	
+
 	//toggle column controls
 	instance.on('click', '.column-controls-toggle', function(e) {
 		e.stopPropagation();
@@ -217,7 +217,7 @@ function fsnInitUIevents(instance) {
 		trigger.toggleClass('open');
 		target.toggleClass('collapsed');
 	});
-	
+
 	//toggle tabs controls
 	instance.on('click', '.tabs-controls-toggle', function(e) {
 		e.stopPropagation();
@@ -227,7 +227,7 @@ function fsnInitUIevents(instance) {
 		trigger.toggleClass('open');
 		target.toggleClass('collapsed');
 	});
-	
+
 	//single tab
 	instance.on('click', '.tab-controls-toggle', function(e) {
 		e.stopPropagation();
@@ -237,7 +237,7 @@ function fsnInitUIevents(instance) {
 		trigger.toggleClass('open');
 		target.toggleClass('collapsed');
 	});
-	
+
 	//on switch tab
 	instance.on('shown.bs.tab', 'a[data-toggle="tab"]', function(e) {
 		var incomingTab = e.target // newly activated tab
@@ -245,7 +245,7 @@ function fsnInitUIevents(instance) {
 		fsnAddColFields(instance);
 		fsnResize();
 	});
-	
+
 	//toggle element controls
 	instance.on('click', '.element-controls-toggle', function(e) {
 		e.stopPropagation();
@@ -255,7 +255,7 @@ function fsnInitUIevents(instance) {
 		trigger.toggleClass('open');
 		target.toggleClass('collapsed');
 	});
-	
+
 	//add row to visual editor
 	instanceParent.on('click', '.fsn-add-row', function(e) {
 		e.preventDefault();
@@ -265,7 +265,7 @@ function fsnInitUIevents(instance) {
 		} catch(err) {}
 		//add row to fusion interface
 		var rowContent = fsnGetRow();
-		trigger.closest('.row-container').after(rowContent);		
+		trigger.closest('.row-container').after(rowContent);
 		//reinit sortables and resizables
 		initSortables(instance);
 		initResizables(instance);
@@ -276,7 +276,7 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//delete row from visual editor
 	instance.on('click', '.delete-row', function(e) {
 		e.preventDefault();
@@ -298,7 +298,7 @@ function fsnInitUIevents(instance) {
 			}
 		});
 	});
-	
+
 	//duplicate row in visual editor
 	instance.on('click', '.duplicate-row', function(e) {
 		e.preventDefault();
@@ -330,7 +330,7 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//move row in visual editor
 	instance.on('click', '.move-row', function(e) {
 		e.preventDefault();
@@ -366,12 +366,12 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//add column to visual editor
 	fsnAddColFields(instance);
 	//init tooltips
 	fsnInitTooltips(instance);
-	
+
 	instance.on('click', '.fsn-add-col', function() {
 		var addColBtn = jQuery(this);
 		var colWidth = addColBtn.attr('data-width');
@@ -382,12 +382,12 @@ function fsnInitUIevents(instance) {
 			//remove old offset class and data attr
 			var classes = nextItem.attr('class');
 			var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-			if (matchedClass != null) {					
+			if (matchedClass != null) {
 				nextItem.removeClass(matchedClass[0]);
-				nextItem.removeAttr('data-offset');										
+				nextItem.removeAttr('data-offset');
 			}
 		}
-		jQuery(this).after(colData).remove();		
+		jQuery(this).after(colData).remove();
 		//reinit sortables and resizables
 		initSortables(instance);
 		initResizables(instance);
@@ -397,21 +397,21 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//delete column from visual editor
 	instance.on('click', '.delete-col', function(e) {
 		e.preventDefault();
 		var targetCol = jQuery(this).closest('div[class*="col-"]');
 		var targetColWidth = parseInt(targetCol.attr('data-width'));
-		var nextItem = targetCol.nextAll('[class*="col-"]').not('.ui-sortable-placeholder').first();		
+		var nextItem = targetCol.nextAll('[class*="col-"]').not('.ui-sortable-placeholder').first();
 		if (nextItem.length > 0) {
-			var itemClasses = nextItem.attr('class');												
+			var itemClasses = nextItem.attr('class');
 			var itemColOffsetClass = itemClasses.match(/col-sm-offset-[0-9]+/);
 			if (itemColOffsetClass != null) {
 				var offsetClassBroken = itemColOffsetClass[0].split('-');
 				var offsetColWidthInt = parseInt(offsetClassBroken[3]);
 				nextItem.removeClass(itemColOffsetClass[0]);
-				nextItem.removeAttr('data-offset');	
+				nextItem.removeAttr('data-offset');
 			} else {
 				var offsetColWidthInt = 0;
 			}
@@ -423,9 +423,9 @@ function fsnInitUIevents(instance) {
 		//reinit add col fields
 		fsnAddColFields(instance);
 		//refenerate content
-		fsnUpdateContent(instance);	
+		fsnUpdateContent(instance);
 	});
-	
+
 	//delete tabs from visual editor
 	instance.on('click', '.delete-tabs', function(e) {
 		e.preventDefault();
@@ -436,7 +436,7 @@ function fsnInitUIevents(instance) {
 			fsnUpdateContent(instance);
 		});
 	});
-	
+
 	//duplicate tabs in visual editor
 	instance.on('click', '.duplicate-tabs', function(e) {
 		e.preventDefault();
@@ -462,7 +462,7 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//add tab in visual editor
 	instance.on('click', '.fsn-add-tab', function(e) {
 		e.preventDefault();
@@ -487,7 +487,7 @@ function fsnInitUIevents(instance) {
 		trigger.trigger('blur');
 		tabsNav.find('li').has('a[data-toggle="tab"]').last().find('a').trigger('click');
 	});
-	
+
 	//delete tab from visual editor
 	instance.on('click', '.delete-tab', function(e) {
 		e.preventDefault();
@@ -504,7 +504,7 @@ function fsnInitUIevents(instance) {
 		fsnUpdateContent(instance);
 		tabSelect.children('a').trigger('click');
 	});
-	
+
 	//duplicate tab in visual editor
 	instance.on('click', '.duplicate-tab', function(e) {
 		e.preventDefault();
@@ -531,7 +531,7 @@ function fsnInitUIevents(instance) {
 		//target new tab
 		tabsNav.find('li').has('a[href="#'+ newID +'"]').find('a').trigger('click');
 	});
-	
+
 	//delete element from visual editor
 	instance.on('click', '.delete-element', function(e) {
 		e.preventDefault();
@@ -542,7 +542,7 @@ function fsnInitUIevents(instance) {
 			fsnUpdateContent(instance);
 		});
 	});
-	
+
 	//duplicate element in visual editor
 	instance.on('click', '.duplicate-element', function(e) {
 		e.preventDefault();
@@ -555,26 +555,26 @@ function fsnInitUIevents(instance) {
 		//update content
 		fsnUpdateContent(instance);
 	});
-	
+
 	//sortables
 	initSortables(instance);
 	instance.find('.sort-row, .sort-col, .sort-element').on('click', function(e) {
 		e.preventDefault();
 	});
-	
+
 	//resizables
 	initResizables(instance);
-	
+
 	//add element
 	instance.on('click', '.fsn-add-element', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		try {
-			trigger.tooltip('close');	
+			trigger.tooltip('close');
 		} catch(err) {}
-		
+
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//row options
 		var containerType = trigger.attr('data-container');
 		var currentCol = trigger.closest('[class*="col-"]');
@@ -586,14 +586,14 @@ function fsnInitUIevents(instance) {
 				var wrapper = trigger.siblings('.tab-wrapper').find('.tab').first();
 				break;
 		}
-		
+
 		//get row nesting level
 		var colParentRows = currentCol.parents('.row');
 		var nestingLevel = colParentRows.length;
-		
+
 		//get tab nesting level
 		var tabsNestingLevel = trigger.parents('.tabs-container').length;
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'add_element_modal',
@@ -611,15 +611,15 @@ function fsnInitUIevents(instance) {
 			jQuery('body').append(response);
 			//open modal
 			var modalSelector = jQuery('#addElementModal');
-			modalSelector.modal();			
+			modalSelector.modal();
 			//update row variables
-			modalSelector.on('click', '.element-item', function(e) {	
-				e.preventDefault();			
+			modalSelector.on('click', '.element-item', function(e) {
+				e.preventDefault();
 				//add element container to column
 				var elementType = jQuery(this).attr('data-element-type');
 				var elementName = jQuery(this).find('.element-name').text();
 				//var shortcodeName = 'fsn_'+ elementType;
-				
+
 				switch(elementType) {
 					case 'row':
 						var rowContent = fsnGetRow();
@@ -630,15 +630,15 @@ function fsnInitUIevents(instance) {
 					case 'tabs':
 						var tabsContent = fsnGetTabs();
 						wrapper.append(tabsContent);
-						break;					
+						break;
 					default:
 						var elementContent = fsnGetElement(elementType, elementName);
 						wrapper.append(elementContent);
 				}
-				
+
 				//hide modal and regenerate RTE content
-				modalSelector.modal('hide');				
-				//reinit sortables and resizables				
+				modalSelector.modal('hide');
+				//reinit sortables and resizables
 				initSortables(instance);
 				initResizables(instance);
 				//init tooltips
@@ -652,17 +652,17 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//row modal
 	instance.on('click', '.edit-row', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//row options
-		var currentContent = trigger.closest('.row-container').find('.row').first();		
+		var currentContent = trigger.closest('.row-container').find('.row').first();
 		var dataAttributes = getDataAttrs(currentContent);
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_row_modal',
@@ -703,7 +703,7 @@ function fsnInitUIevents(instance) {
 				//loop through form fields and update data attributes
 				var formFields = modalSelector.find('.element-input').not('.content-field');
 				formFields.each(function() {
-					var fieldType = jQuery(this).attr('type');					
+					var fieldType = jQuery(this).attr('type');
 					var dataAttributeSuffix = jQuery(this).attr('name').replace(/[_]/g,'-');
 					var dataAttribute = 'data-'+ dataAttributeSuffix;
 					var newParamValue = '';
@@ -711,7 +711,7 @@ function fsnInitUIevents(instance) {
 						case 'checkbox':
 							if (jQuery(this).is(':checked')) {
 								newParamValue = 'on';
-							} 
+							}
 							break;
 						case 'select':
 							newParamValue = jQuery(this).find('option:selected').val();
@@ -722,7 +722,7 @@ function fsnInitUIevents(instance) {
 							newParamValue = checkedRadio.val();
 							break;
 						default:
-							newParamValue = jQuery(this).val();	
+							newParamValue = jQuery(this).val();
 					}
 					//do not save hidden dependenent field values
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
@@ -748,17 +748,17 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//column modal
 	instance.on('click', '.edit-col', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//column options
 		var currentContent = trigger.closest('[class*="col-"]');
 		var dataAttributes = getDataAttrs(currentContent);
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_column_modal',
@@ -793,7 +793,7 @@ function fsnInitUIevents(instance) {
 				//loop through form fields and update data attributes
 				var formFields = modalSelector.find('.element-input').not('.content-field');
 				formFields.each(function() {
-					var fieldType = jQuery(this).attr('type');					
+					var fieldType = jQuery(this).attr('type');
 					var dataAttributeSuffix = jQuery(this).attr('name').replace(/[_]/g,'-');
 					var dataAttribute = 'data-'+ dataAttributeSuffix;
 					var newParamValue = '';
@@ -801,7 +801,7 @@ function fsnInitUIevents(instance) {
 						case 'checkbox':
 							if (jQuery(this).is(':checked')) {
 								newParamValue = 'on';
-							} 
+							}
 							break;
 						case 'select':
 							newParamValue = jQuery(this).find('option:selected').val();
@@ -812,7 +812,7 @@ function fsnInitUIevents(instance) {
 							newParamValue = checkedRadio.val();
 							break;
 						default:
-							newParamValue = jQuery(this).val();	
+							newParamValue = jQuery(this).val();
 					}
 					//do not save hidden dependenent field values
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
@@ -838,17 +838,17 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//tabs modal
 	instance.on('click', '.edit-tabs', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//tabs options
 		var currentContent = trigger.closest('.tabs-container');
 		var dataAttributes = getDataAttrs(currentContent);
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_tabs_modal',
@@ -883,7 +883,7 @@ function fsnInitUIevents(instance) {
 				//loop through form fields and update data attributes
 				var formFields = modalSelector.find('.element-input').not('.content-field');
 				formFields.each(function() {
-					var fieldType = jQuery(this).attr('type');					
+					var fieldType = jQuery(this).attr('type');
 					var dataAttributeSuffix = jQuery(this).attr('name').replace(/[_]/g,'-');
 					var dataAttribute = 'data-'+ dataAttributeSuffix;
 					var newParamValue = '';
@@ -891,7 +891,7 @@ function fsnInitUIevents(instance) {
 						case 'checkbox':
 							if (jQuery(this).is(':checked')) {
 								newParamValue = 'on';
-							} 
+							}
 							break;
 						case 'select':
 							newParamValue = jQuery(this).find('option:selected').val();
@@ -902,7 +902,7 @@ function fsnInitUIevents(instance) {
 							newParamValue = checkedRadio.val();
 							break;
 						default:
-							newParamValue = jQuery(this).val();	
+							newParamValue = jQuery(this).val();
 					}
 					//do not save hidden dependenent field values
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
@@ -928,17 +928,17 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//tab modal
 	instance.on('click', '.edit-tab', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//tab options
 		var currentContent = trigger.closest('.tab-container');
 		var dataAttributes = getDataAttrs(currentContent);
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'edit_tab_modal',
@@ -965,7 +965,7 @@ function fsnInitUIevents(instance) {
 				//loop through form fields and update data attributes
 				var formFields = modalSelector.find('.element-input').not('.content-field');
 				formFields.each(function() {
-					var fieldType = jQuery(this).attr('type');					
+					var fieldType = jQuery(this).attr('type');
 					var dataAttributeSuffix = jQuery(this).attr('name').replace(/[_]/g,'-');
 					var dataAttribute = 'data-'+ dataAttributeSuffix;
 					var newParamValue = '';
@@ -973,7 +973,7 @@ function fsnInitUIevents(instance) {
 						case 'checkbox':
 							if (jQuery(this).is(':checked')) {
 								newParamValue = 'on';
-							} 
+							}
 							break;
 						case 'select':
 							newParamValue = jQuery(this).find('option:selected').val();
@@ -984,7 +984,7 @@ function fsnInitUIevents(instance) {
 							newParamValue = checkedRadio.val();
 							break;
 						default:
-							newParamValue = jQuery(this).val();	
+							newParamValue = jQuery(this).val();
 					}
 					//do not save hidden dependenent field values
 					if (jQuery(this).closest('.form-group').hasClass('no-save')) {
@@ -1019,19 +1019,19 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//element modal
 	instance.on('click', '.fsn-element .edit-element', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
-		var shortcodeTag = trigger.closest('.fsn-element').attr('data-shortcode-tag');		
-		
+		var shortcodeTag = trigger.closest('.fsn-element').attr('data-shortcode-tag');
+
 		//content options
 		var currentContent = trigger.closest('.element-controls').siblings('.element-text-holder');
-		var fsnContent = currentContent.html();		
+		var fsnContent = currentContent.html();
 		var dataAttributes = getDataAttrs(currentContent);
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: shortcodeTag +'_modal',
@@ -1048,18 +1048,18 @@ function fsnInitUIevents(instance) {
 			//append modal to body
 			jQuery('body').append(response);
 			//open modal
-			var modalSelector = jQuery('#'+ shortcodeTag +'_modal').last();
+			var modalSelector = jQuery('.modal[id="'+ shortcodeTag +'_modal"]').last();
 			modalSelector.modal();
 			//reinit tinyMCE
 			if (jQuery('#fsncontent').length > 0) {
 				setUserSetting( 'editor', 'tinymce' );
-				modalSelector.on('shown.bs.modal', function() {	
+				modalSelector.on('shown.bs.modal', function() {
 					var $element = jQuery('#fsncontent');
 			        var qt, textfield_id = $element.attr("id"),
 			            content = '';
-			
+
 			        window.tinyMCEPreInit.mceInit[textfield_id] = _.extend({}, tinyMCEPreInit.mceInit['content']);
-			
+
 			        if(_.isUndefined(tinyMCEPreInit.qtInit[textfield_id])) {
 			            window.tinyMCEPreInit.qtInit[textfield_id] = _.extend({}, tinyMCEPreInit.qtInit['replycontent'], {id: textfield_id})
 			        }
@@ -1073,7 +1073,7 @@ function fsnInitUIevents(instance) {
 			        tinyMCE.get('fsncontent').focus();
 				});
 				//destroy tinyMCE
-				modalSelector.on('hidden.bs.modal', function() {					
+				modalSelector.on('hidden.bs.modal', function() {
 					//make compatable with TinyMCE 4 which is used starting with WordPress 3.9
 					if(tinymce.majorVersion === "4") {
 						tinymce.execCommand('mceRemoveEditor', true, 'fsncontent');
@@ -1090,29 +1090,30 @@ function fsnInitUIevents(instance) {
 			modalSelector.on('hide.bs.modal', function(e) {
 				//custom save trigger event
 				modalSelector.trigger('fsnSave', shortcodeTag);
-				if (jQuery('#fsncontent').not('.element-input').length > 0) {
+				if (modalSelector.find('#fsncontent').not('.element-input').length > 0) {
 					//update html content
-					if ( jQuery('#wp-fsncontent-wrap').hasClass('html-active') ) {										
+					if ( jQuery('#wp-fsncontent-wrap').hasClass('html-active') ) {
 						var htmlEditorVal = switchEditors.wpautop(jQuery('#fsncontent').val());
 						tinyMCE.get('fsncontent').setContent(htmlEditorVal);
 					}
-					var newContent = tinyMCE.get('fsncontent').getContent();				
+					var newContent = tinyMCE.get('fsncontent').getContent();
 					if (newContent != '') {
 						currentContent.html(newContent);
 					} else {
 						currentContent.empty();
 					}
-				} else if (jQuery('.content-field').length > 0) {
-					if (jQuery('.content-field').hasClass('encode-base64')) {
-						var newContent = jQuery('.content-field').val();
+				} else if (modalSelector.find('.content-field').length > 0) {
+          var contentField = modalSelector.find('.content-field');
+					if (contentField.hasClass('encode-base64')) {
+						var newContent = contentField.val();
 						var newContent = btoa(newContent);
-					} else if (jQuery('.content-field').hasClass('encode-url')) {
-						var newContent = jQuery('.content-field').val();
+					} else if (contentField.hasClass('encode-url')) {
+						var newContent = contentField.val();
 						var newContent = encodeURIComponent(newContent);
-					} else if (jQuery('.content-field').is('textarea')) {
-						var newContent = fsnautop(jQuery('.content-field').val());
+					} else if (contentField.is('textarea')) {
+						var newContent = fsnautop(contentField.val());
 					} else {
-						var newContent = jQuery('.content-field').val();
+						var newContent = contentField.val();
 					}
 					if (newContent != '') {
 						currentContent.html(newContent);
@@ -1127,7 +1128,7 @@ function fsnInitUIevents(instance) {
 						var boxField = jQuery(this);
 						fsnUpdateBoxField(boxField);
 					});
-				} 
+				}
 				//loop through form fields and update data attributes
 				var formFields = modalSelector.find('.element-input').not('.content-field, .nested');
 				formFields.each(function() {
@@ -1139,7 +1140,7 @@ function fsnInitUIevents(instance) {
 						case 'checkbox':
 							if (jQuery(this).is(':checked')) {
 								newParamValue = 'on';
-							} 
+							}
 							break;
 						case 'select':
 							newParamValue = jQuery(this).find('option:selected').val();
@@ -1151,7 +1152,7 @@ function fsnInitUIevents(instance) {
 							break;
 						default:
 							if (jQuery(this).attr('id') == 'fsncontent') {
-								if ( jQuery('#wp-fsncontent-wrap').hasClass('html-active') ) {										
+								if ( jQuery('#wp-fsncontent-wrap').hasClass('html-active') ) {
 									var htmlEditorVal = switchEditors.wpautop(jQuery('#fsncontent').val());
 									tinyMCE.get('fsncontent').setContent(htmlEditorVal);
 								}
@@ -1178,13 +1179,13 @@ function fsnInitUIevents(instance) {
 					if (dataAttributeSuffix == 'element-label') {
 						var elementLabel = currentContent.siblings('.element-label');
 						if (newParamValue != '') {
-							var elementLabelText = newParamValue;	
+							var elementLabelText = newParamValue;
 						} else {
 							var elementLabelText = elementLabel.attr('title');
 						}
 						elementLabel.html(elementLabelText);
 					}
-				});							
+				});
 				//hide modal ensure user editor setting stays as tinymce and regenerate RTE content
 				setUserSetting( 'editor', 'tinymce' );
 				//refenerate content
@@ -1196,13 +1197,13 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//save template modal
 	instanceParent.on('click', '.fsn-save-template', function(e) {
 		e.preventDefault();
-		
+
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'save_template_modal',
@@ -1218,7 +1219,7 @@ function fsnInitUIevents(instance) {
 			jQuery('body').append(response);
 			//open modal
 			var modalSelector = jQuery('#save_template_modal');
-			modalSelector.modal();			
+			modalSelector.modal();
 			//update content variables
 			modalSelector.on('click', '.save-template', function(e) {
 				e.preventDefault();
@@ -1242,7 +1243,7 @@ function fsnInitUIevents(instance) {
 					} else if (response.status == 'error') {
 						modalSelector.find('.modal-body').prepend('<div class="notice notice-error is-dismissible"><p>'+ fsnL10n.template_save_error +'</p><button class="notice-dismiss" type="button"><span class="screen-reader-text">'+ fsnL10n.notice_dismiss +'</span></button></div>');
 					}
-				});		
+				});
 			});
 			//dismiss notices
 			modalSelector.on('click', '.notice-dismiss' , function() {
@@ -1256,13 +1257,13 @@ function fsnInitUIevents(instance) {
 			});
 		});
 	});
-	
+
 	//load template modal
 	instanceParent.on('click', '.fsn-load-template' , function(e) {
 		e.preventDefault();
-		
+
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'load_template_modal',
@@ -1282,7 +1283,7 @@ function fsnInitUIevents(instance) {
 			//template options
 			modalSelector.on('shown.bs.modal', function(e) {
 				jQuery(this).on('click', '.template-controls-toggle', function(e) {
-					e.stopPropagation();					
+					e.stopPropagation();
 					var trigger = jQuery(this);
 					var target = trigger.next('.template-controls-dropdown');
 					fsnCloseDropdowns(trigger, target);
@@ -1295,7 +1296,7 @@ function fsnInitUIevents(instance) {
 				e.preventDefault();
 				var templateItem = jQuery(this);
 				var templateID = templateItem.attr('data-template-id');
-				
+
 				var data = {
 					action: 'load_template',
 					template_id: templateID,
@@ -1307,7 +1308,7 @@ function fsnInitUIevents(instance) {
 						alert(fsnL10n.error);
 						return false;
 					}
-					//hide modal					
+					//hide modal
 					instance.empty().append(response);
 					modalSelector.modal('hide');
 					//regenerate Tabs IDs
@@ -1325,7 +1326,7 @@ function fsnInitUIevents(instance) {
 							}
 						});
 					}
-					//reinit sortables and resizables				
+					//reinit sortables and resizables
 					initSortables(instance);
 					initResizables(instance);
 					//init tooltips
@@ -1334,7 +1335,7 @@ function fsnInitUIevents(instance) {
 					fsnAddColFields(instance);
 					//update content
 					fsnUpdateContent(instance);
-				});		
+				});
 			});
 			//delete template
 			modalSelector.on('click', '.delete-template', function(e) {
@@ -1364,7 +1365,7 @@ function fsnInitUIevents(instance) {
 					} else {
 						alert(fsnL10n.template_delete_error);
 					}
-				});		
+				});
 			});
 			//load more templates
 			modalSelector.on('click', '.fsn-load-more-templates', function(e) {
@@ -1374,7 +1375,7 @@ function fsnInitUIevents(instance) {
 				var postsPerPage = 20;
 				var totalPosts = parseInt(loadMoreBtn.data('total'));
 				var totalPages = Math.ceil(totalPosts/postsPerPage);
-				
+
 				var data = {
 					action: 'fsn_posts_search',
 					page : nextPage,
@@ -1433,7 +1434,7 @@ function fsnAddColFields(instance) {
 			var itemClasses = jQuery(this).attr('class');
 			var itemColClass = itemClasses.match(/col-sm-[0-9]+/);
 			var classBroken = itemColClass[0].split('-');
-			var colWidthInt = parseInt(classBroken[2]);			
+			var colWidthInt = parseInt(classBroken[2]);
 			var itemColOffsetClass = itemClasses.match(/col-sm-offset-[0-9]+/);
 			if (itemColOffsetClass != null) {
 				var offsetClassBroken = itemColOffsetClass[0].split('-');
@@ -1455,9 +1456,9 @@ function fsnAddColFields(instance) {
 }
 
 function initSortables(instance) {
-	
+
 	//row sorting
-	instance.sortable({	
+	instance.sortable({
 		//connectWith: "#fsn-interface-grid > .row-container > .row-wrapper > .row > [class*='col-'] > .column-container > .column-wrapper",
 		cursor: "move",
 		items: ".row-container",
@@ -1467,7 +1468,7 @@ function initSortables(instance) {
 		over: function(event, ui) {
 			ui.placeholder.css({width:ui.item.width(), height:ui.item.outerHeight()});
 		},
-		change: function(event, ui) {			
+		change: function(event, ui) {
 			//reinit add col fields
 			//fsnAddColFields(instance);
 		},
@@ -1478,12 +1479,12 @@ function initSortables(instance) {
 			fsnUpdateContent(instance);
 		}
 	});
-	
-	//column sorting	
+
+	//column sorting
 	var leftStart = 0;
 	instance.find('.row').sortable({
 		//connectWith: "#fsn-interface-grid .row",
-		cursor: "move",		
+		cursor: "move",
 		helper: "clone",
 		items: "[class*='col-']",
 		handle: ".column-header",
@@ -1492,10 +1493,10 @@ function initSortables(instance) {
 			ui.placeholder.css({height:ui.item.outerHeight()});
 		},
 		start: function(event, ui) {
-			leftStart = ui.placeholder.offset().left - ui.item.parent('.row').offset().left;			
+			leftStart = ui.placeholder.offset().left - ui.item.parent('.row').offset().left;
 		},
 		stop: function(event, ui) {
-			//set offset			
+			//set offset
 			var currentItem = ui.item;
 			var nextItem = currentItem.nextAll('[class*="col-"]').not('.ui-sortable-placeholder').first();
 			var gridWidth = currentItem.parent('.row').width();
@@ -1517,15 +1518,15 @@ function initSortables(instance) {
 					var offsetColWidthInt = 0;
 				}
 				colSpace = colSpace + colWidthInt + offsetColWidthInt;
-			});						
-			
+			});
+
 			var offset = Math.round(droppedLeft / colWidth) - colSpace;
-			
+
 			//stop items from pushing out of grid or to next line
 			var totalFromLeft = colSpace + offset;
 			var currentItemWidth = parseInt(currentItem.attr('data-width'));
 			var totalSpaceFront = totalFromLeft + currentItemWidth;
-			
+
 			if (totalSpaceFront > 12) {
 				var pullBack = totalSpaceFront - 12;
 				offset = offset - pullBack;
@@ -1551,7 +1552,7 @@ function initSortables(instance) {
 			}
 			//check for empty space to move into
 			if (offset >= 0) {
-				//get offset difference					
+				//get offset difference
 				var oldOffset = parseInt(currentItem.attr('data-offset'));
 				if (isNaN(oldOffset)) {
 					oldOffset = 0;
@@ -1560,19 +1561,19 @@ function initSortables(instance) {
 				//remove old offset class and data attr
 				var classes = currentItem.attr('class');
 				var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-				if (matchedClass != null) {					
+				if (matchedClass != null) {
 					currentItem.removeClass(matchedClass[0]);
-					currentItem.removeAttr('data-offset');										
+					currentItem.removeAttr('data-offset');
 				}
 				//add new offset class and data attr
 				if (offset > 0) {
 					currentItem.addClass('col-sm-offset-'+ offset);
 					currentItem.attr('data-offset', offset);
-				}				
+				}
 			}
-			//offset next item by difference			
+			//offset next item by difference
 			if (nextItem.length != 0) {
-				var nextItemClasses = nextItem.attr('class');				
+				var nextItemClasses = nextItem.attr('class');
 				var nextItemMatchedClass = nextItemClasses.match(/col-sm-offset-[0-9]+/);
 				if (nextItemMatchedClass != null) {
 					//get next item offset
@@ -1583,7 +1584,7 @@ function initSortables(instance) {
 					}
 					//remove old offset class and data attr
 					nextItem.removeClass(nextItemMatchedClass[0]);
-					nextItem.removeAttr('data-offset');					
+					nextItem.removeAttr('data-offset');
 				} else {
 					var nextItemNewOffset = offsetDifference;
 				}
@@ -1599,7 +1600,7 @@ function initSortables(instance) {
 			fsnUpdateContent(instance);
 		}
 	});
-	
+
 	//tab sorting
 	instance.find('.row [class*="col-"] .column-wrapper .nav-tabs').sortable({
 		cursor: "move",
@@ -1607,7 +1608,7 @@ function initSortables(instance) {
 		axis: "x",
 		update: function(event, ui) {
 			//reorder tab containers
-			var targetMenu = jQuery(event.target);	
+			var targetMenu = jQuery(event.target);
 			var targetMenuItems = targetMenu.find('li');
 			var targetItem = jQuery(ui.item);
 			var targetItemID = targetItem.find('a').attr('href').replace('#','');
@@ -1628,7 +1629,7 @@ function initSortables(instance) {
 			fsnUpdateContent(instance);
 		}
 	});
-	
+
 	//tabs and element sorting
 	instance.find('.row [class*="col-"] .column-wrapper, .row [class*="col-"] .column-wrapper .tab').sortable({
 		connectWith: ".fsn-interface-grid [class*='col-'] .column-wrapper, .fsn-interface-grid [class*='col-'] .column-wrapper .tab",
@@ -1657,7 +1658,7 @@ function initResizables(instance) {
 		handles: 'e, w',
 		helper: 'fsn-helper',
 		stop: function(event, ui) {
-			//reset Resizable outcome			
+			//reset Resizable outcome
 			ui.element.removeAttr('style');
 			//set vars
 			var originalWidth = ui.originalSize.width;
@@ -1674,9 +1675,9 @@ function initResizables(instance) {
 			var colWidth = gridWidth / 12;
 			var widthDifference = newWidth - originalWidth;
 			var colDifference = Math.round(widthDifference / colWidth);
-			
+
 			//get dragging direction based on positions
-			if (newLeft == originalLeft) {				
+			if (newLeft == originalLeft) {
 				//RIGHT HANDLE
 				if (colDifference > 0) {
 					//EXPANDING
@@ -1697,9 +1698,9 @@ function initResizables(instance) {
 						//remove old offset class and data attr
 						var classes = nextItem.attr('class');
 						var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-						if (matchedClass != null) {					
+						if (matchedClass != null) {
 							nextItem.removeClass(matchedClass[0]);
-							nextItem.removeAttr('data-offset');										
+							nextItem.removeAttr('data-offset');
 						}
 						//add new offset class and data attr
 						if (newOffset > 0) {
@@ -1722,8 +1723,8 @@ function initResizables(instance) {
 							prevItemOffset = 0;
 						}
 						prevItemsSpace = prevItemsSpace + (prevItemWidth + prevItemOffset);
-					});					
-					var newWidth = currentItemWidth + colDifference;					
+					});
+					var newWidth = currentItemWidth + colDifference;
 					var currentItemOffset = parseInt(currentItem.attr('data-offset'));
 					if (isNaN(currentItemOffset)) {
 						currentItemOffset = 0;
@@ -1739,7 +1740,7 @@ function initResizables(instance) {
 					var currentItemMatchedClass = currentItemClasses.match(/col-sm-[0-9]+/);
 					if (currentItemMatchedClass != null) {
 						currentItem.removeClass(currentItemMatchedClass[0]);
-						currentItem.removeAttr('data-width');										
+						currentItem.removeAttr('data-width');
 					}
 					currentItem.addClass('col-sm-'+ newWidth);
 					currentItem.attr('data-width', newWidth);
@@ -1759,9 +1760,9 @@ function initResizables(instance) {
 						//remove old offset class and data attr
 						var classes = nextItem.attr('class');
 						var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-						if (matchedClass != null) {					
+						if (matchedClass != null) {
 							nextItem.removeClass(matchedClass[0]);
-							nextItem.removeAttr('data-offset');										
+							nextItem.removeAttr('data-offset');
 						}
 						//add new offset class and data attr
 						if (newOffset > 0) {
@@ -1770,7 +1771,7 @@ function initResizables(instance) {
 						}
 					}
 					//resize item
-					var currentItemClasses = currentItem.attr('class');					
+					var currentItemClasses = currentItem.attr('class');
 					var currentItemWidth = parseInt(currentItem.attr('data-width'));
 					var newWidth = currentItemWidth + colDifference;
 					if (newWidth < 1) {
@@ -1779,15 +1780,15 @@ function initResizables(instance) {
 					var currentItemMatchedClass = currentItemClasses.match(/col-sm-[0-9]+/);
 					if (currentItemMatchedClass != null) {
 						currentItem.removeClass(currentItemMatchedClass[0]);
-						currentItem.removeAttr('data-width');										
+						currentItem.removeAttr('data-width');
 					}
 					currentItem.addClass('col-sm-'+ newWidth);
 					currentItem.attr('data-width', newWidth);
 				}
 			} else {
 				//LEFT HANDLE
-				if (colDifference > 0) {					
-					//EXPANDING					
+				if (colDifference > 0) {
+					//EXPANDING
 					var availableSpace = parseInt(currentItem.attr('data-offset'));
 					if (isNaN(availableSpace)) {
 						availableSpace = 0;
@@ -1795,13 +1796,13 @@ function initResizables(instance) {
 					if (colDifference > availableSpace) {
 						colDifference = availableSpace;
 					}
-					var newOffset = availableSpace - colDifference;					
+					var newOffset = availableSpace - colDifference;
 					//remove old offset class and data attr
 					var classes = currentItem.attr('class');
 					var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-					if (matchedClass != null) {					
+					if (matchedClass != null) {
 						currentItem.removeClass(matchedClass[0]);
-						currentItem.removeAttr('data-offset');										
+						currentItem.removeAttr('data-offset');
 					}
 					//add new offset class and data attr
 					if (newOffset > 0) {
@@ -1818,14 +1819,14 @@ function initResizables(instance) {
 					var currentItemMatchedClass = currentItemClasses.match(/col-sm-[0-9]+/);
 					if (currentItemMatchedClass != null) {
 						currentItem.removeClass(currentItemMatchedClass[0]);
-						currentItem.removeAttr('data-width');										
+						currentItem.removeAttr('data-width');
 					}
 					currentItem.addClass('col-sm-'+ newWidth);
 					currentItem.attr('data-width', newWidth);
 				} else {
 					//CONTRACTING
 					//resize item
-					var currentItemClasses = currentItem.attr('class');					
+					var currentItemClasses = currentItem.attr('class');
 					var currentItemWidth = parseInt(currentItem.attr('data-width'));
 					var newWidth = currentItemWidth + colDifference;
 					if (newWidth < 1) {
@@ -1834,7 +1835,7 @@ function initResizables(instance) {
 					var currentItemMatchedClass = currentItemClasses.match(/col-sm-[0-9]+/);
 					if (currentItemMatchedClass != null) {
 						currentItem.removeClass(currentItemMatchedClass[0]);
-						currentItem.removeAttr('data-width');										
+						currentItem.removeAttr('data-width');
 					}
 					currentItem.addClass('col-sm-'+ newWidth);
 					currentItem.attr('data-width', newWidth);
@@ -1847,9 +1848,9 @@ function initResizables(instance) {
 					//remove old offset class and data attr
 					var classes = currentItem.attr('class');
 					var matchedClass = classes.match(/col-sm-offset-[0-9]+/);
-					if (matchedClass != null) {					
+					if (matchedClass != null) {
 						currentItem.removeClass(matchedClass[0]);
-						currentItem.removeAttr('data-offset');										
+						currentItem.removeAttr('data-offset');
 					}
 					//add new offset class and data attr
 					if (newOffset > 0) {
@@ -2013,7 +2014,7 @@ jQuery(document).ready(function() {
 		try {
 			var currentButtonArray = JSON.parse(currentButtonStringField.val());
 		} catch(err) {}
-		
+
 		var currentLink = currentButtonArray.link;
 		var currentLabel = currentButtonArray.label;
 		var currentAttached = currentButtonArray.attachedID;
@@ -2023,7 +2024,7 @@ jQuery(document).ready(function() {
 		var currentCollapseLabelShow = currentButtonArray.collapseLabelShow;
 		var currentCollapseLabelHide = currentButtonArray.collapseLabelHide;
 		var currentComponentID = currentButtonArray.componentID;
-		
+
 		jQuery.post(
 		    ajaxurl,
 		    {
@@ -2047,10 +2048,10 @@ jQuery(document).ready(function() {
 				}
 		        jQuery('body').append(response);
 		        var buttonModal = jQuery('.button-modal').last();
-				
+
 				//open modal
 		        buttonModal.modal();
-		        
+
 		        var buttonLink = buttonModal.find('[name="button_link"]');
 		        var buttonLabel = buttonModal.find('[name="button_label"]');
 		        var buttonTarget = buttonModal.find('[name="button_target"]');
@@ -2059,21 +2060,21 @@ jQuery(document).ready(function() {
 		        var buttonCollapseLabelShow = buttonModal.find('[name="button_collapse_label_show"]');
 		        var buttonCollapseLabelHide = buttonModal.find('[name="button_collapse_label_hide"]');
 		        var buttonComponentID = buttonModal.find('[name="button_component_id"]');
-		        
+
 		        //save notice
 				fsnSaveNotice(buttonModal);
-		        
+
 		        //select post
 		        buttonModal.find('[name="button_attached"]').on('change', function() {
 		        	var selectedOption = jQuery(this).find('option:selected');
 		        	if (selectedOption.val() != '') {
-				        var selectedLabel = jQuery(this).find('option:selected').text();			        
+				        var selectedLabel = jQuery(this).find('option:selected').text();
 				        buttonLabel.val(selectedLabel);
 			        } else {
 				        buttonLabel.val('');
 			        }
 		        });
-		        
+
 		        //save modal
 		        buttonModal.on('hide.bs.modal', function(e) {
 			        var buttonLinkVal = String.prototype.trim ? buttonLink.val().trim() : buttonLink.val().replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
@@ -2085,7 +2086,7 @@ jQuery(document).ready(function() {
 			        var buttonCollapseLabelShowVal = buttonCollapseLabelShow.val();
 			        var buttonCollapseLabelHideVal = buttonCollapseLabelHide.val();
 			        var buttonComponentIDval = buttonComponentID.val();
-			        
+
 			        //empty non-relevant fields
 			        switch(buttonTypeVal) {
 			        	case 'external':
@@ -2117,10 +2118,10 @@ jQuery(document).ready(function() {
 			        		buttonCollapseLabelHideVal = '';
 			        		break;
 			        }
-			        
+
 			        //set outer modal hidden input value (for shortcode param)
 					var buttonArray = new Object;
-					
+
 					if (buttonLinkVal != '') {
 				        buttonArray["link"] = buttonLinkVal;
 			        }
@@ -2149,15 +2150,15 @@ jQuery(document).ready(function() {
 			        if (buttonComponentIDval != '') {
 				        buttonArray["componentID"] = buttonComponentIDval;
 				    }
-			        
+
 			        var buttonJSON = JSON.stringify(buttonArray);
-			        
+
 			        currentButtonStringField.val(buttonJSON);
-			        
+
 			        //update trigger button text
 			        buttonTrigger.find('.button-verb').html(buttonTrigger.attr('data-isset'));
 			        buttonTrigger.siblings('.fsn-remove-button').removeClass('deactivated');
-			        
+
 			        //set Button summary
 			        var buttonSummary = '';
 			        switch(buttonTypeVal) {
@@ -2210,7 +2211,7 @@ jQuery(document).ready(function() {
 			        		if (buttonComponentIDval != '') {
 				        		buttonModalIDval = buttonComponentID.find('option:selected').text();
 			        		} else {
-				        		buttonModalIDval = '';	
+				        		buttonModalIDval = '';
 			        		}
 			        		buttonSummary += '<p>'+ fsnL10n.button_summary_type +': <strong>'+ fsnL10n.button_summary_modal +'</strong></p>';
 							buttonSummary += buttonModalIDval != '' ? '<p>'+ fsnL10n.button_summary_opens +': <strong>'+ buttonModalIDval +'</strong></p>' : '';
@@ -2219,7 +2220,7 @@ jQuery(document).ready(function() {
 			        }
 			        buttonSummaryContainer.html(buttonSummary);
 		        });
-		        
+
 		        //hide / destroy modal
 				buttonModal.on('hidden.bs.modal', function(e) {
 					jQuery(this).remove();
@@ -2240,20 +2241,20 @@ jQuery(document).ready(function() {
 });
 
 //custom list field
-jQuery(document).ready(function() {	
+jQuery(document).ready(function() {
 	//add custom list item
 	jQuery('body').on('click', '.add-custom-list-item', function(e) {
 		e.preventDefault();
-		
+
 		var customListItemsContainer = jQuery(this).siblings('.custom-list-sort');
 		var customListID = customListItemsContainer.attr('data-list-id');
 		var postID = jQuery('input#post_ID').val();
-		
+
 		//check if list is sortable and initialize if not
 		if (customListItemsContainer.sortable('instance') === undefined) {
 			customListItemsContainer.sortable();
 		}
-		
+
 		var data = {
 			action: 'custom_list_add_item',
 			listID: customListID,
@@ -2272,7 +2273,7 @@ jQuery(document).ready(function() {
 			setDependencies(customListItemsContainer);
 			//trigger item added event
 			customListItemsContainer.trigger('fsnAddListItem');
-		});	
+		});
 	});
 	//drag and drop sorting
 	jQuery('body').on('shown.bs.modal', '.modal' , function (e) {
@@ -2338,7 +2339,7 @@ jQuery(document).ready(function() {
 function customListItemShortcodes() {
 	var customListItemsContainer = jQuery('.custom-list-sort');
 	var customListID = customListItemsContainer.attr('data-list-id');
-	var shortcodesString = '';	
+	var shortcodesString = '';
 	var customListItems = jQuery('.custom-list-item');
 	customListItems.each(function() {
 		shortcodesString += '[fsn_custom_list_item list_id="'+ customListID +'"';
@@ -2354,7 +2355,7 @@ function customListItemShortcodes() {
 				case 'checkbox':
 					if (jQuery(this).is(':checked')) {
 						newParamValue = 'on';
-					} 
+					}
 					break;
 				case 'select':
 					newParamValue = jQuery(this).find('option:selected').val();
@@ -2367,42 +2368,42 @@ function customListItemShortcodes() {
 					}
 					break;
 				default:
-					newParamValue = jQuery(this).val();							
+					newParamValue = jQuery(this).val();
 			}
 			//do not save hidden dependenent field values
 			if (jQuery(this).closest('.form-group').hasClass('no-save')) {
 				newParamValue = '';
 			}
-								
+
 			if (newParamValue != '') {
 				if (jQuery(this).hasClass('encode-base64')) {
 					newParamValue = btoa(newParamValue);
 				} else if (jQuery(this).hasClass('encode-url')) {
 					newParamValue = encodeURIComponent(newParamValue);
 				}
-				newParamValue = fsnCustomEntitiesEncode(newParamValue);	
+				newParamValue = fsnCustomEntitiesEncode(newParamValue);
 				shortcodesString += ' '+ paramName +'="'+ newParamValue +'"';
-				
+
 			}
 		});
 		shortcodesString += ']';
 	});
-	var customListInput = jQuery('.custom-list-items');	
+	var customListInput = jQuery('.custom-list-items');
 	customListInput.val(shortcodesString);
 }
 
 //update box field
 function fsnUpdateBoxField(field) {
-	
+
 	//set hidden input value (for shortcode param)
 	var boxArray = new Object;
 	var boxStringField = field.next('.box-string');
-	
+
 	var boxTopVal = field.find('.box-top').val();
 	var boxRightVal = field.find('.box-right').val();
 	var boxBottomVal = field.find('.box-bottom').val();
 	var boxLeftVal = field.find('.box-left').val();
-	
+
 	if (boxTopVal != '') {
         boxArray["top"] = boxTopVal;
     }
@@ -2415,13 +2416,13 @@ function fsnUpdateBoxField(field) {
     if (boxLeftVal != '') {
         boxArray["left"] = boxLeftVal;
     }
-    
+
     var boxJSON = JSON.stringify(boxArray);
-    
+
     if (boxJSON == '{}') {
 	   boxJSON = '';
     }
-    
+
     boxStringField.val(boxJSON);
 }
 
@@ -2430,7 +2431,7 @@ jQuery(document).ready(function() {
 	jQuery('body').on('show.bs.modal', '.modal', function() {
 		var modal = jQuery(this);
 		fsnInitPostSelect();
-	});	
+	});
 });
 
 function fsnInitPostSelect() {
@@ -2485,14 +2486,14 @@ function fsnInitPostSelect() {
 				return text;
 			}
 		});
-	});	
+	});
 }
 
 //create JS object from data attributes
 function getDataAttrs(obj) {
 	var allAttrs = obj[0].attributes;
 	var attrsObject = new Object();
-	for (var i = 0; i < allAttrs.length; i++) {		
+	for (var i = 0; i < allAttrs.length; i++) {
 		if (allAttrs[i].nodeName != 'class') {
 			var attrName = allAttrs[i].nodeName.replace('data-','');
 			attrsObject[attrName] = allAttrs[i].nodeValue;
@@ -2506,7 +2507,7 @@ function fsnUniqid(prefix, more_entropy) {
 	if (typeof prefix === 'undefined') {
 		prefix = '';
 	}
-	
+
 	var retId;
 	var formatSeed = function (seed, reqWidth) {
 		seed = parseInt(seed, 10)
@@ -2522,7 +2523,7 @@ function fsnUniqid(prefix, more_entropy) {
 		}
 		return seed;
 	};
-	
+
 	// BEGIN REDUNDANT
 	if (!this.php_js) {
 		this.php_js = {};
@@ -2533,7 +2534,7 @@ function fsnUniqid(prefix, more_entropy) {
 		this.php_js.uniqidSeed = Math.floor(Math.random() * 0x75bcd15);
 	}
 	this.php_js.uniqidSeed++;
-	
+
 	// start with prefix, add current milliseconds hex string
 	retId = prefix;
 	retId += formatSeed(parseInt(new Date()
@@ -2546,7 +2547,7 @@ function fsnUniqid(prefix, more_entropy) {
 		.toFixed(8)
 		.toString();
 	}
-	
+
 	return retId;
 }
 
@@ -2731,12 +2732,12 @@ function fsnGetContent(instance) {
 	var output = '';
 	outerRows.each(function() {
 		//build outer row shortcodes
-		var row = jQuery(this).find('.row').first();		
-		var dataAttributes = getDataAttrs(row);					
+		var row = jQuery(this).find('.row').first();
+		var dataAttributes = getDataAttrs(row);
 		var rowParams = '';
-		if (dataAttributes.length != 0) {						
+		if (dataAttributes.length != 0) {
 			for (var k in dataAttributes) {
-				if (dataAttributes.hasOwnProperty(k)) {								
+				if (dataAttributes.hasOwnProperty(k)) {
 					var paramName = k.replace(/[-]/g,'_');
 					var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 					rowParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2748,11 +2749,11 @@ function fsnGetContent(instance) {
 		rowChildren.each(function() {
 			//build outer column shortcodes
 			var column = jQuery(this);
-			var dataAttributes = getDataAttrs(column);					
+			var dataAttributes = getDataAttrs(column);
 			var columnParams = '';
-			if (dataAttributes.length != 0) {						
+			if (dataAttributes.length != 0) {
 				for (var k in dataAttributes) {
-					if (dataAttributes.hasOwnProperty(k)) {								
+					if (dataAttributes.hasOwnProperty(k)) {
 						var paramName = k.replace(/[-]/g,'_');
 						var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 						columnParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2772,11 +2773,11 @@ function fsnGetContent(instance) {
 							var currentElement = jQuery(this);
 							var textContent = currentElement.html();
 							var shortcodeTag = currentElement.parent('.fsn-element').attr('data-shortcode-tag');
-							var dataAttributes = getDataAttrs(currentElement);					
+							var dataAttributes = getDataAttrs(currentElement);
 							var elementParams = '';
-							if (dataAttributes.length != 0) {						
+							if (dataAttributes.length != 0) {
 								for (var k in dataAttributes) {
-									if (dataAttributes.hasOwnProperty(k)) {								
+									if (dataAttributes.hasOwnProperty(k)) {
 										var paramName = k.replace(/[-]/g,'_');
 										var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 										elementParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2787,7 +2788,7 @@ function fsnGetContent(instance) {
 								output += '['+ shortcodeTag + elementParams +']'+ textContent +'[/'+ shortcodeTag +']';
 							//} else {
 								//output += '['+ shortcodeTag + elementParams +']';
-							//}					
+							//}
 						});
 					}
 				} else if (currentChild.hasClass('row-container')) {
@@ -2796,12 +2797,12 @@ function fsnGetContent(instance) {
 					if (innerRows != undefined) {
 						innerRows.each(function() {
 							//build inner row shortcodes
-							var rowInner = jQuery(this).find('.row').first();					
-							var dataAttributes = getDataAttrs(rowInner);					
+							var rowInner = jQuery(this).find('.row').first();
+							var dataAttributes = getDataAttrs(rowInner);
 							var rowInnerParams = '';
-							if (dataAttributes.length != 0) {						
+							if (dataAttributes.length != 0) {
 								for (var k in dataAttributes) {
-									if (dataAttributes.hasOwnProperty(k)) {								
+									if (dataAttributes.hasOwnProperty(k)) {
 										var paramName = k.replace(/[-]/g,'_');
 										var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 										rowInnerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2813,11 +2814,11 @@ function fsnGetContent(instance) {
 							rowInnerChildren.each(function() {
 								//build inner column shortcodes
 								var columnInner = jQuery(this);
-								var dataAttributes = getDataAttrs(columnInner);					
+								var dataAttributes = getDataAttrs(columnInner);
 								var columnInnerParams = '';
-								if (dataAttributes.length != 0) {						
+								if (dataAttributes.length != 0) {
 									for (var k in dataAttributes) {
-										if (dataAttributes.hasOwnProperty(k)) {								
+										if (dataAttributes.hasOwnProperty(k)) {
 											var paramName = k.replace(/[-]/g,'_');
 											var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 											columnInnerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2827,16 +2828,16 @@ function fsnGetContent(instance) {
 								output += '[fsn_column_inner'+ columnInnerParams +']';
 								//build elements
 								var element = jQuery(this).find('.element-text-holder');
-								if (element.length != 0) {				
+								if (element.length != 0) {
 									element.each(function() {
 										var currentElement = jQuery(this);
 										var textContent = currentElement.html();
 										var shortcodeTag = currentElement.parent('.fsn-element').attr('data-shortcode-tag');
-										var dataAttributes = getDataAttrs(currentElement);					
+										var dataAttributes = getDataAttrs(currentElement);
 										var elementParams = '';
-										if (dataAttributes.length != 0) {						
+										if (dataAttributes.length != 0) {
 											for (var k in dataAttributes) {
-												if (dataAttributes.hasOwnProperty(k)) {								
+												if (dataAttributes.hasOwnProperty(k)) {
 													var paramName = k.replace(/[-]/g,'_');
 													var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 													elementParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2847,7 +2848,7 @@ function fsnGetContent(instance) {
 											output += '['+ shortcodeTag + elementParams +']'+ textContent +'[/'+ shortcodeTag +']';
 										//} else {
 											//output += '['+ shortcodeTag + elementParams +']';
-										//}								
+										//}
 									});
 								}
 								output += '[/fsn_column_inner]';
@@ -2861,12 +2862,12 @@ function fsnGetContent(instance) {
 					if (tabsSection != undefined) {
 						tabsSection.each(function() {
 							//build tabs shortcodes
-							var tabsContainer = jQuery(this);					
-							var dataAttributes = getDataAttrs(tabsContainer);					
+							var tabsContainer = jQuery(this);
+							var dataAttributes = getDataAttrs(tabsContainer);
 							var tabsContainerParams = '';
-							if (dataAttributes.length != 0) {						
+							if (dataAttributes.length != 0) {
 								for (var k in dataAttributes) {
-									if (dataAttributes.hasOwnProperty(k)) {								
+									if (dataAttributes.hasOwnProperty(k)) {
 										var paramName = k.replace(/[-]/g,'_');
 										var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 										tabsContainerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2878,11 +2879,11 @@ function fsnGetContent(instance) {
 							tabs.each(function() {
 								//build inner column shortcodes
 								var tabContainer = jQuery(this);
-								var dataAttributes = getDataAttrs(tabContainer);					
+								var dataAttributes = getDataAttrs(tabContainer);
 								var tabContainerParams = '';
-								if (dataAttributes.length != 0) {						
+								if (dataAttributes.length != 0) {
 									for (var k in dataAttributes) {
-										if (dataAttributes.hasOwnProperty(k)) {								
+										if (dataAttributes.hasOwnProperty(k)) {
 											var paramName = k.replace(/[-]/g,'_');
 											var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 											tabContainerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2902,11 +2903,11 @@ function fsnGetContent(instance) {
 												var currentElement = jQuery(this);
 												var textContent = currentElement.html();
 												var shortcodeTag = currentElement.parent('.fsn-element').attr('data-shortcode-tag');
-												var dataAttributes = getDataAttrs(currentElement);					
+												var dataAttributes = getDataAttrs(currentElement);
 												var elementParams = '';
-												if (dataAttributes.length != 0) {						
+												if (dataAttributes.length != 0) {
 													for (var k in dataAttributes) {
-														if (dataAttributes.hasOwnProperty(k)) {								
+														if (dataAttributes.hasOwnProperty(k)) {
 															var paramName = k.replace(/[-]/g,'_');
 															var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 															elementParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2917,7 +2918,7 @@ function fsnGetContent(instance) {
 													output += '['+ shortcodeTag + elementParams +']'+ textContent +'[/'+ shortcodeTag +']';
 												//} else {
 													//output += '['+ shortcodeTag + elementParams +']';
-												//}					
+												//}
 											});
 										}
 									} else if (currentChild.hasClass('row-container')) {
@@ -2926,12 +2927,12 @@ function fsnGetContent(instance) {
 										if (innerRows != undefined) {
 											innerRows.each(function() {
 												//build inner row shortcodes
-												var rowInner = jQuery(this).find('.row').first();					
-												var dataAttributes = getDataAttrs(rowInner);					
+												var rowInner = jQuery(this).find('.row').first();
+												var dataAttributes = getDataAttrs(rowInner);
 												var rowInnerParams = '';
-												if (dataAttributes.length != 0) {						
+												if (dataAttributes.length != 0) {
 													for (var k in dataAttributes) {
-														if (dataAttributes.hasOwnProperty(k)) {								
+														if (dataAttributes.hasOwnProperty(k)) {
 															var paramName = k.replace(/[-]/g,'_');
 															var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 															rowInnerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2943,11 +2944,11 @@ function fsnGetContent(instance) {
 												rowInnerChildren.each(function() {
 													//build inner column shortcodes
 													var columnInner = jQuery(this);
-													var dataAttributes = getDataAttrs(columnInner);					
+													var dataAttributes = getDataAttrs(columnInner);
 													var columnInnerParams = '';
-													if (dataAttributes.length != 0) {						
+													if (dataAttributes.length != 0) {
 														for (var k in dataAttributes) {
-															if (dataAttributes.hasOwnProperty(k)) {								
+															if (dataAttributes.hasOwnProperty(k)) {
 																var paramName = k.replace(/[-]/g,'_');
 																var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 																columnInnerParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2957,16 +2958,16 @@ function fsnGetContent(instance) {
 													output += '[fsn_column_inner'+ columnInnerParams +']';
 													//build elements
 													var element = jQuery(this).find('.element-text-holder');
-													if (element.length != 0) {				
+													if (element.length != 0) {
 														element.each(function() {
 															var currentElement = jQuery(this);
 															var textContent = currentElement.html();
 															var shortcodeTag = currentElement.parent('.fsn-element').attr('data-shortcode-tag');
-															var dataAttributes = getDataAttrs(currentElement);					
+															var dataAttributes = getDataAttrs(currentElement);
 															var elementParams = '';
-															if (dataAttributes.length != 0) {						
+															if (dataAttributes.length != 0) {
 																for (var k in dataAttributes) {
-																	if (dataAttributes.hasOwnProperty(k)) {								
+																	if (dataAttributes.hasOwnProperty(k)) {
 																		var paramName = k.replace(/[-]/g,'_');
 																		var paramValue = fsnCustomEntitiesEncode(dataAttributes[k]);
 																		elementParams += ' '+ paramName +'="'+ paramValue +'"';
@@ -2977,7 +2978,7 @@ function fsnGetContent(instance) {
 																output += '['+ shortcodeTag + elementParams +']'+ textContent +'[/'+ shortcodeTag +']';
 															//} else {
 																//output += '['+ shortcodeTag + elementParams +']';
-															//}								
+															//}
 														});
 													}
 													output += '[/fsn_column_inner]';
@@ -2998,14 +2999,14 @@ function fsnGetContent(instance) {
 		});
 		output += '[/fsn_row]';
 	});
-	
+
 	return output;
 }
 
 function fsnUpdateContent(instance) {
 	if (instance.attr('id') == 'fsn-main-ui') {
 		content = fsnGetContent(instance);
-		//refocus on main content editor	
+		//refocus on main content editor
 		if (tinymce.get( 'content' ).isHidden()) {
 			tinymce.get( 'content' ).show();
 		}
@@ -3047,7 +3048,7 @@ jQuery.valHooks.textarea = {
 /**
  * Components
  */
- 
+
 jQuery(document).ready(function() {
 	//add new component
 	jQuery('body').on('click', '.component-add-new', function(e) {
@@ -3068,7 +3069,7 @@ jQuery(document).ready(function() {
 
 function launchComponentsModal(id) {
 	var postID = jQuery('input#post_ID').val();
-	
+
 	//data to pass to AJAX function
 	var data = {
 		action: 'components_modal',
@@ -3113,7 +3114,7 @@ function launchComponentsModal(id) {
 jQuery(document).ready(function() {
 	jQuery('body').on('click', '.fsn-save-component', function(e) {
 		e.preventDefault();
-				
+
 		var editForm = jQuery(this).closest('#edit_component');
 		var instance = editForm.find('.fsn-interface-grid');
 
@@ -3121,9 +3122,9 @@ jQuery(document).ready(function() {
 		var componentID = editForm.find('input[name="component_id"]').val();
 		var componentTitle = editForm.find('input[name="component_title"]').val();
 		var componentContent = fsnGetContent(instance);
-		
+
 		editForm.addClass('saving');
-				
+
 		//data to pass to AJAX function
 		var data = {
 			action: 'update_component',
@@ -3150,7 +3151,7 @@ jQuery(document).ready(function() {
 					var componentSelector = jQuery(this);
 					componentSelector.prepend('<option value="'+ newComponentID +'">'+ componentTitle +'</option>');
 					if (componentSelector.parent('.component-select').hasClass('active'))	{
-						componentSelector.find('option').first().prop('selected', true);	
+						componentSelector.find('option').first().prop('selected', true);
 					}
 					componentSelector.trigger('change.select2');
 				});
@@ -3177,7 +3178,7 @@ jQuery(document).ready(function() {
 		var buttonTrigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
-	    
+
 	    // If the media frame already exists, reopen it.
 	    if ( frame ) {
 			frame.open();
@@ -3193,7 +3194,7 @@ jQuery(document).ready(function() {
 	    });
 	    // Select Image
 	    frame.on('select', function() {
-	        var attachment = frame.state().get('selection').first().toJSON();	        
+	        var attachment = frame.state().get('selection').first().toJSON();
 	        targetField.val(attachment.id);
 	        //data to pass to AJAX function
 			var data = {
@@ -3238,15 +3239,15 @@ jQuery(document).ready(function() {
 	    button.siblings('.image-field-preview').remove();
 	    button.siblings('.element-input').val('');
     });
-    
-    
+
+
     //add video button
 	jQuery('body').on('click', '.fsn_upload_video', function(e) {
 		e.preventDefault();
 		var buttonTrigger = jQuery(this);
 		var postID = jQuery('input#post_ID').val();
 		var targetField = buttonTrigger.siblings('.element-input');
-		
+
 		// If the media frame already exists, reopen it.
 	    if ( frame ) {
 			frame.open();
@@ -3262,7 +3263,7 @@ jQuery(document).ready(function() {
 	    });
 	    // Select Video
 	    frame.on('select', function() {
-	        var attachment = frame.state().get('selection').first().toJSON();	        
+	        var attachment = frame.state().get('selection').first().toJSON();
 	        targetField.val(attachment.id);
 	        //data to pass to AJAX function
 			var data = {
@@ -3310,7 +3311,7 @@ jQuery(document).ready(function() {
 });
 
 //In throttling, the code execution is limited to once in a specified time period.
-function fsnThrottle(callback, wait) {  
+function fsnThrottle(callback, wait) {
     var time,
     go = true;
     return function() {
@@ -3326,7 +3327,7 @@ function fsnThrottle(callback, wait) {
 }
 
 //In debouncing, the code is not executed until the event has not been fired for a set amount of time.
-function fsnDebounce(callback, wait) {  
+function fsnDebounce(callback, wait) {
     var time;
     return function() {
         clearTimeout(time);
