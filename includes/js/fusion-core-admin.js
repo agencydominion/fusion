@@ -2341,7 +2341,7 @@ function customListItemShortcodes(modal) {
 	var customListItemsContainer = modal.find('.custom-list-sort');
 	var customListID = customListItemsContainer.attr('data-list-id');
 	var shortcodesString = '';
-	var customListItems = jQuery('.custom-list-item');
+	var customListItems = modal.find('.custom-list-item');
 	customListItems.each(function() {
 		shortcodesString += '[fsn_custom_list_item list_id="'+ customListID +'"';
 		var currentItem = jQuery(this);
