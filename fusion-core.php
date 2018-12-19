@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: http://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.3.5
+ * Version: 1.3.6
  * Author: Agency Dominion
  * Author URI: http://agencydominion.com
  * Text Domain: fusion
@@ -14,7 +14,7 @@
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.3.5' );
+define( 'FSN_VERSION', '1.3.6' );
 
 /**
  * Fusion class.
@@ -282,12 +282,12 @@ class FusionCore	{
 			wp_enqueue_style( 'fsn_bootstrap', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.3.0' );
 		}
 		//modernizr
-		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1');
+		wp_enqueue_script( 'modernizr', plugin_dir_url( __FILE__ ) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1', true);
 		//imagesLoaded
 		wp_enqueue_script('images_loaded', plugin_dir_url( __FILE__ ) .'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
-		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.3.0', true );
-		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.3.0' );
+		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.3.6', true );
+		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', false, '1.3.6' );
 
 		//setup front end script for use with AJAX
 		wp_localize_script( 'fsn_core', 'fsnAjax', array(
@@ -296,7 +296,7 @@ class FusionCore	{
 			)
 		);
 		//fusion core query
-		wp_register_script( 'fsn_core_query', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.0', true );
+		wp_register_script( 'fsn_core_query', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.6', true );
 		wp_localize_script( 'fsn_core_query', 'fsnQuery', array(
 				'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				'fsnQueryNonce' => wp_create_nonce('fsn-query'),
