@@ -103,6 +103,22 @@ function fsnTabsGetOffset(targetTabTrigger) {
 	return offset;
 }
 
+
+/**
+* Modals
+*/
+
+//Set focus on modal when shown
+jQuery(document).ready(function() {
+  var modals = jQuery('.modal');
+  modals.each(function() {
+    var modal = jQuery(this);
+    modal.on('shown.bs.modal', function () {
+      jQuery(this).find('.modal-dialog .close').focus();
+    })
+  });
+});
+
 /**
  * JavaScript Media Queries
  */
