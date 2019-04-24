@@ -11,7 +11,7 @@
 /**
  * Material Icons
  */
- 
+
 @font-face {
 	font-family: 'Material Icons';
 	font-style: normal;
@@ -36,15 +36,15 @@
 	word-wrap: normal;
 	white-space: nowrap;
 	direction: ltr;
-	
+
 	/* Support for all WebKit browsers. */
 	-webkit-font-smoothing: antialiased;
 	/* Support for Safari and Chrome. */
 	text-rendering: optimizeLegibility;
-	
+
 	/* Support for Firefox. */
 	-moz-osx-font-smoothing: grayscale;
-	
+
 	/* Support for IE. */
 	font-feature-settings: 'liga';
 }
@@ -71,12 +71,18 @@
 }
 
 .component.modal > .modal-component-inner	{
-	margin-top:50px;
-	margin-bottom:50px;
+	margin:50px auto;
 	background:#fff;
 	box-shadow:0 5px 15px rgba(0, 0, 0, 0.5);
 	position:relative;
 	width:960px;
+  -ms-transform:none;
+  -moz-transform:none;
+  -webkit-transform:none;
+  transform:none;
+  -moz-transition:none;
+  -webkit-transition:none;
+  transition:none;
 }
 
 .full-width-row > .container-fluid	{
@@ -183,8 +189,7 @@ input[type="search"] {
 		padding-right:15px;
 	}
 	.component.modal > .modal-component-inner	{
-		margin-top:20px;
-		margin-bottom:20px;
+		margin:20px auto;
 		padding-left:15px;
 		padding-right:15px;
 		width:auto;
