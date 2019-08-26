@@ -279,7 +279,6 @@ function fsn_get_image_sizes() {
 
 function fsn_get_button_object($button) {
 	$button_array = json_decode(FusionCore::decode_custom_entities($button));
-	print_r($button_array);
 	$button_link = !empty($button_array->link) ? $button_array->link : '';
 	$button_label = !empty($button_array->label) ? $button_array->label : '';
 	$button_aria_label = !empty($button_array->ariaLabel) ? $button_array->ariaLabel : '';
@@ -358,7 +357,6 @@ function fsn_get_button_object($button) {
  */
 
 function fsn_get_button_anchor_attributes($button_object, $classes = false) {
-	print_r($button_object);
 	extract($button_object);
 	$button_attributes = '';
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
