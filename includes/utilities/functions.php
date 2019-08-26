@@ -372,6 +372,7 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 		if (!empty($button_label_show) && !empty($button_label_hide)) {
 			$button_attributes .= ' data-label-show="'. esc_attr($button_label_show) .'"';
 			$button_attributes .= ' data-label-hide="'. esc_attr($button_label_hide) .'"';
+			$button_attributes .= ' role="button"';
 		}
 	} elseif (!empty($button_type) && $button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
