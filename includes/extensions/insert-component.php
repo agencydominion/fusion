@@ -38,7 +38,13 @@ function fsn_init_insert_component_element() {
 					'label' => __('Collapse Component', 'fusion'),
 					'help' => __('Check to load component in a collapsed state.', 'fusion'),
 					'section' => 'advanced'
-				)	
+				),
+				array(
+					'type' => 'text',
+					'param_name' => 'custom_component_id',
+					'label' => __('Custom ID', 'fusion'),
+					'section' => 'advanced'
+				)
 			)
 		));
 	}
@@ -51,7 +57,8 @@ function fsn_init_insert_component_element() {
 function fsn_component_shortcode( $atts, $content ) {
 	extract( shortcode_atts( array(
 		'component_id' => false,
-		'component_collapse' => false
+		'component_collapse' => false,
+		'custom_component_id' => ''
 	), $atts ) );
 
 	$output = '';
@@ -64,7 +71,11 @@ function fsn_component_shortcode( $atts, $content ) {
 	if (!empty($component_id)) {
 		$component = get_post($component_id);
 		if (!empty($component) && $component->post_status == 'publish') {
-			$output .= '<div id="component-'. esc_attr($component_id) .'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
+			$component_id_output = 'component-'. esc_attr($component_id);
+			if (!empty($custom_component_id)) {
+				$component_id_output = $custom_component_id;
+			}
+			$output .= '<div id="'.$component_id_output.'" class="component '. fsn_style_params_class($atts) . (!empty($component_collapse) ? ' collapse' : '') .'">';
 				$output .= apply_filters('fsn_the_content', $component->post_content);
 			$output .= '</div>';
 		}
