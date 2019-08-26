@@ -153,6 +153,7 @@ function fsn_style_params_class($atts) {
 			'background_color_opacity' => '',
 			'hidden_xs' => '',
 			'visible_xs' => '',
+			'sr_only' => '',
 			'user_classes' => ''
 		), $atts ) );
 
@@ -174,6 +175,7 @@ function fsn_style_params_class($atts) {
 		//add visibility classes
 		$style_params_class .= !empty($hidden_xs) ? ' hidden-xs' : '';
 		$style_params_class .= !empty($visible_xs) ? ' visible-xs-block' : '';
+		$style_params_class .= !empty($sr_only) ? ' sr-only' : '';
 		//add user classes
 		$style_params_class .= !empty($user_classes) ? ' '. $user_classes : '';
 	}

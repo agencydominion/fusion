@@ -478,6 +478,12 @@ class FusionCore	{
 					'param_name' => 'visible_xs',
 					'label' => __('Hide on Desktop and Tablet', 'fusion'),
 					'section' => 'style'
+				),				
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'sr-only',
+					'label' => __('Screen reader only', 'fusion'),
+					'section' => 'style'
 				),
 				array(
 					'type' => 'text',
