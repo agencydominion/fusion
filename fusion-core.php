@@ -920,14 +920,14 @@ class FusionCore	{
 	 * @param string $post_type         The post type being checked.
 	 */
 
-	 public function disable_block_editor_for_post_type($current_status, $post_type) {
-	 		$options = get_option('fsn_options');
-	 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
-			if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
-				return false;
-			}
-			return $current_status;
-	 }
+	public function disable_block_editor_for_post_type($current_status, $post_type) {
+		$options = get_option('fsn_options');
+		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+		if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
+			return false;
+		}
+		return $current_status;
+	}
 
 
 	/**
