@@ -14,12 +14,12 @@
 /**
  * Map Shortcode
  */
- 
+
 add_action('init', 'fsn_init_insert_component_element', 12);
 function fsn_init_insert_component_element() {
-	
+
 	if (function_exists('fsn_map')) {
-		
+
 		fsn_map(array(
 			'name' => __('Component', 'fusion'),
 			'shortcode_tag' => 'fsn_component',
@@ -38,7 +38,7 @@ function fsn_init_insert_component_element() {
 					'label' => __('Collapse Component', 'fusion'),
 					'help' => __('Check to load component in a collapsed state.', 'fusion'),
 					'section' => 'advanced'
-				)			
+				)	
 			)
 		));
 	}
@@ -48,19 +48,19 @@ function fsn_init_insert_component_element() {
  * Output Shortcode
  */
 
-function fsn_component_shortcode( $atts, $content ) {		
-	extract( shortcode_atts( array(							
+function fsn_component_shortcode( $atts, $content ) {
+	extract( shortcode_atts( array(
 		'component_id' => false,
 		'component_collapse' => false
 	), $atts ) );
-	
+
 	$output = '';
-	
+
 	//before fusion component action hook
 	ob_start();
 	do_action('fsn_before_component', $atts);
 	$output .= ob_get_clean();
-	
+
 	if (!empty($component_id)) {
 		$component = get_post($component_id);
 		if (!empty($component) && $component->post_status == 'publish') {
@@ -69,12 +69,12 @@ function fsn_component_shortcode( $atts, $content ) {
 			$output .= '</div>';
 		}
 	}
-	
+
 	//after fusion component action hook
 	ob_start();
 	do_action('fsn_after_component', $atts);
 	$output .= ob_get_clean();
-	
+
 	return $output;
 }
 add_shortcode('fsn_component', 'fsn_component_shortcode');
