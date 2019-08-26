@@ -66,6 +66,9 @@ class FusionCore	{
 		// Initialize the editor
 		add_action('edit_form_after_title', array($this, 'render_editor'));
 
+		// Disable Block editor
+		add_filter('use_block_editor_for_post_type', array($this, 'disable_block_editor_for_post_type'), 10, 2);
+
 		// Initialize Screen Options
 		add_action('load-post.php', array($this, 'add_screen_options'));
 
@@ -905,6 +908,27 @@ class FusionCore	{
 			echo '</div>';
 		}
 	}
+
+	/**
+	 * Disable Block Editor
+	 *
+	 * Disable Block editor on select post types.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param bool   $use_block_editor  Whether the post type can be edited or not. Default true.
+	 * @param string $post_type         The post type being checked.
+	 */
+
+	 public function disable_block_editor_for_post_type($current_status, $post_type) {
+	 		$options = get_option('fsn_options');
+	 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+			if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
+				return false;
+			}
+			return $current_status;
+	 }
+
 
 	/**
 	 * Add Screen Options
