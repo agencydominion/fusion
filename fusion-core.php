@@ -4,17 +4,17 @@
  */
 /**
  * Plugin Name: Fusion : Plugin
- * Plugin URI: http://www.agencydominion.com/fusion/
+ * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.3.7
+ * Version: 1.4.0
  * Author: Agency Dominion
- * Author URI: http://agencydominion.com
+ * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
  * Domain Path: /languages/
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.3.7' );
+define( 'FSN_VERSION', '1.4.0' );
 
 /**
  * Fusion class.
@@ -65,6 +65,9 @@ class FusionCore	{
 
 		// Initialize the editor
 		add_action('edit_form_after_title', array($this, 'render_editor'));
+
+		// Disable Block editor
+		add_filter('use_block_editor_for_post_type', array($this, 'disable_block_editor_for_post_type'), 10, 2);
 
 		// Initialize Screen Options
 		add_action('load-post.php', array($this, 'add_screen_options'));
@@ -237,6 +240,7 @@ class FusionCore	{
 				'button_summary_modal' => __('Modal', 'fusion'),
 				'button_summary_link' => __('Links to', 'fusion'),
 				'button_summary_label' => __('Label', 'fusion'),
+				'button_summary_aria_label' => __('ARIA Label', 'fusion'),
 				'button_summary_target' => __('Opens in', 'fusion'),
 				'button_summary_target_blank' => __('New Window / Tab', 'fusion'),
 				'button_summary_target_parent' => __('Parent Frame', 'fusion'),
@@ -345,6 +349,10 @@ class FusionCore	{
 			array(
 				'id' => 'animation',
 				'name' => __('Animation', 'fusion')
+			),
+			array(
+				'id' => 'accessibility',
+				'name' => __('Accessibility', 'fusion')
 			)
 		);
 		$fsn_param_sections = apply_filters('fsn_param_sections', $fsn_param_sections);
@@ -469,6 +477,12 @@ class FusionCore	{
 					'type' => 'checkbox',
 					'param_name' => 'visible_xs',
 					'label' => __('Hide on Desktop and Tablet', 'fusion'),
+					'section' => 'style'
+				),				
+				array(
+					'type' => 'checkbox',
+					'param_name' => 'sr-only',
+					'label' => __('Screen reader only', 'fusion'),
 					'section' => 'style'
 				),
 				array(
@@ -904,6 +918,27 @@ class FusionCore	{
 			echo '</div>';
 		}
 	}
+
+	/**
+	 * Disable Block Editor
+	 *
+	 * Disable Block editor on select post types.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @param bool   $use_block_editor  Whether the post type can be edited or not. Default true.
+	 * @param string $post_type         The post type being checked.
+	 */
+
+	public function disable_block_editor_for_post_type($current_status, $post_type) {
+		$options = get_option('fsn_options');
+		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+		if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
+			return false;
+		}
+		return $current_status;
+	}
+
 
 	/**
 	 * Add Screen Options
@@ -1540,6 +1575,7 @@ class FusionCore	{
 					$button_array = json_decode($param_value);
 					$saved_button_link = !empty($button_array->link) ? $button_array->link : '';
 					$saved_button_label = !empty($button_array->label) ? $button_array->label : '';
+					$saved_button_aria_label = !empty($button_array->ariaLabel) ? $button_array->ariaLabel : '';
 					$saved_button_attached_id = !empty($button_array->attachedID) ? $button_array->attachedID : '';
 					$saved_button_target = !empty($button_array->target) ? $button_array->target : '';
 					$saved_button_type = !empty($button_array->type) ? $button_array->type : '';
@@ -1557,6 +1593,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('External Link', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_link) ? '<p>'. __('Links to', 'fusion') .': <strong>'. esc_html($saved_button_link) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								switch($saved_button_target) {
 									case '_blank':
 										$input .= '<p>'. __('Opens in', 'fusion') .': <strong>'. __('New Window / Tab', 'fusion') .'</strong></p>';
@@ -1575,6 +1612,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Internal Link', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_attached_id) ? '<p>'. __('Links to', 'fusion') .': <strong>'. get_the_title($saved_button_attached_id) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								switch($saved_button_target) {
 									case '_blank':
 										$input .= '<p>'. __('Opens in', 'fusion') .': <strong>'. __('New Window / Tab', 'fusion') .'</strong></p>';
@@ -1595,6 +1633,7 @@ class FusionCore	{
 								}
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Collapse', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_collapse_id) ? '<p>'. __('Opens', 'fusion') .': <strong>'. esc_html($saved_button_collapse_id) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								$input .= !empty($saved_button_collapse_label_show) ? '<p>'. __('Show Label', 'fusion') .': <strong>'. esc_html($saved_button_collapse_label_show) .'</strong></p>' : '';
 								$input .= !empty($saved_button_collapse_label_hide) ? '<p>'. __('Hide Label', 'fusion') .': <strong>'. esc_html($saved_button_collapse_label_hide) .'</strong></p>' : '';
 								break;
@@ -1605,6 +1644,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Modal', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_modal_id) ? '<p>'. __('Opens', 'fusion') .': <strong>'. esc_html($saved_button_modal_id) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								break;
 						}
 					}
