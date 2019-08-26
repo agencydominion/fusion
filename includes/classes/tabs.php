@@ -241,7 +241,7 @@ class FusionCoreTabs	{
 
 			switch ($fsn_tab_output_phase) {
 				case 'tab_nav':
-					$output .= '<li'. ($fsn_tab_counter === 1 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" data-toggle="tab"'. (!empty($classes) ? ' class="'. esc_attr($classes) .'"' : '') .'>'. esc_html($tab_title) .'</a></li>';
+					$output .= '<li'. ($fsn_tab_counter === 1 ? ' class="active"' : '') .'><a href="#'. esc_attr($tab_id) .'" role="button" data-toggle="tab"'. (!empty($classes) ? ' class="'. esc_attr($classes) .'"' : '') .'>'. esc_html($tab_title) .'</a></li>';
 					break;
 				case 'tab_content':
 					$output .= '<div id="'. esc_attr($tab_id) .'" class="tab-pane'. (!empty($fsn_tabs_settings['fade']) ? ' fade' : '') . (!empty($fsn_tabs_settings['fade']) && $fsn_tab_counter === 1 ? ' in' : '') . ($fsn_tab_counter === 1 ? ' active' : '') .'">';
