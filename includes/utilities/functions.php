@@ -364,6 +364,9 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
 	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
 	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
+	if (!empty($button_target) && $button_target == '_blank') {
+		$button_attributes .= ' rel="noopener"';
+	}
 	if (!empty($button_aria_label) ) {
 		$button_attributes .= ' aria-label="'.esc_attr($button_aria_label).'"';
 	}
