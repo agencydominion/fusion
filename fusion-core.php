@@ -4,17 +4,17 @@
  */
 /**
  * Plugin Name: Fusion : Plugin
- * Plugin URI: http://www.agencydominion.com/fusion/
+ * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.3.7
+ * Version: 1.4.0
  * Author: Agency Dominion
- * Author URI: http://agencydominion.com
+ * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
  * Domain Path: /languages/
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.3.7' );
+define( 'FSN_VERSION', '1.4.0' );
 
 /**
  * Fusion class.
@@ -237,6 +237,7 @@ class FusionCore	{
 				'button_summary_modal' => __('Modal', 'fusion'),
 				'button_summary_link' => __('Links to', 'fusion'),
 				'button_summary_label' => __('Label', 'fusion'),
+				'button_summary_aria_label' => __('ARIA Label', 'fusion'),
 				'button_summary_target' => __('Opens in', 'fusion'),
 				'button_summary_target_blank' => __('New Window / Tab', 'fusion'),
 				'button_summary_target_parent' => __('Parent Frame', 'fusion'),
@@ -1540,6 +1541,7 @@ class FusionCore	{
 					$button_array = json_decode($param_value);
 					$saved_button_link = !empty($button_array->link) ? $button_array->link : '';
 					$saved_button_label = !empty($button_array->label) ? $button_array->label : '';
+					$saved_button_aria_label = !empty($button_array->ariaLabel) ? $button_array->ariaLabel : '';
 					$saved_button_attached_id = !empty($button_array->attachedID) ? $button_array->attachedID : '';
 					$saved_button_target = !empty($button_array->target) ? $button_array->target : '';
 					$saved_button_type = !empty($button_array->type) ? $button_array->type : '';
@@ -1557,6 +1559,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('External Link', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_link) ? '<p>'. __('Links to', 'fusion') .': <strong>'. esc_html($saved_button_link) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								switch($saved_button_target) {
 									case '_blank':
 										$input .= '<p>'. __('Opens in', 'fusion') .': <strong>'. __('New Window / Tab', 'fusion') .'</strong></p>';
@@ -1575,6 +1578,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Internal Link', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_attached_id) ? '<p>'. __('Links to', 'fusion') .': <strong>'. get_the_title($saved_button_attached_id) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								switch($saved_button_target) {
 									case '_blank':
 										$input .= '<p>'. __('Opens in', 'fusion') .': <strong>'. __('New Window / Tab', 'fusion') .'</strong></p>';
@@ -1595,6 +1599,7 @@ class FusionCore	{
 								}
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Collapse', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_collapse_id) ? '<p>'. __('Opens', 'fusion') .': <strong>'. esc_html($saved_button_collapse_id) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								$input .= !empty($saved_button_collapse_label_show) ? '<p>'. __('Show Label', 'fusion') .': <strong>'. esc_html($saved_button_collapse_label_show) .'</strong></p>' : '';
 								$input .= !empty($saved_button_collapse_label_hide) ? '<p>'. __('Hide Label', 'fusion') .': <strong>'. esc_html($saved_button_collapse_label_hide) .'</strong></p>' : '';
 								break;
@@ -1605,6 +1610,7 @@ class FusionCore	{
 								$input .= '<p>'. __('Type', 'fusion') .': <strong>'. __('Modal', 'fusion') .'</strong></p>';
 								$input .= !empty($saved_button_modal_id) ? '<p>'. __('Opens', 'fusion') .': <strong>'. esc_html($saved_button_modal_id) .'</strong></p>' : '';
 								$input .= !empty($saved_button_label) ? '<p>'. __('Label', 'fusion') .': <strong>'. esc_html($saved_button_label) .'</strong></p>' : '';
+								$input .= !empty($saved_button_aria_label) ? '<p>'. __('ARIA Label', 'fusion') .': <strong>'. esc_html($saved_button_aria_label) .'</strong></p>' : '';
 								break;
 						}
 					}

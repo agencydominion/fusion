@@ -279,8 +279,10 @@ function fsn_get_image_sizes() {
 
 function fsn_get_button_object($button) {
 	$button_array = json_decode(FusionCore::decode_custom_entities($button));
+	print_r($button_array);
 	$button_link = !empty($button_array->link) ? $button_array->link : '';
 	$button_label = !empty($button_array->label) ? $button_array->label : '';
+	$button_aria_label = !empty($button_array->ariaLabel) ? $button_array->ariaLabel : '';
 	$button_attached_id = !empty($button_array->attachedID) ? $button_array->attachedID : '';
 	$button_target = !empty($button_array->target) ? $button_array->target : '';
 	$button_type = !empty($button_array->type) ? $button_array->type : '';
@@ -295,6 +297,7 @@ function fsn_get_button_object($button) {
 			$button_object['button_type'] = 'external';
 			$button_object['button_link'] = $button_link;
 			$button_object['button_label'] = $button_label;
+			$button_object['button_aria_label'] = $button_aria_label;
 			if (!empty($button_target)) {
 				$button_object['button_target'] = $button_target;
 			}
@@ -307,6 +310,7 @@ function fsn_get_button_object($button) {
 				$button_object['button_link'] = $button_link;
 			}
 			$button_object['button_label'] = $button_label;
+			$button_object['button_aria_label'] = $button_aria_label;
 			if (!empty($button_target)) {
 				$button_object['button_target'] = $button_target;
 			}
@@ -318,6 +322,7 @@ function fsn_get_button_object($button) {
 			$button_object['button_type'] = 'collapse';
 			$button_object['button_link'] = $button_collapse_id;
 			$button_object['button_label'] = $button_collapse_label_show;
+			$button_object['button_aria_label'] = $button_aria_label;
 			$button_object['button_label_show'] = $button_collapse_label_show;
 			$button_object['button_label_hide'] = $button_collapse_label_hide;
 			break;
@@ -331,10 +336,12 @@ function fsn_get_button_object($button) {
 			$button_object['button_type'] = 'modal';
 			$button_object['button_link'] = $button_modal_id;
 			$button_object['button_label'] = $button_label;
+			$button_object['button_aria_label'] = $button_aria_label;
 			break;
 		default:
 			$button_object['button_link'] = $button_link;
 			$button_object['button_label'] = $button_label;
+			$button_object['button_aria_label'] = $button_aria_label;
 			if (!empty($button_target)) {
 				$button_object['button_target'] = $button_target;
 			}
@@ -351,11 +358,15 @@ function fsn_get_button_object($button) {
  */
 
 function fsn_get_button_anchor_attributes($button_object, $classes = false) {
+	print_r($button_object);
 	extract($button_object);
 	$button_attributes = '';
 	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
 	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
 	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
+	if (!empty($button_aria_label) ) {
+		$button_attributes .= ' aria-label="'.esc_attr($button_aria_label).'"';
+	}
 	if (!empty($button_type) && $button_type == 'collapse') {
 		$button_attributes .= ' data-toggle="collapse"';
 		if (!empty($button_label_show) && !empty($button_label_hide)) {

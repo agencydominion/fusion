@@ -2015,8 +2015,11 @@ jQuery(document).ready(function() {
 			var currentButtonArray = JSON.parse(currentButtonStringField.val());
 		} catch(err) {}
 
+    console.log(currentButtonArray);
+
 		var currentLink = currentButtonArray.link;
 		var currentLabel = currentButtonArray.label;
+    var currentAriaLabel = currentButtonArray.ariaLabel;
 		var currentAttached = currentButtonArray.attachedID;
 		var currentTarget = currentButtonArray.target;
 		var currentType = currentButtonArray.type;
@@ -2032,6 +2035,7 @@ jQuery(document).ready(function() {
 		        post_id: postID,
 		        current_link: currentLink,
 		        current_label: currentLabel,
+            current_aria_label: currentAriaLabel,
 		        current_attached: currentAttached,
 		        current_target: currentTarget,
 		        current_type: currentType,
@@ -2054,6 +2058,7 @@ jQuery(document).ready(function() {
 
 		        var buttonLink = buttonModal.find('[name="button_link"]');
 		        var buttonLabel = buttonModal.find('[name="button_label"]');
+            var buttonAriaLabel = buttonModal.find('[name="button_aria_label"]');
 		        var buttonTarget = buttonModal.find('[name="button_target"]');
 		        var buttonType = buttonModal.find('[name="button_type"]');
 		        var buttonCollapseID = buttonModal.find('[name="button_collapse_id"]');
@@ -2079,6 +2084,7 @@ jQuery(document).ready(function() {
 		        buttonModal.on('hide.bs.modal', function(e) {
 			        var buttonLinkVal = String.prototype.trim ? buttonLink.val().trim() : buttonLink.val().replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
 			        var buttonLabelVal = buttonLabel.val();
+              var buttonAriaLabelVal = buttonAriaLabel.val();
 			        var attachedItem = jQuery('[name="button_attached"]').find('option:selected');
 			        var buttonTargetVal = buttonTarget.val();
 			        var buttonTypeVal = buttonType.find('option:selected').val();
@@ -2128,6 +2134,9 @@ jQuery(document).ready(function() {
 			        if (buttonLabelVal != '') {
 				        buttonArray["label"] = buttonLabelVal;
 			        }
+			        if (buttonAriaLabelVal != '') {
+				        buttonArray["ariaLabel"] = buttonAriaLabelVal;
+			        }
 			        if (attachedItem.length > 0) {
 				        var attachedItemID = attachedItem.val();
 				        buttonArray["attachedID"] = attachedItemID;
@@ -2166,6 +2175,7 @@ jQuery(document).ready(function() {
 			        		buttonSummary += '<p>'+ fsnL10n.button_summary_type +': <strong>'+ fsnL10n.button_summary_external +'</strong></p>';
 							buttonSummary += buttonLinkVal != '' ? '<p>'+ fsnL10n.button_summary_link +': <strong>'+ buttonLinkVal +'</strong></p>' : '';
 							buttonSummary += buttonLabelVal != '' ? '<p>'+ fsnL10n.button_summary_label +': <strong>'+ buttonLabelVal +'</strong></p>' : '';
+              buttonSummary += buttonAriaLabelVal != '' ? '<p>'+ fsnL10n.button_summary_aria_label +': <strong>'+ buttonAriaLabelVal +'</strong></p>' : '';
 							switch(buttonTargetVal) {
 								case '_blank':
 									buttonSummary += '<p>'+ fsnL10n.button_summary_target +': <strong>'+ fsnL10n.button_summary_target_blank +'</strong></p>';
@@ -2184,6 +2194,7 @@ jQuery(document).ready(function() {
 			        		buttonSummary += '<p>'+ fsnL10n.button_summary_type +': <strong>'+ fsnL10n.button_summary_internal +'</strong></p>';
 							buttonSummary += attachedItem.length > 0 ? '<p>'+ fsnL10n.button_summary_link +': <strong>'+ attachedItem.text() +'</strong></p>' : '';
 							buttonSummary += buttonLabelVal != '' ? '<p>'+ fsnL10n.button_summary_label +': <strong>'+ buttonLabelVal +'</strong></p>' : '';
+              buttonSummary += buttonAriaLabelVal != '' ? '<p>'+ fsnL10n.button_summary_aria_label +': <strong>'+ buttonAriaLabelVal +'</strong></p>' : '';
 							switch(buttonTargetVal) {
 								case '_blank':
 									buttonSummary += '<p>'+ fsnL10n.button_summary_target +': <strong>'+ fsnL10n.button_summary_target_blank +'</strong></p>';
@@ -2204,6 +2215,7 @@ jQuery(document).ready(function() {
 			        		}
 			        		buttonSummary += '<p>'+ fsnL10n.button_summary_type +': <strong>'+ fsnL10n.button_summary_collapse +'</strong></p>';
 							buttonSummary += buttonCollapseIDval != '' ? '<p>'+ fsnL10n.button_summary_opens +': <strong>'+ buttonCollapseIDval +'</strong></p>' : '';
+              buttonSummary += buttonAriaLabelVal != '' ? '<p>'+ fsnL10n.button_summary_aria_label +': <strong>'+ buttonAriaLabelVal +'</strong></p>' : '';
 							buttonSummary += buttonCollapseLabelShowVal != '' ? '<p>'+ fsnL10n.button_summary_collapse_show +': <strong>'+ buttonCollapseLabelShowVal +'</strong></p>' : '';
 							buttonSummary += buttonCollapseLabelHideVal != '' ? '<p>'+ fsnL10n.button_summary_collapse_hide +': <strong>'+ buttonCollapseLabelHideVal +'</strong></p>' : '';
 			        		break;
@@ -2216,6 +2228,7 @@ jQuery(document).ready(function() {
 			        		buttonSummary += '<p>'+ fsnL10n.button_summary_type +': <strong>'+ fsnL10n.button_summary_modal +'</strong></p>';
 							buttonSummary += buttonModalIDval != '' ? '<p>'+ fsnL10n.button_summary_opens +': <strong>'+ buttonModalIDval +'</strong></p>' : '';
 							buttonSummary += buttonLabelVal != '' ? '<p>'+ fsnL10n.button_summary_label +': <strong>'+ buttonLabelVal +'</strong></p>' : '';
+              buttonSummary += buttonAriaLabelVal != '' ? '<p>'+ fsnL10n.button_summary_aria_label +': <strong>'+ buttonAriaLabelVal +'</strong></p>' : '';
 			        		break;
 			        }
 			        buttonSummaryContainer.html(buttonSummary);

@@ -10,14 +10,14 @@
  *
  * @since 1.0.0
  */
- 
+
 class FusionCoreButtonModal	{
 
 	public function __construct() {
-		
+
 		//Button Modal
 		add_action('wp_ajax_init-button-modal', array($this, 'button_init_modal'));
-		
+
 	}
 
 	/**
@@ -29,13 +29,14 @@ class FusionCoreButtonModal	{
 	public function button_init_modal() {
 		//verify nonce
 		check_ajax_referer( 'fsn-admin-edit', 'security' );
-		
+
 		//verify capabilities
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
-			
+
 		$current_link = !empty($_POST['current_link']) ? esc_url_raw($_POST['current_link']) : '';
 		$current_label = !empty($_POST['current_label']) ? stripslashes(wp_filter_post_kses($_POST['current_label'])) : '';
+    $current_aria_label = !empty($_POST['current_aria_label']) ? stripslashes(wp_filter_post_kses($_POST['current_aria_label'])) : '';
 		$current_attached = !empty($_POST['current_attached']) ? intval($_POST['current_attached']) : '';
 		$current_target = !empty($_POST['current_target']) ? wp_filter_post_kses($_POST['current_target']) : '';
 		$current_type = !empty($_POST['current_type']) ? wp_filter_post_kses($_POST['current_type']) : '';
@@ -55,7 +56,7 @@ class FusionCoreButtonModal	{
 						<form role="form">
 						<?php
 						//get registered post types
-						$post_types = get_post_types(array('public' => true));		
+						$post_types = get_post_types(array('public' => true));
 						unset($post_types['attachment']);
 						unset($post_types['component']);
 						unset($post_types['template']);
@@ -113,6 +114,11 @@ class FusionCoreButtonModal	{
 							),
 							array(
 								'type' => 'text',
+								'param_name' => 'button_aria_label',
+								'label' => __('ARIA Label', 'fusion')
+							),
+							array(
+								'type' => 'text',
 								'param_name' => 'button_collapse_id',
 								'label' => __('Collapse ID', 'fusion'),
 								'help' => __('Input the ID attribute for the collapsible element if not using an attached Component.', 'fusion'),
@@ -157,7 +163,7 @@ class FusionCoreButtonModal	{
 								)
 							)
 						);
-						
+
 						if (!empty($params)) {
 							foreach($params as $param) {
 								//check for saved values
@@ -167,6 +173,9 @@ class FusionCoreButtonModal	{
 										break;
 									case 'button_label':
 										$param_value = $current_label;
+										break;
+									case 'button_aria_label':
+										$param_value = $current_aria_label;
 										break;
 									case 'button_attached':
 										$param_value = $current_attached;
