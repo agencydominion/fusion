@@ -2015,8 +2015,6 @@ jQuery(document).ready(function() {
 			var currentButtonArray = JSON.parse(currentButtonStringField.val());
 		} catch(err) {}
 
-    console.log(currentButtonArray);
-
 		var currentLink = currentButtonArray.link;
 		var currentLabel = currentButtonArray.label;
     var currentAriaLabel = currentButtonArray.ariaLabel;
