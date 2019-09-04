@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.4.0
+ * Version: 1.4.1
  * Author: Agency Dominion
  * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
@@ -14,7 +14,7 @@
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.4.0' );
+define( 'FSN_VERSION', '1.4.1' );
 
 /**
  * Fusion class.
@@ -931,10 +931,12 @@ class FusionCore	{
 	 */
 
 	public function disable_block_editor_for_post_type($current_status, $post_type) {
-		$options = get_option('fsn_options');
-		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
-		if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
-			return false;
+		if ( !is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+			$options = get_option('fsn_options');
+			$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+			if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
+				return false;
+			}
 		}
 		return $current_status;
 	}
