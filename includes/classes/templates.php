@@ -116,7 +116,7 @@ class FusionCoreTemplate	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
-		<div class="modal fade" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="save_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						
@@ -202,7 +202,7 @@ class FusionCoreTemplate	{
 		if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
 			die( '-1' );
 		?>
-		<div class="modal fade" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="load_template_modal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">						

@@ -318,7 +318,7 @@ class FusionCoreTabs	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="editTabsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
@@ -435,7 +435,7 @@ class FusionCoreTabs	{
 			}
 		}
 		?>
-		<div class="modal fade" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="editTabModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">

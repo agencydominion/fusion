@@ -148,7 +148,7 @@ class FusionCoreExtend	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="<?php echo esc_attr($this->shortcode_tag) ?>_modal" tabindex="-1" role="dialog">
+		<div class="modal" id="<?php echo esc_attr($this->shortcode_tag) ?>_modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">

@@ -1047,10 +1047,9 @@ function fsnInitUIevents(instance) {
 			}
 			//append modal to body
 			jQuery('body').append(response);
-			//open modal
 			var modalSelector = jQuery('.modal[id="'+ shortcodeTag +'_modal"]').last();
-			modalSelector.modal();
-			//reinit tinyMCE
+
+			//register modal events, open modal, and reinit tinyMCE
 			if (jQuery('#fsncontent').length > 0) {
 				setUserSetting( 'editor', 'tinymce' );
 				modalSelector.on('shown.bs.modal', function() {
@@ -1071,17 +1070,18 @@ function fsnInitUIevents(instance) {
 			        window.switchEditors.go(textfield_id, 'tmce');
 			        //focus on this RTE
 			        tinyMCE.get('fsncontent').focus();
-				});
-				//destroy tinyMCE
-				modalSelector.on('hidden.bs.modal', function() {
+				}).on('hidden.bs.modal', function() {
+          //destroy tinyMCE
 					//make compatable with TinyMCE 4 which is used starting with WordPress 3.9
 					if(tinymce.majorVersion === "4") {
 						tinymce.execCommand('mceRemoveEditor', true, 'fsncontent');
                     } else {
 						tinymce.execCommand("mceRemoveControl", true, 'fsncontent');
                     }
-				});
-			}
+				}).modal('show');
+			} else {
+        modalSelector.modal('show');
+      }
 			//init color pickers
 			jQuery('.fsn-color-picker').wpColorPicker();
 			//save notice
@@ -1219,7 +1219,7 @@ function fsnInitUIevents(instance) {
 			jQuery('body').append(response);
 			//open modal
 			var modalSelector = jQuery('#save_template_modal');
-			modalSelector.modal();
+			modalSelector.modal('show');
 			//update content variables
 			modalSelector.on('click', '.save-template', function(e) {
 				e.preventDefault();
@@ -1277,10 +1277,8 @@ function fsnInitUIevents(instance) {
 			}
 			//append modal to body
 			jQuery('body').append(response);
-			//open modal
 			var modalSelector = jQuery('#load_template_modal');
-			modalSelector.modal();
-			//template options
+			//register modal events, open modal, and set template options
 			modalSelector.on('shown.bs.modal', function(e) {
 				jQuery(this).on('click', '.template-controls-toggle', function(e) {
 					e.stopPropagation();
@@ -1290,7 +1288,9 @@ function fsnInitUIevents(instance) {
 					trigger.toggleClass('open');
 					target.toggleClass('collapsed');
 				});
-			});
+			}).on('hidden.bs.modal', function(e) {
+				jQuery(this).remove();
+			}).modal('show');
 			//load template
 			modalSelector.on('click', '.template-item', function(e) {
 				e.preventDefault();
@@ -1403,10 +1403,6 @@ function fsnInitUIevents(instance) {
 						loadMoreBtn.remove();
 					}
 				}, 'json');
-			});
-			//delete modal on hidden
-			modalSelector.on('hidden.bs.modal', function(e) {
-				jQuery(this).remove();
 			});
 		});
 	});
@@ -3098,8 +3094,7 @@ function launchComponentsModal(id) {
 		jQuery('body').append(response);
 		//open modal
 		var componentsModal = jQuery('#componentsModal').last();
-		componentsModal.modal();
-		//init Fusion UI events on show
+		//register modal events, open modal, and init Fusion UI events on show
 		componentsModal.on('shown.bs.modal', function(e) {
 			var componentInterfaceGrid = componentsModal.find('.fsn-interface-grid');
 			if (componentInterfaceGrid.is(':empty')) {
@@ -3107,17 +3102,16 @@ function launchComponentsModal(id) {
 				componentInterfaceGrid.empty().append(fsnInitContent);
 			}
 			fsnInitUIevents(componentInterfaceGrid);
-		});
+		}).on('hidden.bs.modal', function(e) {
+      //delete modal on hidden
+			jQuery(this).remove();
+			jQuery('.component-select').removeClass('active');
+		}).modal('show');
 		//dismiss notices
 		componentsModal.on('click', '.notice-dismiss' , function() {
 			jQuery(this).closest('.notice').fadeOut(200, function() {
 				jQuery(this).remove();
 			});
-		});
-		//delete modal on hidden
-		componentsModal.on('hidden.bs.modal', function(e) {
-			jQuery(this).remove();
-			jQuery('.component-select').removeClass('active');
 		});
 	});
 }

@@ -45,7 +45,7 @@ class FusionCoreButtonModal	{
 		$current_collapse_label_hide = !empty($_POST['current_collapse_label_hide']) ? stripslashes(wp_filter_post_kses($_POST['current_collapse_label_hide'])) : '';
 		$current_component_id = !empty($_POST['current_component_id']) ? intval($_POST['current_component_id']) : '';
 		?>
-		<div class="modal fade button-modal">
+		<div class="modal button-modal">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">

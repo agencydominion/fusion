@@ -478,7 +478,7 @@ class FusionCore	{
 					'param_name' => 'visible_xs',
 					'label' => __('Hide on Desktop and Tablet', 'fusion'),
 					'section' => 'style'
-				),				
+				),
 				array(
 					'type' => 'checkbox',
 					'param_name' => 'sr-only',
@@ -1000,7 +1000,7 @@ class FusionCore	{
 		$nesting_level = intval($_POST['nesting_level']);
 		$tabs_nesting_level = intval($_POST['tabs_nesting_level']);
 		?>
-		<div class="modal fade" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="addElementModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -1209,7 +1209,7 @@ class FusionCore	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="editRowModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
@@ -1354,7 +1354,7 @@ class FusionCore	{
 		$fsn_param_sections = fsn_get_sorted_param_sections($params);
 		$tabset_id = uniqid();
 		?>
-		<div class="modal fade" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
+		<div class="modal" id="editColModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
