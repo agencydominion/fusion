@@ -175,7 +175,7 @@ class FusionCore	{
 		// Editor scripts and styles
 		if ( ($hook_suffix == 'post.php' || $hook_suffix == 'post-new.php') && ( (post_type_exists('notification') && $post->post_type == 'notification') || (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) ) ) {
 			//bootstrap
-			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.3.5', true );
+			wp_enqueue_script( 'bootstrap_admin', plugin_dir_url( __FILE__ ) . 'includes/bootstrap/admin/js/bootstrap.min.js', false, '3.4.1', true );
 			//jQuery UI
 			wp_enqueue_style( 'jquery-ui-custom', plugin_dir_url( __FILE__ ) . 'includes/css/jquery-ui-1.11.4.custom/jquery-ui.min.css', false, '1.11.4' );
 			wp_enqueue_script('jquery-ui-sortable');
