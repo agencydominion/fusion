@@ -272,7 +272,7 @@ class FusionCoreComponents	{
 			$attached_modals = array_unique($fsn_attached_modals);
 			//output modals
 			foreach($attached_modals as $attached_modal) {
-				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" aria-labelledby="modal-component-label-'. esc_attr($attached_modal) .'" class="component modal" tabindex="-1" role="dialog">';
+				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" aria-labelledby="modal-component-label-'. esc_attr($attached_modal) .'" class="component modal fade" tabindex="-1" role="dialog">';
 					echo '<div class="modal-component-inner container modal-dialog" role="document">';
 						echo '<div class="modal-component-controls clearfix">';
 							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><span class="material-icons md-48">&#xE5CD;</span></button>';
