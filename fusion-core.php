@@ -937,6 +937,15 @@ class FusionCore	{
 			if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
 				return false;
 			}
+		} else {
+			$editor_option = get_option( 'classic-editor-replace' );
+			if (!empty($editor_option) && $editor_option == 'block') {
+				$options = get_option('fsn_options');
+				$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
+				if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post_type, $fsn_post_types)) {
+					return false;
+				}
+			}
 		}
 		return $current_status;
 	}
