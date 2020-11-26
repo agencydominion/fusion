@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.5.2
+ * Version: 1.5.3
  * Author: Agency Dominion
  * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
@@ -14,7 +14,7 @@
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.5.2' );
+define( 'FSN_VERSION', '1.5.3' );
 
 /**
  * Fusion class.
@@ -41,6 +41,9 @@ class FusionCore	{
 
 		// Enqueue front end scripts and styles
 		add_action('wp_enqueue_scripts', array($this, 'front_enqueue_scripts_styles'));
+
+		// Preload webfonts
+		add_action('wp_head', array($this, 'preload_webfonts'), 7);
 
 		// Add Mobile Detection script
 		add_action('init', array($this, 'include_mobile_detect_function'));
@@ -307,6 +310,17 @@ class FusionCore	{
 				'fsnQueryError' => __('Oops, something went wrong with your query. Please reload the page and try again.','fusion'),
 			)
 		);
+	}
+
+	/**
+	 * Preload web fonts
+	 *
+	 * @since 1.5.3
+	 *
+	 */
+
+	public function preload_webfonts() {
+		echo '<link rel="preload" href="'. plugin_dir_url( __FILE__ ) .'includes/css/webfonts/MaterialIcons-Regular.woff2" as="font" type="font/woff2" crossorigin>';
 	}
 
 	/**
