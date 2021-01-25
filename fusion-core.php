@@ -6,7 +6,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.5.3
+ * Version: 1.5.4
  * Author: Agency Dominion
  * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
@@ -14,7 +14,7 @@
  * License: GPL2
  */
 
-define( 'FSN_VERSION', '1.5.3' );
+define( 'FSN_VERSION', '1.5.4' );
 
 /**
  * Fusion class.
@@ -294,6 +294,7 @@ class FusionCore	{
 		wp_enqueue_script('images_loaded', plugin_dir_url( __FILE__ ) .'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
 		wp_enqueue_script( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/js/fusion-core.js', array('jquery','modernizr','images_loaded'), '1.3.6', true );
+		wp_enqueue_style( 'material-icons', plugin_dir_url( __FILE__ ) . 'includes/css/material-icons.css', '', '1.5.4' );
 		wp_enqueue_style( 'fsn_core', plugin_dir_url( __FILE__ ) . 'includes/css/fusion-core.css', array('bootstrap'), '1.3.6' );
 
 		//setup front end script for use with AJAX
