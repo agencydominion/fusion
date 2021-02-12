@@ -222,7 +222,7 @@ function fsn_get_sorted_param_sections($params) {
  *
  */
 
-function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $mobile_size = 'mobile', $desktop_init = false) {
+function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $mobile_size = 'mobile', $desktop_init = false, $lazy = false) {
 	if (!empty($image_id)) {
 		$image_id = intval($image_id);
 		$attachment_attrs_mobile = wp_get_attachment_image_src($image_id, $mobile_size);
@@ -246,7 +246,7 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 			$attachment_width = $attachment_attrs_mobile[1];
 			$attachment_height = $attachment_attrs_mobile[2];
 		}
-		$image = '<img class="ad-dynamic-image'. (!empty($classes) ? ' '. esc_attr($classes) : '') .'" src="'. esc_url($attachment_src) .'" width="'. esc_attr($attachment_width) .'" height="'. esc_attr($attachment_height) .'" alt="'. esc_attr($attachment_alt) .'" data-image-json="'. esc_attr(json_encode($image_data)) .'">';
+		$image = '<img class="ad-dynamic-image'. (!empty($classes) ? ' '. esc_attr($classes) : '') .'" src="'. esc_url($attachment_src) .'" width="'. esc_attr($attachment_width) .'" height="'. esc_attr($attachment_height) .'" alt="'. esc_attr($attachment_alt) .'" data-image-json="'. esc_attr(json_encode($image_data)) .'"'. (!empty($lazy) ? ' loading="lazy"' : '') .'>';
 	}
 
 	return $image;
