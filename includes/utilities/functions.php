@@ -453,7 +453,8 @@ function fsn_get_post_meta($args = false) {
 			if (!empty($categories_array)) {
 				foreach($categories_array as $category) {
 					$i++;
-					$categories .= '<a href="'. esc_url(get_term_link($category, $taxonomy)) .'">'. $category->name .'</a>';
+					$category_aria_label = sprintf(__('View posts in the %s category', 'fusion'), $category->name);
+					$categories .= '<a href="'. esc_url(get_term_link($category, $taxonomy)) .'" aria-label="'. esc_attr($category_aria_label) .'">'. $category->name .'</a>';
 					$categories .= $i < $numcats ? ', ' : '';
 				}
 				$output .= !empty($author) || !empty($date) ? ' '. $separator .' '. $categories : $categories;
