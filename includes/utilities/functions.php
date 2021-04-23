@@ -379,6 +379,7 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 		}
 	} elseif (!empty($button_type) && $button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
+		$button_attributes .= ' role="button"';
 	}
 	return apply_filters('fsn_button_anchor_attributes', $button_attributes, $button_object, $classes);
 }
