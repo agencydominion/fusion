@@ -22,7 +22,9 @@ add_filter( 'fsn_the_content', 'convert_smilies'                   );
 add_filter( 'fsn_the_content', 'wpautop'                           );
 add_filter( 'fsn_the_content', 'shortcode_unautop'                 );
 add_filter( 'fsn_the_content', 'prepend_attachment'                );
-if (function_exists('wp_make_content_images_responsive')) {
+if (function_exists('wp_filter_content_tags')) {
+	add_filter( 'fsn_the_content', 'wp_filter_content_tags' );
+} else if (function_exists('wp_make_content_images_responsive')) {
 	add_filter( 'fsn_the_content', 'wp_make_content_images_responsive' );
 }
 add_filter( 'fsn_the_content', 'do_shortcode', 11 ); // AFTER wpautop()
@@ -379,6 +381,7 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
 		}
 	} elseif (!empty($button_type) && $button_type == 'modal') {
 		$button_attributes .= ' data-toggle="modal"';
+		$button_attributes .= ' role="button"';
 	}
 	return apply_filters('fsn_button_anchor_attributes', $button_attributes, $button_object, $classes);
 }
@@ -452,7 +455,8 @@ function fsn_get_post_meta($args = false) {
 			if (!empty($categories_array)) {
 				foreach($categories_array as $category) {
 					$i++;
-					$categories .= '<a href="'. esc_url(get_term_link($category, $taxonomy)) .'">'. $category->name .'</a>';
+					$category_aria_label = sprintf(__('View posts in the %s category', 'fusion'), $category->name);
+					$categories .= '<a href="'. esc_url(get_term_link($category, $taxonomy)) .'" aria-label="'. esc_attr($category_aria_label) .'">'. $category->name .'</a>';
 					$categories .= $i < $numcats ? ', ' : '';
 				}
 				$output .= !empty($author) || !empty($date) ? ' '. $separator .' '. $categories : $categories;
