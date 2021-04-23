@@ -22,7 +22,9 @@ add_filter( 'fsn_the_content', 'convert_smilies'                   );
 add_filter( 'fsn_the_content', 'wpautop'                           );
 add_filter( 'fsn_the_content', 'shortcode_unautop'                 );
 add_filter( 'fsn_the_content', 'prepend_attachment'                );
-if (function_exists('wp_make_content_images_responsive')) {
+if (function_exists('wp_filter_content_tags')) {
+	add_filter( 'fsn_the_content', 'wp_filter_content_tags' );
+} else if (function_exists('wp_make_content_images_responsive')) {
 	add_filter( 'fsn_the_content', 'wp_make_content_images_responsive' );
 }
 add_filter( 'fsn_the_content', 'do_shortcode', 11 ); // AFTER wpautop()
