@@ -449,10 +449,10 @@ function fsn_get_post_meta($args = false) {
 		$taxonomy = apply_filters('fsn_post_meta_taxonomy', 'category', $post_type);
 		if (!empty($taxonomy)) {
 			$categories_array = get_the_terms($post->ID, $taxonomy);
-			$numcats = count($categories_array);
-			$i = 0;
-			$categories = '';
 			if (!empty($categories_array)) {
+				$numcats = count($categories_array);
+				$i = 0;
+				$categories = '';
 				foreach($categories_array as $category) {
 					$i++;
 					$category_aria_label = sprintf(__('View posts in the %s category', 'fusion'), $category->name);
@@ -466,10 +466,10 @@ function fsn_get_post_meta($args = false) {
 	if (!empty($tags)) {
 		//tags
 		$tags_array = get_the_tags($post->ID);
-		$numtags = count($tags_array);
-		$i = 0;
-		$tags = '';
 		if (!empty($tags_array)) {
+			$numtags = count($tags_array);
+			$i = 0;
+			$tags = '';
 			foreach($tags_array as $tag) {
 				$i++;
 				$tags .= '<a href="'. esc_url(get_term_link($tag, $taxonomy)) .'">'. $tag->name .'</a>';
