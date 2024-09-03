@@ -4,7 +4,7 @@
  * @package Fusion
  */
 
-// Ensure the DISALLOW_UNFILTERED_HTML constant is defined to avoid errors in static analysis tools.
+// Ensure the DISALLOW_UNFILTERED_HTML constant is defined.
 if (!defined('DISALLOW_UNFILTERED_HTML')) {
 	define('DISALLOW_UNFILTERED_HTML', false);
 }
