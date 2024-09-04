@@ -15,19 +15,19 @@
 
 //WordPress filters
 global $wp_embed;
-add_filter( 'fsn_the_content', array( $wp_embed, 'run_shortcode' ), 8 );
-add_filter( 'fsn_the_content', array( $wp_embed, 'autoembed' ), 8 );
-add_filter( 'fsn_the_content', 'wptexturize'                       );
-add_filter( 'fsn_the_content', 'convert_smilies'                   );
-add_filter( 'fsn_the_content', 'wpautop'                           );
-add_filter( 'fsn_the_content', 'shortcode_unautop'                 );
-add_filter( 'fsn_the_content', 'prepend_attachment'                );
+add_filter('fsn_the_content', array($wp_embed, 'run_shortcode'), 8);
+add_filter('fsn_the_content', array($wp_embed, 'autoembed'), 8);
+add_filter('fsn_the_content', 'wptexturize');
+add_filter('fsn_the_content', 'convert_smilies');
+add_filter('fsn_the_content', 'wpautop');
+add_filter('fsn_the_content', 'shortcode_unautop');
+add_filter('fsn_the_content', 'prepend_attachment');
 if (function_exists('wp_filter_content_tags')) {
-	add_filter( 'fsn_the_content', 'wp_filter_content_tags' );
+	add_filter('fsn_the_content', 'wp_filter_content_tags');
 } else if (function_exists('wp_make_content_images_responsive')) {
-	add_filter( 'fsn_the_content', 'wp_make_content_images_responsive' );
+	add_filter('fsn_the_content', 'wp_make_content_images_responsive');
 }
-add_filter( 'fsn_the_content', 'do_shortcode', 11 ); // AFTER wpautop()
+add_filter('fsn_the_content', 'do_shortcode', 11); // AFTER wpautop()
 
 //Fusion Filters
 add_filter('fsn_the_content', 'fsn_shortcode_cleaner');
@@ -42,10 +42,11 @@ add_filter('fsn_the_content', 'fsn_shortcode_cleaner');
 
 add_filter('the_content', 'fsn_shortcode_cleaner');
 
-function fsn_shortcode_cleaner($content) {
+function fsn_shortcode_cleaner($content)
+{
 
 	// array of shortcodes requiring the fix
-	$shortcodes_to_clean = array("fsn_row","fsn_row_inner","fsn_column","fsn_column_inner","fsn_tabs","fsn_tab");
+	$shortcodes_to_clean = array("fsn_row", "fsn_row_inner", "fsn_column", "fsn_column_inner", "fsn_tabs", "fsn_tab");
 
 	// auto add all registered Layout elements
 	global $fsn_elements;
@@ -61,13 +62,12 @@ function fsn_shortcode_cleaner($content) {
 	$block = join("|", $shortcodes_to_clean);
 
 	// opening tag
-	$rep = preg_replace("/(<p>)?\[($block)(\s[^\]]+)?\](<\/p>|<br \/>)?/","[$2$3]",$content);
+	$rep = preg_replace("/(<p>)?\[($block)(\s[^\]]+)?\](<\/p>|<br \/>)?/", "[$2$3]", $content);
 
 	// closing tag
-	$rep = preg_replace("/(<p>)?\[\/($block)](<\/p>|<br \/>)?/","[/$2]",$rep);
+	$rep = preg_replace("/(<p>)?\[\/($block)](<\/p>|<br \/>)?/", "[/$2]", $rep);
 
 	return $rep;
-
 }
 
 /**
@@ -84,19 +84,20 @@ function fsn_shortcode_cleaner($content) {
  *
  */
 
-function fsn_unautop($s) {
-    $replace = array( "\n" => '', "\r" => '' );
-    $replace["<p>"] = "";
-    $replace["<br />"] = "\r\n";
-    $replace["<br>"] = "\r\n";
-    $replace["<br/>"] = "\r\n";
-    $replace["</p>"] = "\r\n\r\n";
+function fsn_unautop($s)
+{
+	$replace = array("\n" => '', "\r" => '');
+	$replace["<p>"] = "";
+	$replace["<br />"] = "\r\n";
+	$replace["<br>"] = "\r\n";
+	$replace["<br/>"] = "\r\n";
+	$replace["</p>"] = "\r\n\r\n";
 
-	return rtrim( str_replace(
-		array_keys( $replace ),
-		array_values( $replace ),
+	return rtrim(str_replace(
+		array_keys($replace),
+		array_values($replace),
 		$s
-	) );
+	));
 }
 
 /**
@@ -107,21 +108,22 @@ function fsn_unautop($s) {
  * @since 1.0.0
  */
 
-function fsn_hex2rgb($hex) {
-   $hex = str_replace("#", "", $hex);
+function fsn_hex2rgb($hex)
+{
+	$hex = str_replace("#", "", $hex);
 
-   if(strlen($hex) == 3) {
-      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
-      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
-      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
-   } else {
-      $r = hexdec(substr($hex,0,2));
-      $g = hexdec(substr($hex,2,2));
-      $b = hexdec(substr($hex,4,2));
-   }
-   $rgb = array($r, $g, $b);
-   //return implode(",", $rgb); // returns the rgb values separated by commas
-   return $rgb; // returns an array with the rgb values
+	if (strlen($hex) == 3) {
+		$r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+		$g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+		$b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+	} else {
+		$r = hexdec(substr($hex, 0, 2));
+		$g = hexdec(substr($hex, 2, 2));
+		$b = hexdec(substr($hex, 4, 2));
+	}
+	$rgb = array($r, $g, $b);
+	//return implode(",", $rgb); // returns the rgb values separated by commas
+	return $rgb; // returns an array with the rgb values
 }
 
 /**
@@ -135,12 +137,13 @@ function fsn_hex2rgb($hex) {
  * @return string
  */
 
-function fsn_style_params_class($atts) {
+function fsn_style_params_class($atts)
+{
 	global $fsn_style_output;
-	$style_params_class = 'fsn-'. uniqid();
+	$style_params_class = 'fsn-' . uniqid();
 
 	if (!empty($atts)) {
-		extract( shortcode_atts( array(
+		extract(shortcode_atts(array(
 			'margin' => '',
 			'margin_xs_custom' => '',
 			'margin_xs' => '',
@@ -157,7 +160,7 @@ function fsn_style_params_class($atts) {
 			'visible_xs' => '',
 			'sr_only' => '',
 			'user_classes' => ''
-		), $atts ) );
+		), $atts));
 
 		//populate style params array
 		$fsn_style_output[$style_params_class] = array();
@@ -179,10 +182,10 @@ function fsn_style_params_class($atts) {
 		$style_params_class .= !empty($visible_xs) ? ' visible-xs-block' : '';
 		$style_params_class .= !empty($sr_only) ? ' sr-only' : '';
 		//add user classes
-		$style_params_class .= !empty($user_classes) ? ' '. $user_classes : '';
+		$style_params_class .= !empty($user_classes) ? ' ' . $user_classes : '';
 	}
 
-	return esc_attr( apply_filters('fsn_style_params_class', $style_params_class, $atts) );
+	return esc_attr(apply_filters('fsn_style_params_class', $style_params_class, $atts));
 }
 
 /**
@@ -195,11 +198,12 @@ function fsn_style_params_class($atts) {
  * @return array
  */
 
-function fsn_get_sorted_param_sections($params) {
+function fsn_get_sorted_param_sections($params)
+{
 	global $fsn_param_sections;
-	for($i=0; $i < count($fsn_param_sections); $i++) {
+	for ($i = 0; $i < count($fsn_param_sections); $i++) {
 		$fsn_param_sections[$i]['params'] = array();
-		foreach($params as $param) {
+		foreach ($params as $param) {
 			$param_section = !empty($param['section']) ? $param['section'] : 'general';
 			if ($param_section == $fsn_param_sections[$i]['id']) {
 				$fsn_param_sections[$i]['params'][] = $param;
@@ -224,7 +228,8 @@ function fsn_get_sorted_param_sections($params) {
  *
  */
 
-function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $mobile_size = 'mobile', $desktop_init = false, $lazy = false) {
+function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $mobile_size = 'mobile', $desktop_init = false, $lazy = false)
+{
 	if (!empty($image_id)) {
 		$image_id = intval($image_id);
 		$attachment_attrs_mobile = wp_get_attachment_image_src($image_id, $mobile_size);
@@ -248,7 +253,7 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 			$attachment_width = $attachment_attrs_mobile[1];
 			$attachment_height = $attachment_attrs_mobile[2];
 		}
-		$image = '<img class="ad-dynamic-image'. (!empty($classes) ? ' '. esc_attr($classes) : '') .'" src="'. esc_url($attachment_src) .'" width="'. esc_attr($attachment_width) .'" height="'. esc_attr($attachment_height) .'" alt="'. esc_attr($attachment_alt) .'" data-image-json="'. esc_attr(json_encode($image_data)) .'"'. (!empty($lazy) ? ' loading="lazy"' : '') .'>';
+		$image = '<img class="ad-dynamic-image' . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '" src="' . esc_url($attachment_src) . '" width="' . esc_attr($attachment_width) . '" height="' . esc_attr($attachment_height) . '" alt="' . esc_attr($attachment_alt) . '" data-image-json="' . esc_attr(json_encode($image_data)) . '"' . (!empty($lazy) ? ' loading="lazy"' : '') . '>';
 	}
 
 	return $image;
@@ -261,13 +266,14 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
  *
  */
 
-function fsn_get_image_sizes() {
+function fsn_get_image_sizes()
+{
 	$image_sizes = get_intermediate_image_sizes();
 	$image_sizes_array = array();
 	$image_sizes_array[''] = __('Choose image size.', 'fusion');
 	$image_sizes_array['full'] = __('Full Size', 'fusion');
 	foreach ($image_sizes as $image_size) {
-		$image_sizes_array[$image_size] = __(ucwords(str_replace(array('-','_'), ' ', $image_size)), 'fusion');
+		$image_sizes_array[$image_size] = __(ucwords(str_replace(array('-', '_'), ' ', $image_size)), 'fusion');
 	}
 	$image_sizes_array = apply_filters('fsn_selectable_image_sizes', $image_sizes_array);
 
@@ -281,7 +287,8 @@ function fsn_get_image_sizes() {
  *
  */
 
-function fsn_get_button_object($button) {
+function fsn_get_button_object($button)
+{
 	$button_array = json_decode(FusionCore::decode_custom_entities($button));
 	$button_link = !empty($button_array->link) ? $button_array->link : '';
 	$button_label = !empty($button_array->label) ? $button_array->label : '';
@@ -295,7 +302,7 @@ function fsn_get_button_object($button) {
 	$button_component_id = !empty($button_array->componentID) ? $button_array->componentID : '';
 
 	$button_object = array();
-	switch($button_type) {
+	switch ($button_type) {
 		case 'external':
 			$button_object['button_type'] = 'external';
 			$button_object['button_link'] = $button_link;
@@ -320,7 +327,7 @@ function fsn_get_button_object($button) {
 			break;
 		case 'collapse':
 			if (!empty($button_component_id)) {
-				$button_collapse_id = '#component-'. $button_component_id;
+				$button_collapse_id = '#component-' . $button_component_id;
 			}
 			$button_object['button_type'] = 'collapse';
 			$button_object['button_link'] = $button_collapse_id;
@@ -334,7 +341,7 @@ function fsn_get_button_object($button) {
 			global $fsn_attached_modals;
 			if (!empty($button_component_id)) {
 				$fsn_attached_modals[] = $button_component_id;
-				$button_modal_id = '#modal-component-'. $button_component_id;
+				$button_modal_id = '#modal-component-' . $button_component_id;
 			}
 			$button_object['button_type'] = 'modal';
 			$button_object['button_link'] = $button_modal_id;
@@ -360,23 +367,24 @@ function fsn_get_button_object($button) {
  *
  */
 
-function fsn_get_button_anchor_attributes($button_object, $classes = false) {
+function fsn_get_button_anchor_attributes($button_object, $classes = false)
+{
 	extract($button_object);
 	$button_attributes = '';
-	$button_attributes .= !empty($button_link) ? ' href="'. esc_url($button_link) .'"' : ' href="#"';
-	$button_attributes .= !empty($classes) ? ' class="'. esc_attr($classes) .'"' : '';
-	$button_attributes .= !empty($button_target) ? ' target="'. esc_attr($button_target) .'"' : '';
+	$button_attributes .= !empty($button_link) ? ' href="' . esc_url($button_link) . '"' : ' href="#"';
+	$button_attributes .= !empty($classes) ? ' class="' . esc_attr($classes) . '"' : '';
+	$button_attributes .= !empty($button_target) ? ' target="' . esc_attr($button_target) . '"' : '';
 	if (!empty($button_target) && $button_target == '_blank') {
 		$button_attributes .= ' rel="noopener"';
 	}
-	if (!empty($button_aria_label) ) {
-		$button_attributes .= ' aria-label="'.esc_attr($button_aria_label).'"';
+	if (!empty($button_aria_label)) {
+		$button_attributes .= ' aria-label="' . esc_attr($button_aria_label) . '"';
 	}
 	if (!empty($button_type) && $button_type == 'collapse') {
 		$button_attributes .= ' data-toggle="collapse"';
 		if (!empty($button_label_show) && !empty($button_label_hide)) {
-			$button_attributes .= ' data-label-show="'. esc_attr($button_label_show) .'"';
-			$button_attributes .= ' data-label-hide="'. esc_attr($button_label_hide) .'"';
+			$button_attributes .= ' data-label-show="' . esc_attr($button_label_show) . '"';
+			$button_attributes .= ' data-label-hide="' . esc_attr($button_label_hide) . '"';
 			$button_attributes .= ' role="button"';
 		}
 	} elseif (!empty($button_type) && $button_type == 'modal') {
@@ -396,19 +404,20 @@ function fsn_get_button_anchor_attributes($button_object, $classes = false) {
  */
 
 //pagination **passing a $query_max_pages fixes pagination for custom WP_Query objects
-function fsn_pagination($query_max_pages = false) {
+function fsn_pagination($query_max_pages = false)
+{
 	global $wp_query;
 	if (!empty($query_max_pages)) {
 		$total_pages = $query_max_pages;
 	} else {
 		$total_pages = $wp_query->max_num_pages;
 	}
-	if ( $total_pages > 1 ) {
+	if ($total_pages > 1) {
 		$previous_page_label = __('&laquo; Previous Page', 'fusion');
 		$next_page_label = __('Next Page &raquo;', 'fusion');
 		echo '<ul class="pager">';
-	      	echo '<li class="previous">'. get_previous_posts_link($previous_page_label) .'</li>';
-	        echo '<li class="next">'. get_next_posts_link($next_page_label, $total_pages) .'</li>';
+		echo '<li class="previous">' . get_previous_posts_link($previous_page_label) . '</li>';
+		echo '<li class="next">' . get_next_posts_link($next_page_label, $total_pages) . '</li>';
 		echo '</ul>';
 	}
 }
@@ -423,7 +432,8 @@ function fsn_pagination($query_max_pages = false) {
  * @return string
  */
 
-function fsn_get_post_meta($args = false) {
+function fsn_get_post_meta($args = false)
+{
 	global $post;
 
 	$defaults = array(
@@ -453,13 +463,13 @@ function fsn_get_post_meta($args = false) {
 				$numcats = count($categories_array);
 				$i = 0;
 				$categories = '';
-				foreach($categories_array as $category) {
+				foreach ($categories_array as $category) {
 					$i++;
 					$category_aria_label = sprintf(__('View posts in the %s category', 'fusion'), $category->name);
-					$categories .= '<a href="'. esc_url(get_term_link($category, $taxonomy)) .'" aria-label="'. esc_attr($category_aria_label) .'">'. $category->name .'</a>';
+					$categories .= '<a href="' . esc_url(get_term_link($category, $taxonomy)) . '" aria-label="' . esc_attr($category_aria_label) . '">' . $category->name . '</a>';
 					$categories .= $i < $numcats ? ', ' : '';
 				}
-				$output .= !empty($author) || !empty($date) ? ' '. $separator .' '. $categories : $categories;
+				$output .= !empty($author) || !empty($date) ? ' ' . $separator . ' ' . $categories : $categories;
 			}
 		}
 	}
@@ -470,12 +480,12 @@ function fsn_get_post_meta($args = false) {
 			$numtags = count($tags_array);
 			$i = 0;
 			$tags = '';
-			foreach($tags_array as $tag) {
+			foreach ($tags_array as $tag) {
 				$i++;
-				$tags .= '<a href="'. esc_url(get_term_link($tag, $taxonomy)) .'">'. $tag->name .'</a>';
+				$tags .= '<a href="' . esc_url(get_term_link($tag, $taxonomy)) . '">' . $tag->name . '</a>';
 				$tags .= $i < $numtags ? ', ' : '';
 			}
-			$output .= '<br><span class="post-tags">'. $tags .'</span>';
+			$output .= '<br><span class="post-tags">' . $tags . '</span>';
 		}
 	}
 	return $output;
@@ -494,7 +504,8 @@ function fsn_get_post_meta($args = false) {
  *
  */
 
-function fsn_get_post_ids_by_type($post_types = false) {
+function fsn_get_post_ids_by_type($post_types = false)
+{
 	$post_ids = array();
 	return $post_ids;
 }
@@ -512,9 +523,8 @@ function fsn_get_post_ids_by_type($post_types = false) {
  *
  */
 
-function fsn_get_post_ids_titles_by_type($post_types = false) {
+function fsn_get_post_ids_titles_by_type($post_types = false)
+{
 	$post_ids = array();
 	return $post_ids;
 }
-
-?>
