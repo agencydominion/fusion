@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package Fusion
  */
@@ -11,25 +12,27 @@
  * @since 1.0.0
  */
 
-class FusionCoreComponents	{
+class FusionCoreComponents
+{
 
-	public function __construct() {
+	public function __construct()
+	{
 
 		// Register components post type
 		add_action('init', array($this, 'init_components_post_type'));
-		add_filter( 'post_updated_messages', array($this, 'component_updated_messages') );
+		add_filter('post_updated_messages', array($this, 'component_updated_messages'));
 
 		//add components field type
 		add_filter('fsn_input_types', array($this, 'add_components_field_type'), 10, 3);
 
 		// Initialize AJAX modals
-		add_action( 'wp_ajax_components_modal', array($this, 'render_components_modal'));
+		add_action('wp_ajax_components_modal', array($this, 'render_components_modal'));
 
 		// Save component
-		add_action( 'wp_ajax_update_component', array($this, 'update_component'));
+		add_action('wp_ajax_update_component', array($this, 'update_component'));
 
 		// Output attached modal components in footer
-		add_action( 'wp_footer', array($this, 'output_attached_modal_components'));
+		add_action('wp_footer', array($this, 'output_attached_modal_components'));
 	}
 
 	/**
@@ -38,22 +41,23 @@ class FusionCoreComponents	{
 	 * @since 1.0.0
 	 */
 
-	public function init_components_post_type() {
+	public function init_components_post_type()
+	{
 		$labels = array(
-			'name'               => _x( 'Components', 'post type general name', 'fusion' ),
-			'singular_name'      => _x( 'Component', 'post type singular name', 'fusion' ),
-			'menu_name'          => _x( 'Components', 'admin menu', 'fusion' ),
-			'name_admin_bar'     => _x( 'Component', 'add new on admin bar', 'fusion' ),
-			'add_new'            => _x( 'Add New', 'component', 'fusion' ),
-			'add_new_item'       => __( 'Add New Component', 'fusion' ),
-			'new_item'           => __( 'New Component', 'fusion' ),
-			'edit_item'          => __( 'Edit Component', 'fusion' ),
-			'view_item'          => __( 'View Component', 'fusion' ),
-			'all_items'          => __( 'All Components', 'fusion' ),
-			'search_items'       => __( 'Search Components', 'fusion' ),
-			'parent_item_colon'  => __( 'Parent Components:', 'fusion' ),
-			'not_found'          => __( 'No components found.', 'fusion' ),
-			'not_found_in_trash' => __( 'No components found in Trash.', 'fusion' ),
+			'name'               => _x('Components', 'post type general name', 'fusion'),
+			'singular_name'      => _x('Component', 'post type singular name', 'fusion'),
+			'menu_name'          => _x('Components', 'admin menu', 'fusion'),
+			'name_admin_bar'     => _x('Component', 'add new on admin bar', 'fusion'),
+			'add_new'            => _x('Add New', 'component', 'fusion'),
+			'add_new_item'       => __('Add New Component', 'fusion'),
+			'new_item'           => __('New Component', 'fusion'),
+			'edit_item'          => __('Edit Component', 'fusion'),
+			'view_item'          => __('View Component', 'fusion'),
+			'all_items'          => __('All Components', 'fusion'),
+			'search_items'       => __('Search Components', 'fusion'),
+			'parent_item_colon'  => __('Parent Components:', 'fusion'),
+			'not_found'          => __('No components found.', 'fusion'),
+			'not_found_in_trash' => __('No components found in Trash.', 'fusion'),
 		);
 
 		$args = array(
@@ -62,7 +66,7 @@ class FusionCoreComponents	{
 			'publicly_queryable' => false,
 			'show_ui'            => true,
 			'show_in_menu'       => true,
-			'exclude_from_search'=> true,
+			'exclude_from_search' => true,
 			'menu_icon'			 => 'dashicons-schedule',
 			'query_var'          => true,
 			'rewrite'            => false,
@@ -70,10 +74,10 @@ class FusionCoreComponents	{
 			'has_archive'        => false,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'supports'           => array( 'title', 'editor', 'revisions' )
+			'supports'           => array('title', 'editor', 'revisions')
 		);
 
-		register_post_type( 'component', $args );
+		register_post_type('component', $args);
 	}
 
 	/**
@@ -82,27 +86,31 @@ class FusionCoreComponents	{
 	 * @since 1.0.0
 	 */
 
-	public function component_updated_messages( $messages ) {
-	  global $post, $post_ID;
+	public function component_updated_messages($messages)
+	{
+		global $post, $post_ID;
 
-	  $messages['component'] = array(
-	    0 => '', // Unused. Messages start at index 1.
-	    1 => sprintf( __('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-	    2 => __('Custom field updated.', 'fusion'),
-	    3 => __('Custom field deleted.', 'fusion'),
-	    4 => __('Component updated.', 'fusion'),
-	    /* translators: %s: date and time of the revision */
-	    5 => isset($_GET['revision']) ? sprintf( __('Component restored to revision from %s', 'fusion'), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-	    6 => sprintf( __('Component published. <a href="%s">View component</a>', 'fusion'), esc_url( get_permalink($post_ID) ) ),
-	    7 => __('Component saved.', 'fusion'),
-	    8 => sprintf( __('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-	    9 => sprintf( __('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
-	      // translators: Publish box date format, see http://php.net/date
-	      date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink($post_ID) ) ),
-	    10 => sprintf( __('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url( add_query_arg( 'preview', 'true', get_permalink($post_ID) ) ) ),
-	  );
+		$messages['component'] = array(
+			0 => '', // Unused. Messages start at index 1.
+			1 => sprintf(__('Component updated. <a href="%s">View component</a>', 'fusion'), esc_url(get_permalink($post_ID))),
+			2 => __('Custom field updated.', 'fusion'),
+			3 => __('Custom field deleted.', 'fusion'),
+			4 => __('Component updated.', 'fusion'),
+			/* translators: %s: date and time of the revision */
+			5 => isset($_GET['revision']) ? sprintf(__('Component restored to revision from %s', 'fusion'), wp_post_revision_title((int) $_GET['revision'], false)) : false,
+			6 => sprintf(__('Component published. <a href="%s">View component</a>', 'fusion'), esc_url(get_permalink($post_ID))),
+			7 => __('Component saved.', 'fusion'),
+			8 => sprintf(__('Component submitted. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
+			9 => sprintf(
+				__('Component scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview component</a>', 'fusion'),
+				// translators: Publish box date format, see http://php.net/date
+				date_i18n(__('M j, Y @ G:i'), strtotime($post->post_date)),
+				esc_url(get_permalink($post_ID))
+			),
+			10 => sprintf(__('Component draft updated. <a target="_blank" href="%s">Preview component</a>', 'fusion'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
+		);
 
-	  return $messages;
+		return $messages;
 	}
 
 	/**
@@ -116,23 +124,24 @@ class FusionCoreComponents	{
 	 * @return string The HTML for the input field(s)
 	 */
 
-	public function add_components_field_type($input, $param, $param_value = '') {
+	public function add_components_field_type($input, $param, $param_value = '')
+	{
 		if ($param['type'] == 'components') {
 
 			$post_id = intval($_POST['post_id']);
 
-			$input .= '<label for="fsn_'. esc_attr($param['param_name']) .'">'. esc_html($param['label']) .'</label>';
-			$input .= !empty($param['help']) ? '<p class="help-block">'. esc_html($param['help']) .'</p>' : '';
+			$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '">' . esc_html($param['label']) . '</label>';
+			$input .= !empty($param['help']) ? '<p class="help-block">' . esc_html($param['help']) . '</p>' : '';
 			$input .= '<div class="component-select">';
-				$input .= '<select data-placeholder="'. __('Choose a Component.', 'fusion') .'" class="form-control element-input select2-posts-element'. (!empty($param['nested']) ? ' nested' : '') .'" name="'. esc_attr($param['param_name']) .'" style="width:100%;" data-post-type="component" data-hierarchical="true">';
-				$input .= '<option></option>';
-				if (!empty($param_value)) {
-					$input .= '<option value="'. $param_value .'" selected>'. get_the_title($param_value) .'</option>';
-				}
-				$input .= '</select>';
+			$input .= '<select data-placeholder="' . __('Choose a Component.', 'fusion') . '" class="form-control element-input select2-posts-element' . (!empty($param['nested']) ? ' nested' : '') . '" name="' . esc_attr($param['param_name']) . '" style="width:100%;" data-post-type="component" data-hierarchical="true">';
+			$input .= '<option></option>';
+			if (!empty($param_value)) {
+				$input .= '<option value="' . $param_value . '" selected>' . get_the_title($param_value) . '</option>';
+			}
+			$input .= '</select>';
 			$input .= '</div>';
-			$input .= '<a href="#" class="button component-add-new">'. __('Add New', 'fusion') .'</a>';
-			$input .= '<a href="#" class="button component-edit">'. __('Edit Selected', 'fusion') .'</a>';
+			$input .= '<a href="#" class="button component-add-new">' . __('Add New', 'fusion') . '</a>';
+			$input .= '<a href="#" class="button component-edit">' . __('Edit Selected', 'fusion') . '</a>';
 		}
 
 		return $input;
@@ -144,21 +153,22 @@ class FusionCoreComponents	{
 	 * @since 1.0.0
 	 */
 
-	public function render_components_modal() {
+	public function render_components_modal()
+	{
 		//verify nonce
-		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		check_ajax_referer('fsn-admin-edit', 'security');
 
 		//verify capabilities
 		if (!empty($_POST['component_id'])) {
-			if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
-				die( '-1' );
+			if (!current_user_can('edit_post', intval($_POST['component_id'])))
+				die('-1');
 		} else {
-			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
-				die( '-1' );
+			if (!current_user_can('edit_post', intval($_POST['post_id'])))
+				die('-1');
 		}
 
 		$component_id = intval($_POST['component_id']);
-		?>
+?>
 		<div class="modal" id="componentsModal" tabindex="-1" role="dialog" aria-labelledby="fsnModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
 				<span class="components-modal-close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>">&times;</span>
@@ -166,36 +176,36 @@ class FusionCoreComponents	{
 					<h2><?php _e('Add / Edit Post Component', 'fusion'); ?></h2>
 					<form id="edit_component" method="post">
 						<?php
-						echo '<input type="text" id="component_title" name="component_title" '. (!empty($component_id) ? 'value="'. get_the_title($component_id) .'"' : 'value="" placeholder="'. __('New Component', 'fusion') .'"') .'>';
-						echo '<input type="hidden" name="component_id" value="'. (!empty($component_id) ? esc_attr($component_id) : '') .'">';
+						echo '<input type="text" id="component_title" name="component_title" ' . (!empty($component_id) ? 'value="' . get_the_title($component_id) . '"' : 'value="" placeholder="' . __('New Component', 'fusion') . '"') . '>';
+						echo '<input type="hidden" name="component_id" value="' . (!empty($component_id) ? esc_attr($component_id) : '') . '">';
 						echo '<div class="fsn-main-controls">';
-							echo '<p class="description">'. __('Click the "Save" button below to save changes to this Component.', 'fusion') .'</p>';
-							echo '<a href="#" class="button fsn-save-template">'. __('Save Template', 'fusion') .'</a>';
-							echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">'. __('Load Template', 'fusion') .'</a>';
-							//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
-							echo '<div class="fsn-component-controls">';
-								echo '<button type="button" class="button"  data-dismiss="modal">'. __('Cancel', 'fusion') .'</button>';
-								echo '<a href="#" class="button button-primary fsn-save-component" style="margin-left:5px;">'. __('Save', 'fusion') .'</a>';
-								echo '<span class="spinner"></span>';
-							echo '</div>';
+						echo '<p class="description">' . __('Click the "Save" button below to save changes to this Component.', 'fusion') . '</p>';
+						echo '<a href="#" class="button fsn-save-template">' . __('Save Template', 'fusion') . '</a>';
+						echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">' . __('Load Template', 'fusion') . '</a>';
+						//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
+						echo '<div class="fsn-component-controls">';
+						echo '<button type="button" class="button"  data-dismiss="modal">' . __('Cancel', 'fusion') . '</button>';
+						echo '<a href="#" class="button button-primary fsn-save-component" style="margin-left:5px;">' . __('Save', 'fusion') . '</a>';
+						echo '<span class="spinner"></span>';
+						echo '</div>';
 						echo '</div>';
 						echo '<div class="fsn-interface-container">';
-							//output grid content
-							echo '<div class="fsn-interface-grid">';
-								if (!empty($component_id)) {
-									$component = get_post($component_id);
-									if (!empty($component) && $component->post_status == 'publish') {
-										echo do_shortcode($component->post_content);
-									}
-								}
-							echo '</div>';
+						//output grid content
+						echo '<div class="fsn-interface-grid">';
+						if (!empty($component_id)) {
+							$component = get_post($component_id);
+							if (!empty($component) && $component->post_status == 'publish') {
+								echo do_shortcode($component->post_content);
+							}
+						}
+						echo '</div>';
 						echo '</div>';
 						?>
 					</form>
 				</div>
 			</div>
 		</div>
-		<?php
+<?php
 		exit;
 	}
 
@@ -205,17 +215,18 @@ class FusionCoreComponents	{
 	 * @since 1.0.0
 	 */
 
-	public function update_component() {
+	public function update_component()
+	{
 		//verify nonce
-		check_ajax_referer( 'fsn-admin-edit', 'security' );
+		check_ajax_referer('fsn-admin-edit', 'security');
 
 		//verify capabilities
 		if (!empty($_POST['component_id'])) {
-			if ( !current_user_can( 'edit_post', intval($_POST['component_id']) ) )
-				die( '-1' );
+			if (!current_user_can('edit_post', intval($_POST['component_id'])))
+				die('-1');
 		} else {
-			if ( !current_user_can( 'edit_post', intval($_POST['post_id']) ) )
-				die( '-1' );
+			if (!current_user_can('edit_post', intval($_POST['post_id'])))
+				die('-1');
 		}
 
 		$post_id = intval($_POST['post_id']);
@@ -244,7 +255,7 @@ class FusionCoreComponents	{
 				'post_status' => 'publish',
 				'post_parent' => $post_id
 			));
-			if (!empty($new_component_id))	{
+			if (!empty($new_component_id)) {
 				$notice = __('Component created.', 'fusion');
 				$notice_class = 'notice-success';
 			} else {
@@ -253,7 +264,7 @@ class FusionCoreComponents	{
 			}
 		}
 
-		echo '<div class="notice '. esc_attr($notice_class) .' is-dismissible"'. (!empty($new_component_id) ? ' data-new-component-id="'. esc_attr($new_component_id) .'"' : '') .'><p>'. $notice .' <a href="#" data-dismiss="modal">'. __('Done Editing', 'fusion') .'</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">'. __('Dismiss this notice.', 'fusion') .'</span></button></div>';
+		echo '<div class="notice ' . esc_attr($notice_class) . ' is-dismissible"' . (!empty($new_component_id) ? ' data-new-component-id="' . esc_attr($new_component_id) . '"' : '') . '><p>' . $notice . ' <a href="#" data-dismiss="modal">' . __('Done Editing', 'fusion') . '</a></p><button class="notice-dismiss" type="button"><span class="screen-reader-text">' . __('Dismiss this notice.', 'fusion') . '</span></button></div>';
 
 		exit;
 	}
@@ -264,29 +275,29 @@ class FusionCoreComponents	{
 	 * @since 1.0.0
 	 */
 
-	public function output_attached_modal_components() {
+	public function output_attached_modal_components()
+	{
 		//get global attached modals array
 		global $fsn_attached_modals;
 		if (!empty($fsn_attached_modals)) {
 			//remove duplicates
 			$attached_modals = array_unique($fsn_attached_modals);
 			//output modals
-			foreach($attached_modals as $attached_modal) {
-				echo '<div id="modal-component-'. esc_attr($attached_modal) .'" aria-labelledby="modal-component-label-'. esc_attr($attached_modal) .'" class="component modal fade" tabindex="-1" role="dialog">';
-					echo '<div class="modal-component-inner container modal-dialog" role="document">';
-						echo '<div class="modal-component-controls clearfix">';
-							echo '<button type="button" class="close" data-dismiss="modal" aria-label="'. __('Close', 'fusion') .'"><span class="material-icons md-48">&#xE5CD;</span></button>';
-						echo '</div>';
-						echo '<span class="sr-only" id="modal-component-label-'. esc_attr($attached_modal) .'">'.get_the_title($attached_modal).'</span>';
-						echo do_shortcode('[fsn_component component_id="'. esc_attr($attached_modal) .'"]');
-					echo '</div>';
+			foreach ($attached_modals as $attached_modal) {
+				echo '<div id="modal-component-' . esc_attr($attached_modal) . '" aria-labelledby="modal-component-label-' . esc_attr($attached_modal) . '" class="component modal fade" tabindex="-1" role="dialog">';
+				echo '<div class="modal-component-inner container modal-dialog" role="document">';
+				echo '<div class="modal-component-controls clearfix">';
+				echo '<button type="button" class="close" data-dismiss="modal" aria-label="' . __('Close', 'fusion') . '"><span class="material-icons md-48">&#xE5CD;</span></button>';
+				echo '</div>';
+				echo '<span class="sr-only" id="modal-component-label-' . esc_attr($attached_modal) . '">' . get_the_title($attached_modal) . '</span>';
+				echo do_shortcode('[fsn_component component_id="' . esc_attr($attached_modal) . '"]');
+				echo '</div>';
 				echo '</div>';
 			}
 		}
 		//unset global
 		unset($GLOBALS['fsn_attached_modals']);
 	}
-
 }
 
 $fsn_core_components = new FusionCoreComponents();
