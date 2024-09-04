@@ -142,12 +142,14 @@ class FusionCoreCustomList
 				$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
 				$dependency_string = ' data-dependency-param="' . esc_attr($depends_on_field) . '"' . ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="' . esc_attr($depends_on_value) . '"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="' . esc_attr($dependency_callback) . '"' : '');
 			}
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo '<div class="form-group' . (!empty($param['class']) ? ' ' . esc_attr($param['class']) : '') . '"' . ($dependency === true ? $dependency_string : '') . '>';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo FusionCore::get_input_field($param, $param_value);
 			echo '</div>';
 		}
-		echo '<a href="#" class="collapse-custom-list-item">' . __('collapse', 'fusion') . '</a>';
-		echo '<a href="#" class="remove-custom-list-item">' . __('remove', 'fusion') . '</a>';
+		echo '<a href="#" class="collapse-custom-list-item">' . esc_html__('collapse', 'fusion') . '</a>';
+		echo '<a href="#" class="remove-custom-list-item">' . esc_html__('remove', 'fusion') . '</a>';
 		echo '</div>';
 		echo '</div>';
 		exit;
