@@ -1583,7 +1583,7 @@ class FusionCore
 			case 'select_post':
 				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '">' . esc_html($param['label']) . '</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">' . esc_html($param['help']) . '</p>' : '';
-				$input .= '<select class="form-control element-input select2-posts-element' . (!empty($param['nested']) ? ' nested' : '') . '" name="' . esc_attr($param['param_name']) . '" style="width:100%;" data-post-type="' . (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post') . '" data-placeholder="' . __('Choose an Option.', 'fusion') . '">';
+				$input .= '<select class="form-control element-input select2-posts-element' . (!empty($param['nested']) ? ' nested' : '') . '" name="' . esc_attr($param['param_name']) . '" style="width:100%;" data-post-type="' . (!empty($param['post_type']) ? esc_attr(json_encode($param['post_type'])) : 'post') . '" data-placeholder="' . esc_html__('Choose an Option.', 'fusion') . '">';
 				$input .= '<option></option>';
 				if (!empty($param_value)) {
 					$input .= '<option value="' . $param_value . '" selected>' . get_the_title($param_value) . '</option>';
@@ -1616,11 +1616,11 @@ class FusionCore
 					$image_attrs = wp_get_attachment_image_src($param_value, 'medium');
 					$input .= '<img src="' . esc_url($image_attrs[0]) . '" class="image-field-preview" alt="">';
 				}
-				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Edit', 'fusion');
+				$button_verb_empty = esc_html__('Add', 'fusion');
+				$button_verb_isset = esc_html__('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
-				$input .= '<a href="#" class="fsn_upload_image button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . __('Image', 'fusion') . '</a>';
-				$input .= '<a href="#" class="fsn-remove-image button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . __('Remove Image', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn_upload_image button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . esc_html__('Image', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn-remove-image button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . esc_html__('Remove Image', 'fusion') . '</a>';
 				break;
 			case 'video':
 				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '">' . esc_html($param['label']) . '</label>';
@@ -1630,11 +1630,11 @@ class FusionCore
 					$image_attrs = wp_get_attachment_image_src($param_value, 'thumbnail', true);
 					$input .= '<img src="' . esc_url($image_attrs[0]) . '" class="video-field-preview" alt="">';
 				}
-				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Edit', 'fusion');
+				$button_verb_empty = esc_html__('Add', 'fusion');
+				$button_verb_isset = esc_html__('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
-				$input .= '<a href="#" class="fsn_upload_video button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . __('Video', 'fusion') . '</a>';
-				$input .= '<a href="#" class="fsn-remove-video button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . __('Remove Video', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn_upload_video button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . esc_html__('Video', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn-remove-video button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . esc_html__('Remove Video', 'fusion') . '</a>';
 				break;
 			case 'button':
 				if (!empty($param_value)) {
@@ -1656,70 +1656,70 @@ class FusionCore
 				if (!empty($param_value)) {
 					switch ($saved_button_type) {
 						case 'external':
-							$input .= '<p>' . __('Type', 'fusion') . ': <strong>' . __('External Link', 'fusion') . '</strong></p>';
-							$input .= !empty($saved_button_link) ? '<p>' . __('Links to', 'fusion') . ': <strong>' . esc_html($saved_button_link) . '</strong></p>' : '';
-							$input .= !empty($saved_button_label) ? '<p>' . __('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
-							$input .= !empty($saved_button_aria_label) ? '<p>' . __('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
+							$input .= '<p>' . esc_html__('Type', 'fusion') . ': <strong>' . esc_html__('External Link', 'fusion') . '</strong></p>';
+							$input .= !empty($saved_button_link) ? '<p>' . esc_html__('Links to', 'fusion') . ': <strong>' . esc_html($saved_button_link) . '</strong></p>' : '';
+							$input .= !empty($saved_button_label) ? '<p>' . esc_html__('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
+							$input .= !empty($saved_button_aria_label) ? '<p>' . esc_html__('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
 							switch ($saved_button_target) {
 								case '_blank':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('New Window / Tab', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('New Window / Tab', 'fusion') . '</strong></p>';
 									break;
 								case '_parent':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Parent Frame', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Parent Frame', 'fusion') . '</strong></p>';
 									break;
 								case '_top':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Full Body of the Window', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Full Body of the Window', 'fusion') . '</strong></p>';
 									break;
 								default:
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Current Window / Tab', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Current Window / Tab', 'fusion') . '</strong></p>';
 							}
 							break;
 						case 'internal':
-							$input .= '<p>' . __('Type', 'fusion') . ': <strong>' . __('Internal Link', 'fusion') . '</strong></p>';
-							$input .= !empty($saved_button_attached_id) ? '<p>' . __('Links to', 'fusion') . ': <strong>' . get_the_title($saved_button_attached_id) . '</strong></p>' : '';
-							$input .= !empty($saved_button_label) ? '<p>' . __('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
-							$input .= !empty($saved_button_aria_label) ? '<p>' . __('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
+							$input .= '<p>' . esc_html__('Type', 'fusion') . ': <strong>' . esc_html__('Internal Link', 'fusion') . '</strong></p>';
+							$input .= !empty($saved_button_attached_id) ? '<p>' . esc_html__('Links to', 'fusion') . ': <strong>' . get_the_title($saved_button_attached_id) . '</strong></p>' : '';
+							$input .= !empty($saved_button_label) ? '<p>' . esc_html__('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
+							$input .= !empty($saved_button_aria_label) ? '<p>' . esc_html__('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
 							switch ($saved_button_target) {
 								case '_blank':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('New Window / Tab', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('New Window / Tab', 'fusion') . '</strong></p>';
 									break;
 								case '_parent':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Parent Frame', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Parent Frame', 'fusion') . '</strong></p>';
 									break;
 								case '_top':
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Full Body of the Window', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Full Body of the Window', 'fusion') . '</strong></p>';
 									break;
 								default:
-									$input .= '<p>' . __('Opens in', 'fusion') . ': <strong>' . __('Current Window / Tab', 'fusion') . '</strong></p>';
+									$input .= '<p>' . esc_html__('Opens in', 'fusion') . ': <strong>' . esc_html__('Current Window / Tab', 'fusion') . '</strong></p>';
 							}
 							break;
 						case 'collapse':
 							if (!empty($saved_button_component_id)) {
 								$saved_button_collapse_id = get_the_title($saved_button_component_id);
 							}
-							$input .= '<p>' . __('Type', 'fusion') . ': <strong>' . __('Collapse', 'fusion') . '</strong></p>';
-							$input .= !empty($saved_button_collapse_id) ? '<p>' . __('Opens', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_id) . '</strong></p>' : '';
-							$input .= !empty($saved_button_aria_label) ? '<p>' . __('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
-							$input .= !empty($saved_button_collapse_label_show) ? '<p>' . __('Show Label', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_label_show) . '</strong></p>' : '';
-							$input .= !empty($saved_button_collapse_label_hide) ? '<p>' . __('Hide Label', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_label_hide) . '</strong></p>' : '';
+							$input .= '<p>' . esc_html__('Type', 'fusion') . ': <strong>' . esc_html__('Collapse', 'fusion') . '</strong></p>';
+							$input .= !empty($saved_button_collapse_id) ? '<p>' . esc_html__('Opens', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_id) . '</strong></p>' : '';
+							$input .= !empty($saved_button_aria_label) ? '<p>' . esc_html__('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
+							$input .= !empty($saved_button_collapse_label_show) ? '<p>' . esc_html__('Show Label', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_label_show) . '</strong></p>' : '';
+							$input .= !empty($saved_button_collapse_label_hide) ? '<p>' . esc_html__('Hide Label', 'fusion') . ': <strong>' . esc_html($saved_button_collapse_label_hide) . '</strong></p>' : '';
 							break;
 						case 'modal':
 							if (!empty($saved_button_component_id)) {
 								$saved_button_modal_id = get_the_title($saved_button_component_id);
 							}
-							$input .= '<p>' . __('Type', 'fusion') . ': <strong>' . __('Modal', 'fusion') . '</strong></p>';
-							$input .= !empty($saved_button_modal_id) ? '<p>' . __('Opens', 'fusion') . ': <strong>' . esc_html($saved_button_modal_id) . '</strong></p>' : '';
-							$input .= !empty($saved_button_label) ? '<p>' . __('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
-							$input .= !empty($saved_button_aria_label) ? '<p>' . __('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
+							$input .= '<p>' . esc_html__('Type', 'fusion') . ': <strong>' . esc_html__('Modal', 'fusion') . '</strong></p>';
+							$input .= !empty($saved_button_modal_id) ? '<p>' . esc_html__('Opens', 'fusion') . ': <strong>' . esc_html($saved_button_modal_id) . '</strong></p>' : '';
+							$input .= !empty($saved_button_label) ? '<p>' . esc_html__('Label', 'fusion') . ': <strong>' . esc_html($saved_button_label) . '</strong></p>' : '';
+							$input .= !empty($saved_button_aria_label) ? '<p>' . esc_html__('ARIA Label', 'fusion') . ': <strong>' . esc_html($saved_button_aria_label) . '</strong></p>' : '';
 							break;
 					}
 				}
 				$input .= '</div>';
-				$button_verb_empty = __('Add', 'fusion');
-				$button_verb_isset = __('Edit', 'fusion');
+				$button_verb_empty = esc_html__('Add', 'fusion');
+				$button_verb_isset = esc_html__('Edit', 'fusion');
 				$button_verb = !empty($param_value) ? $button_verb_isset : $button_verb_empty;
-				$input .= '<a href="#" class="fsn-add-edit-button button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . __('Button', 'fusion') . '</a>';
-				$input .= '<a href="#" class="fsn-remove-button button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . __('Remove Button', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn-add-edit-button button-secondary" data-empty="' . esc_attr($button_verb_empty) . '" data-isset="' . esc_attr($button_verb_isset) . '"><span class="button-verb">' . $button_verb . '</span> ' . esc_html__('Button', 'fusion') . '</a>';
+				$input .= '<a href="#" class="fsn-remove-button button-secondary' . (empty($param_value) ? ' deactivated' : '') . '">' . esc_html__('Remove Button', 'fusion') . '</a>';
 				$input .= '<input type="hidden" class="form-control element-input button-string' . (!empty($param['nested']) ? ' nested' : '') . '" id="fsn_' . esc_attr($param['param_name']) . '" name="' . esc_attr($param['param_name']) . '" value="' . esc_attr($param_value) . '">';
 				break;
 			case 'box':
@@ -1733,13 +1733,13 @@ class FusionCore
 				$input .= '<label>' . esc_html($param['label']) . '</label>';
 				$input .= !empty($param['help']) ? '<p class="help-block">' . esc_html($param['help']) . '</p>' : '';
 				$input .= '<div class="fsn-box-form">';
-				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_top">' . __('Top', 'fusion') . '</label>';
+				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_top">' . esc_html__('Top', 'fusion') . '</label>';
 				$input .= '<input type="text" class="form-control box-top" id="fsn_' . esc_attr($param['param_name']) . '_top" name="' . esc_attr($param['param_name']) . '_top" value="' . (!empty($box_top) ? esc_attr($box_top) : '') . '">';
-				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_right">' . __('Right', 'fusion') . '</label>';
+				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_right">' . esc_html__('Right', 'fusion') . '</label>';
 				$input .= '<input type="text" class="form-control box-right" id="fsn_' . esc_attr($param['param_name']) . '_right" name="' . esc_attr($param['param_name']) . '_right" value="' . (!empty($box_right) ? esc_attr($box_right) : '') . '">';
-				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_bottom">' . __('Bottom', 'fusion') . '</label>';
+				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_bottom">' . esc_html__('Bottom', 'fusion') . '</label>';
 				$input .= '<input type="text" class="form-control box-bottom" id="fsn_' . esc_attr($param['param_name']) . '_bottom" name="' . esc_attr($param['param_name']) . '_bottom" value="' . (!empty($box_bottom) ? esc_attr($box_bottom) : '') . '">';
-				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_left">' . __('Left', 'fusion') . '</label>';
+				$input .= '<label for="fsn_' . esc_attr($param['param_name']) . '_left">' . esc_html__('Left', 'fusion') . '</label>';
 				$input .= '<input type="text" class="form-control box-left" id="fsn_' . esc_attr($param['param_name']) . '_left" name="' . esc_attr($param['param_name']) . '_left" value="' . (!empty($box_left) ? esc_attr($box_left) : '') . '">';
 				$input .= '</div>';
 				$input .= '<input type="hidden" class="form-control element-input box-string' . (!empty($param['nested']) ? ' nested' : '') . '" id="fsn_' . esc_attr($param['param_name']) . '" name="' . esc_attr($param['param_name']) . '" value="' . esc_attr($param_value) . '">';
