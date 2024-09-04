@@ -341,7 +341,7 @@ class FusionCore
 
 	public function preload_webfonts()
 	{
-		echo '<link rel="preload" href="' . plugin_dir_url(__FILE__) . 'includes/css/webfonts/MaterialIcons-Regular.woff2" as="font" type="font/woff2" crossorigin>';
+		echo '<link rel="preload" href="' . esc_url(plugin_dir_url(__FILE__)) . 'includes/css/webfonts/MaterialIcons-Regular.woff2" as="font" type="font/woff2" crossorigin>';
 	}
 
 	/**
@@ -549,66 +549,66 @@ class FusionCore
 			foreach ($fsn_style_output as $key => $value) {
 				if (!empty($value)) {
 					$selector = '.' . $key;
-					echo $selector . ' {';
+					echo esc_html($selector) . ' {';
 					if (!empty($value['margin'])) {
 						$margin = json_decode($value['margin'], true);
-						echo !empty($margin['top']) ? 'margin-top:' . $margin['top'] . ';' : '';
-						echo !empty($margin['right']) ? 'margin-right:' . $margin['right'] . ';' : '';
-						echo !empty($margin['bottom']) ? 'margin-bottom:' . $margin['bottom'] . ';' : '';
-						echo !empty($margin['left']) ? 'margin-left:' . $margin['left'] . ';' : '';
+						echo !empty($margin['top']) ? 'margin-top:' . esc_html($margin['top']) . ';' : '';
+						echo !empty($margin['right']) ? 'margin-right:' . esc_html($margin['right']) . ';' : '';
+						echo !empty($margin['bottom']) ? 'margin-bottom:' . esc_html($margin['bottom']) . ';' : '';
+						echo !empty($margin['left']) ? 'margin-left:' . esc_html($margin['left']) . ';' : '';
 					}
 					if (!empty($value['padding'])) {
 						$padding = json_decode($value['padding'], true);
-						echo !empty($padding['top']) ? 'padding-top:' . $padding['top'] . ';' : '';
-						echo !empty($padding['right']) ? 'padding-right:' . $padding['right'] . ';' : '';
-						echo !empty($padding['bottom']) ? 'padding-bottom:' . $padding['bottom'] . ';' : '';
-						echo !empty($padding['left']) ? 'padding-left:' . $padding['left'] . ';' : '';
+						echo !empty($padding['top']) ? 'padding-top:' . esc_html($padding['top']) . ';' : '';
+						echo !empty($padding['right']) ? 'padding-right:' . esc_html($padding['right']) . ';' : '';
+						echo !empty($padding['bottom']) ? 'padding-bottom:' . esc_html($padding['bottom']) . ';' : '';
+						echo !empty($padding['left']) ? 'padding-left:' . esc_html($padding['left']) . ';' : '';
 					}
 					if (!empty($value['text_align'])) {
 						$text_align = $value['text_align'];
-						echo 'text-align:' . $text_align . ';';
+						echo 'text-align:' . esc_html($text_align) . ';';
 					}
 					if (!empty($value['font_size'])) {
 						$font_size = $value['font_size'];
-						echo 'font-size:' . $font_size . ';';
+						echo 'font-size:' . esc_html($font_size) . ';';
 					}
 					if (!empty($value['color'])) {
 						$color = $value['color'];
-						echo 'color:' . $color . ';';
+						echo 'color:' . esc_html($color) . ';';
 					}
 					if (!empty($value['background_color'])) {
 						$background_color = $value['background_color'];
 						if (!empty($value['background_color_opacity'])) {
 							$background_color_opacity = $value['background_color_opacity'];
 							$rgb = fsn_hex2rgb($background_color);
-							echo 'background-color:' . $background_color . ';';
-							echo 'background-color:rgba(' . $rgb[0] . ',' . $rgb[1] . ',' . $rgb[2] . ',' . $background_color_opacity . ');';
+							echo 'background-color:' . esc_html($background_color) . ';';
+							echo 'background-color:rgba(' . esc_html($rgb[0]) . ',' . esc_html($rgb[1]) . ',' . esc_html($rgb[2]) . ',' . esc_html($background_color_opacity) . ');';
 						} else {
-							echo 'background-color:' . $background_color . ';';
+							echo 'background-color:' . esc_html($background_color) . ';';
 						}
 					}
 					do_action('fsn_style_append_delcaration_block', $value);
 					echo '}';
 					if ((!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) || (!empty($value['padding_xs_custom']) && !empty($value['padding_xs']) || !empty($value['text_align_xs']))) {
 						$selector = '.' . $key;
-						echo '@media (max-width: 767px) {' . $selector . '{';
+						echo '@media (max-width: 767px) {' . esc_html($selector) . '{';
 						if (!empty($value['margin_xs_custom']) && !empty($value['margin_xs'])) {
 							$margin_xs = json_decode($value['margin_xs'], true);
-							echo !empty($margin_xs['top']) ? 'margin-top:' . $margin_xs['top'] . ';' : '';
-							echo !empty($margin_xs['right']) ? 'margin-right:' . $margin_xs['right'] . ';' : '';
-							echo !empty($margin_xs['bottom']) ? 'margin-bottom:' . $margin_xs['bottom'] . ';' : '';
-							echo !empty($margin_xs['left']) ? 'margin-left:' . $margin_xs['left'] . ';' : '';
+							echo !empty($margin_xs['top']) ? 'margin-top:' . esc_html($margin_xs['top']) . ';' : '';
+							echo !empty($margin_xs['right']) ? 'margin-right:' . esc_html($margin_xs['right']) . ';' : '';
+							echo !empty($margin_xs['bottom']) ? 'margin-bottom:' . esc_html($margin_xs['bottom']) . ';' : '';
+							echo !empty($margin_xs['left']) ? 'margin-left:' . esc_html($margin_xs['left']) . ';' : '';
 						}
 						if (!empty($value['padding_xs_custom']) && !empty($value['padding_xs'])) {
 							$padding_xs = json_decode($value['padding_xs'], true);
-							echo !empty($padding_xs['top']) ? 'padding-top:' . $padding_xs['top'] . ';' : '';
-							echo !empty($padding_xs['right']) ? 'padding-right:' . $padding_xs['right'] . ';' : '';
-							echo !empty($padding_xs['bottom']) ? 'padding-bottom:' . $padding_xs['bottom'] . ';' : '';
-							echo !empty($padding_xs['left']) ? 'padding-left:' . $padding_xs['left'] . ';' : '';
+							echo !empty($padding_xs['top']) ? 'padding-top:' . esc_html($padding_xs['top']) . ';' : '';
+							echo !empty($padding_xs['right']) ? 'padding-right:' . esc_html($padding_xs['right']) . ';' : '';
+							echo !empty($padding_xs['bottom']) ? 'padding-bottom:' . esc_html($padding_xs['bottom']) . ';' : '';
+							echo !empty($padding_xs['left']) ? 'padding-left:' . esc_html($padding_xs['left']) . ';' : '';
 						}
 						if (!empty($value['text_align_xs'])) {
 							$text_align = $value['text_align_xs'];
-							echo 'text-align:' . $text_align . ';';
+							echo 'text-align:' . esc_html($text_align) . ';';
 						}
 						echo '}}';
 					}
@@ -942,14 +942,14 @@ class FusionCore
 		$options = get_option('fsn_options');
 		$fsn_post_types = !empty($options['fsn_post_types']) ? $options['fsn_post_types'] : '';
 		if (!empty($fsn_post_types) && is_array($fsn_post_types) && in_array($post->post_type, $fsn_post_types)) {
-			echo '<a href="#" class="button button-primary fsn-toggle-editor"><div class="fsn-toggle-editor-default">' . __('Switch To Default Editor', 'fusion') . '</div><div class="fsn-toggle-editor-fusion">' . __('Switch To Fusion Editor', 'fusion') . '</div></a>';
+			echo '<a href="#" class="button button-primary fsn-toggle-editor"><div class="fsn-toggle-editor-default">' . esc_html__('Switch To Default Editor', 'fusion') . '</div><div class="fsn-toggle-editor-fusion">' . esc_html__('Switch To Fusion Editor', 'fusion') . '</div></a>';
 			echo '<div class="fsn-editor wp-editor-container">';
 			echo '<div class="fsn-main-controls">';
 			if ($post->post_type != 'template') {
-				echo '<a href="#" class="button fsn-save-template">' . __('Save Template', 'fusion') . '</a>';
+				echo '<a href="#" class="button fsn-save-template">' . esc_html__('Save Template', 'fusion') . '</a>';
 			}
-			echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">' . __('Load Template', 'fusion') . '</a>';
-			//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. __('Hide Element Previews', 'fusion') .'</a>';
+			echo '<a href="#" class="button fsn-load-template" style="margin-left:5px;">' . esc_html__('Load Template', 'fusion') . '</a>';
+			//echo '<a href="#" class="button fsn-toggle-previews" style="margin-left:5px;">'. esc_html__('Hide Element Previews', 'fusion') .'</a>';
 			echo '</div>';
 			echo '<div class="fsn-interface-container">';
 			//output grid content
@@ -1060,19 +1060,19 @@ class FusionCore
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Add Element', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Add Element', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<div class="element-grid">
 							<?php if ($nesting_level === 1) : ?>
 								<div class="element-grid-item">
-									<a href="#" class="element-item" data-element-type="row"><i class="material-icons">reorder</i> <span class="element-name"><?php _e('Row', 'fusion'); ?></span></a>
+									<a href="#" class="element-item" data-element-type="row"><i class="material-icons">reorder</i> <span class="element-name"><?php esc_html_e('Row', 'fusion'); ?></span></a>
 								</div>
 							<?php endif; ?>
 							<?php if ($tabs_nesting_level === 0 && $nesting_level === 1) : ?>
 								<div class="element-grid-item">
-									<a href="#" class="element-item" data-element-type="tabs"><i class="material-icons">tab</i> <span class="element-name"><?php _e('Tabs', 'fusion'); ?></span></a>
+									<a href="#" class="element-item" data-element-type="tabs"><i class="material-icons">tab</i> <span class="element-name"><?php esc_html_e('Tabs', 'fusion'); ?></span></a>
 								</div>
 							<?php endif; ?>
 							<?php if (!empty($fsn_elements)) {
@@ -1086,7 +1086,7 @@ class FusionCore
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -1271,8 +1271,8 @@ class FusionCore
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Row', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Row', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 						$active_tab = true;
@@ -1336,7 +1336,9 @@ class FusionCore
 											$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
 											$dependency_string = ' data-dependency-param="' . esc_attr($depends_on_param) . '"' . ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="' . esc_attr($depends_on_value) . '"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="' . esc_attr($dependency_callback) . '"' : '');
 										}
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo '<div class="form-group' . (!empty($param['class']) ? ' ' . esc_attr($param['class']) : '') . '"' . ($dependency === true ? $dependency_string : '') . '>';
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo self::get_input_field($param, $param_value);
 										echo '</div>';
 									}
@@ -1351,8 +1353,8 @@ class FusionCore
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<span class="save-notice"><?php esc_html_e('Changes will be saved on close.', 'fusion'); ?></span>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -1417,8 +1419,8 @@ class FusionCore
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Column', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Column', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 						$active_tab = true;
@@ -1482,7 +1484,9 @@ class FusionCore
 											$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
 											$dependency_string = ' data-dependency-param="' . esc_attr($depends_on_param) . '"' . ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="' . esc_attr($depends_on_value) . '"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="' . esc_attr($dependency_callback) . '"' : '');
 										}
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo '<div class="form-group' . (!empty($param['class']) ? ' ' . esc_attr($param['class']) : '') . '"' . ($dependency === true ? $dependency_string : '') . '>';
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo self::get_input_field($param, $param_value);
 										echo '</div>';
 									}
@@ -1497,8 +1501,8 @@ class FusionCore
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<span class="save-notice"><?php esc_html_e('Changes will be saved on close.', 'fusion'); ?></span>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
