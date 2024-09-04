@@ -52,7 +52,7 @@ class FusionCoreTemplate
 			'search_items'       => __('Search Templates', 'fusion'),
 			'parent_item_colon'  => __('Parent Templates:', 'fusion'),
 			'not_found'          => __('No templates found.', 'fusion'),
-			'not_found_in_trash' => __('No temapltes found in Trash.', 'fusion'),
+			'not_found_in_trash' => __('No templates found in Trash.', 'fusion'),
 		);
 
 		$args = array(
@@ -127,8 +127,8 @@ class FusionCoreTemplate
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Save Template', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Save Template', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<form role="form">
@@ -139,14 +139,15 @@ class FusionCoreTemplate
 								'param_name' => 'template_name',
 								'label' => __('Template Name', 'fusion')
 							);
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							echo FusionCore::get_input_field($param);
-							echo '<a href="#" class="button button-primary save-template">' . __('Add', 'fusion') . '</a>';
+							echo '<a href="#" class="button button-primary save-template">' . esc_html__('Add', 'fusion') . '</a>';
 							echo '</div>';
 							?>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -215,8 +216,8 @@ class FusionCoreTemplate
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Page Templates', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Page Templates', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<?php
@@ -233,24 +234,24 @@ class FusionCoreTemplate
 							foreach ($saved_templates->posts as $template) {
 								echo '<div class="template-item" data-template-id="' . esc_attr($template) . '">';
 								echo '<span class="template-name">' . esc_html(get_the_title($template)) . '</span>';
-								echo '<span class="template-controls-toggle" title="' . __('Template Options', 'fusion') . '"><i class="material-icons">&#xE5D3;</i></span>';
+								echo '<span class="template-controls-toggle" title="' . esc_html__('Template Options', 'fusion') . '"><i class="material-icons">&#xE5D3;</i></span>';
 								echo '<div class="template-controls-dropdown collapsed">';
-								echo '<a href="#" class="delete-template">' . __('Delete', 'fusion') . '</a>';
+								echo '<a href="#" class="delete-template">' . esc_html__('Delete', 'fusion') . '</a>';
 								echo '</div>';
 								echo '</div>';
 							}
 							echo '</div>';
 						} else {
-							echo '<p>' . __('There are no saved templates yet.', 'fusion') . '</p>';
+							echo '<p>' . esc_html__('There are no saved templates yet.', 'fusion') . '</p>';
 						}
 						$total_templates = $saved_templates->found_posts;
 						if ($total_templates > 20) {
-							echo '<a href="#" class="button fsn-load-more-templates" data-total="' . $total_templates . '">' . __('Load More', 'fusion') . '</a>';
+							echo '<a href="#" class="button fsn-load-more-templates" data-total="' . esc_attr($total_templates) . '">' . esc_html__('Load More', 'fusion') . '</a>';
 						}
 						?>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
