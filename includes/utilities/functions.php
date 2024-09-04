@@ -416,8 +416,8 @@ function fsn_pagination($query_max_pages = false)
 		$previous_page_label = __('&laquo; Previous Page', 'fusion');
 		$next_page_label = __('Next Page &raquo;', 'fusion');
 		echo '<ul class="pager">';
-		echo '<li class="previous">' . get_previous_posts_link($previous_page_label) . '</li>';
-		echo '<li class="next">' . get_next_posts_link($next_page_label, $total_pages) . '</li>';
+		echo '<li class="previous">' . wp_kses_post(get_previous_posts_link($previous_page_label)) . '</li>';
+		echo '<li class="next">' . wp_kses_post(get_next_posts_link($next_page_label, $total_pages)) . '</li>';
 		echo '</ul>';
 	}
 }
