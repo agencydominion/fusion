@@ -326,8 +326,8 @@ class FusionCoreTabs
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header has-tabs">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tabs', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Edit Tabs', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 						<?php
 						echo '<ul class="nav nav-tabs" role="tablist">';
 						$active_tab = true;
@@ -391,7 +391,9 @@ class FusionCoreTabs
 											$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
 											$dependency_string = ' data-dependency-param="' . esc_attr($depends_on_param) . '"' . ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="' . esc_attr($depends_on_value) . '"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="' . esc_attr($dependency_callback) . '"' : '');
 										}
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo '<div class="form-group' . (!empty($param['class']) ? ' ' . esc_attr($param['class']) : '') . '"' . ($dependency === true ? $dependency_string : '') . '>';
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										echo FusionCore::get_input_field($param, $param_value);
 										echo '</div>';
 									}
@@ -406,8 +408,8 @@ class FusionCoreTabs
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<span class="save-notice"><?php esc_html_e('Changes will be saved on close.', 'fusion'); ?></span>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -444,8 +446,8 @@ class FusionCoreTabs
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" id="fsnModalLabel"><?php _e('Edit Tab', 'fusion'); ?></h4>
-						<a href="#" class="close" data-dismiss="modal" aria-label="<?php _e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
+						<h4 class="modal-title" id="fsnModalLabel"><?php esc_html_e('Edit Tab', 'fusion'); ?></h4>
+						<a href="#" class="close" data-dismiss="modal" aria-label="<?php esc_html_e('Close', 'fusion'); ?>"><span aria-hidden="true"><i class="material-icons">&#xE5CD;</i></span></a>
 					</div>
 					<div class="modal-body">
 						<form role="form">
@@ -506,7 +508,9 @@ class FusionCoreTabs
 										$dependency_callback = !empty($param['dependency']['callback']) ? $param['dependency']['callback'] : '';
 										$dependency_string = ' data-dependency-param="' . esc_attr($depends_on_param) . '"' . ($depends_on_not_empty === true ? ' data-dependency-not-empty="true"' : '') . (!empty($depends_on_value) ? ' data-dependency-value="' . esc_attr($depends_on_value) . '"' : '') . (!empty($dependency_callback) ? ' data-dependency-callback="' . esc_attr($dependency_callback) . '"' : '');
 									}
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									echo '<div class="form-group' . (!empty($param['class']) ? ' ' . esc_attr($param['class']) : '') . '"' . ($dependency === true ? $dependency_string : '') . '>';
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									echo FusionCore::get_input_field($param, $param_value);
 									echo '</div>';
 								}
@@ -515,8 +519,8 @@ class FusionCoreTabs
 						</form>
 					</div>
 					<div class="modal-footer">
-						<span class="save-notice"><?php _e('Changes will be saved on close.', 'fusion'); ?></span>
-						<button type="button" class="button" data-dismiss="modal"><?php _e('Close', 'fusion'); ?></button>
+						<span class="save-notice"><?php esc_html_e('Changes will be saved on close.', 'fusion'); ?></span>
+						<button type="button" class="button" data-dismiss="modal"><?php esc_html_e('Close', 'fusion'); ?></button>
 					</div>
 				</div>
 			</div>
