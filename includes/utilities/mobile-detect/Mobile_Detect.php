@@ -960,9 +960,9 @@ class Mobile_Detect
      */
     public function __call($name, $arguments)
     {
-        //make sure the name starts with 'is', otherwise
+        // Make sure the name starts with 'is', otherwise
         if (substr($name, 0, 2) != 'is') {
-            throw new BadMethodCallException("No such method exists: $name");
+            throw new BadMethodCallException("No such method exists: " . esc_html($name));
         }
 
         $this->setDetectionType(self::DETECTION_TYPE_MOBILE);
