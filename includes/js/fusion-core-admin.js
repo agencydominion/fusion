@@ -175,6 +175,7 @@ jQuery(document).ready(function() {
 		jQuery('.row-controls-toggle, .column-controls-toggle, .tabs-controls-toggle, .tab-controls-toggle, .element-controls-toggle').removeClass('open');
 	});
 	jQuery('body').on('click', '.control-icon', function(e) {
+		e.preventDefault();
 		try {
 			jQuery(this).tooltip('close');
 		} catch(err) {}
@@ -1024,6 +1025,10 @@ function fsnInitUIevents(instance) {
 	instance.on('click', '.fsn-element .edit-element', function(e) {
 		e.preventDefault();
 		var trigger = jQuery(this);
+		
+		// Preserve scroll position immediately when button is clicked
+		var preservedScrollPos = jQuery(window).scrollTop();
+		
 		var postID = jQuery('input#post_ID').val();
 		var shortcodeTag = trigger.closest('.fsn-element').attr('data-shortcode-tag');
 
@@ -1049,6 +1054,14 @@ function fsnInitUIevents(instance) {
 			jQuery('body').append(response);
 			var modalSelector = jQuery('.modal[id="'+ shortcodeTag +'_modal"]').last();
 
+			// preserve current scroll position to avoid jumps when initializing TinyMCE
+			var prevScrollPosition = preservedScrollPos;
+			
+			// Simple delayed scroll restoration after TinyMCE initialization
+			setTimeout(function() {
+				jQuery(window).scrollTop(preservedScrollPos);
+			}, 500);
+
 			//register modal events, open modal, and reinit tinyMCE
 			if (jQuery('#fsncontent').length > 0) {
 				setUserSetting( 'editor', 'tinymce' );
@@ -1068,8 +1081,9 @@ function fsnInitUIevents(instance) {
 			        //make compatable with TinyMCE 4 which is used starting with WordPress 3.9
 			        if(tinymce.majorVersion === "4") tinymce.execCommand( 'mceAddEditor', true, textfield_id );
 			        window.switchEditors.go(textfield_id, 'tmce');
-			        //focus on this RTE
-			        tinyMCE.get('fsncontent').focus();
+			        // Avoid focusing the RTE to prevent scroll jumps
+			        // restore scroll position after editor init
+			        jQuery(window).scrollTop(prevScrollPosition);
 				}).on('hidden.bs.modal', function() {
           //destroy tinyMCE
 					//make compatable with TinyMCE 4 which is used starting with WordPress 3.9
@@ -3014,13 +3028,14 @@ function fsnGetContent(instance) {
 function fsnUpdateContent(instance) {
 	if (instance.attr('id') == 'fsn-main-ui') {
 		content = fsnGetContent(instance);
-		//refocus on main content editor
-		if (tinymce.get( 'content' ).isHidden()) {
-			tinymce.get( 'content' ).show();
+		//send content to TinyMCE without shifting page focus/scroll
+		var contentEditor = tinymce.get('content');
+		if (contentEditor) {
+			if (contentEditor.isHidden()) {
+				contentEditor.show();
+			}
+			contentEditor.setContent(content);
 		}
-		tinyMCE.get('content').focus();
-		//send content to TinyMCE
-		tinyMCE.activeEditor.setContent(content);
 	}
 }
 
