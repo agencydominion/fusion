@@ -39,11 +39,33 @@ function fsnInitUI() {
 	}
 	//prevent scroll to top on first action
 	jQuery( document ).on( 'tinymce-editor-init', function( event, editor ) {
+		fsnGuardEditorFocus(editor);
 	    jQuery(window).trigger('resize');
 	});
+	if (typeof tinymce !== 'undefined') {
+		fsnGuardEditorFocus(tinymce.get('content'));
+	}
 
 	//init events
 	fsnInitUIevents(interfaceGrid);
+}
+
+//prevent focus on the hidden default editor
+//WordPress and TinyMCE focus the main editor from several places (e.g. execCommand on window resize).
+//While the default editor is hidden by Fusion it sits at the top of the page, so any focus scrolls the page to the top.
+function fsnGuardEditorFocus(editor) {
+	if (!editor || editor.id !== 'content' || editor.fsnFocusGuarded) {
+		return;
+	}
+	editor.fsnFocusGuarded = true;
+	var originalFocus = editor.focus;
+	editor.focus = function(skipFocus) {
+		if (jQuery('#postdivrich').hasClass('fsn-off')) {
+			//keep TinyMCE's active editor bookkeeping without moving DOM focus
+			return originalFocus.call(this, true);
+		}
+		return originalFocus.call(this, skipFocus);
+	};
 }
 
 function fsnInitTinyMCE() {
@@ -1664,7 +1686,14 @@ function initSortables(instance) {
 }
 
 function initResizables(instance) {
-	instance.find('.row [class*="col-"]').resizable({
+	var cols = instance.find('.row [class*="col-"]');
+	//jQuery UI Resizable triggers a custom "resize" event on the column while dragging.
+	//Left alone it bubbles up to window, where WordPress treats it as a real window resize
+	//and focuses the main editor, which scrolls the page to the top.
+	cols.off('resize.fsnResizable').on('resize.fsnResizable', function(e) {
+		e.stopPropagation();
+	});
+	cols.resizable({
 		handles: 'e, w',
 		helper: 'fsn-helper',
 		stop: function(event, ui) {
