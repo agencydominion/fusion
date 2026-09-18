@@ -194,10 +194,10 @@ class FusionCore
 			wp_enqueue_script('wp-color-picker');
 			wp_enqueue_style('wp-color-picker');
 			//plugin
-			wp_enqueue_script('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-admin.js', array('jquery'), '1.3.0', true);
-			wp_enqueue_style('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/css/fusion-core-admin.css', false, '1.3.0');
+			wp_enqueue_script('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-admin.js', array('jquery'), FSN_VERSION, true);
+			wp_enqueue_style('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/css/fusion-core-admin.css', false, FSN_VERSION);
 			if ($user_admin_color != 'fresh') {
-				wp_enqueue_style('fsn_core_admin_color_scheme', plugin_dir_url(__FILE__) . 'includes/css/colors/' . $user_admin_color . '/colors.css', false, '1.3.0');
+				wp_enqueue_style('fsn_core_admin_color_scheme', plugin_dir_url(__FILE__) . 'includes/css/colors/' . $user_admin_color . '/colors.css', false, FSN_VERSION);
 			}
 			wp_localize_script(
 				'fsn_core_admin',
@@ -269,7 +269,7 @@ class FusionCore
 			wp_localize_script('fsn_core_admin', 'fsnL10n', $translation_array);
 		}
 		//fusion core query
-		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.0', true);
+		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), FSN_VERSION, true);
 		wp_localize_script(
 			'fsn_core_query',
 			'fsnQuery',
@@ -299,16 +299,16 @@ class FusionCore
 		if (!empty($bootstrap_enable)) {
 			wp_enqueue_script('bootstrap', plugin_dir_url(__FILE__) . 'includes/bootstrap/front/js/bootstrap.min.js', false, '3.3.5', true);
 			wp_enqueue_style('bootstrap', plugin_dir_url(__FILE__) . 'includes/bootstrap/front/css/bootstrap.min.css', false, '3.3.5');
-			wp_enqueue_style('fsn_bootstrap', plugin_dir_url(__FILE__) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.3.0');
+			wp_enqueue_style('fsn_bootstrap', plugin_dir_url(__FILE__) . 'includes/css/fusion-bootstrap.css', 'bootstrap', FSN_VERSION);
 		}
 		//modernizr
 		wp_enqueue_script('modernizr', plugin_dir_url(__FILE__) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1', true);
 		//imagesLoaded
 		wp_enqueue_script('images_loaded', plugin_dir_url(__FILE__) . 'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
-		wp_enqueue_script('fsn_core', plugin_dir_url(__FILE__) . 'includes/js/fusion-core.js', array('jquery', 'modernizr', 'images_loaded'), '1.3.6', true);
+		wp_enqueue_script('fsn_core', plugin_dir_url(__FILE__) . 'includes/js/fusion-core.js', array('jquery', 'modernizr', 'images_loaded'), FSN_VERSION, true);
 		wp_enqueue_style('material-icons', plugin_dir_url(__FILE__) . 'includes/css/material-icons.css', '', '1.5.4');
-		wp_enqueue_style('fsn_core', plugin_dir_url(__FILE__) . 'includes/css/fusion-core.css', array('bootstrap'), '1.3.6');
+		wp_enqueue_style('fsn_core', plugin_dir_url(__FILE__) . 'includes/css/fusion-core.css', array('bootstrap'), FSN_VERSION);
 
 		//setup front end script for use with AJAX
 		wp_localize_script(
@@ -320,7 +320,7 @@ class FusionCore
 			)
 		);
 		//fusion core query
-		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.6', true);
+		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), FSN_VERSION, true);
 		wp_localize_script(
 			'fsn_core_query',
 			'fsnQuery',
