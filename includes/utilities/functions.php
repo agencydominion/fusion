@@ -459,7 +459,7 @@ function fsn_get_post_meta($args = false)
 		$taxonomy = apply_filters('fsn_post_meta_taxonomy', 'category', $post_type);
 		if (!empty($taxonomy)) {
 			$categories_array = get_the_terms($post->ID, $taxonomy);
-			if (!empty($categories_array)) {
+			if (is_array($categories_array) && !empty($categories_array)) {
 				$numcats = count($categories_array);
 				$i = 0;
 				$categories = '';
@@ -476,7 +476,7 @@ function fsn_get_post_meta($args = false)
 	if (!empty($tags)) {
 		//tags
 		$tags_array = get_the_tags($post->ID);
-		if (!empty($tags_array)) {
+		if (is_array($tags_array) && !empty($tags_array)) {
 			$numtags = count($tags_array);
 			$i = 0;
 			$tags = '';

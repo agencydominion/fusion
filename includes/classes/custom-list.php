@@ -231,7 +231,7 @@ class FusionCoreCustomList
 		} else {
 			$output = '';
 			$callback_function = 'fsn_get_' . sanitize_text_field($list_id) . '_list_item';
-			$output .= call_user_func($callback_function, $atts, $content);
+			$output .= is_callable($callback_function) ? call_user_func($callback_function, $atts, $content) : '';
 		}
 
 		return $output;
