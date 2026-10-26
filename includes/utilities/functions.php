@@ -253,10 +253,229 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 			$attachment_width = $attachment_attrs_mobile[1] ?? null;
 			$attachment_height = $attachment_attrs_mobile[2] ?? null;
 		}
+		//fsn_perf_responsive_images (default off): the browser picks the mobile or desktop copy itself (they are often different crops, so a
+		//<source> per breakpoint rather than srcset), instead of loading one and swapping in the other from jQuery; the
+		//data and class stay, so ADimageSwap only sets what the browser already chose. The <img> keeps the copy $desktop_init
+		//asks for: markup added by jQuery (lazy masthead slides) fetches the <img> src before the <source> applies.
+		//display:contents keeps the layout of a bare <img>.
+		$perf_picture = apply_filters('fsn_perf_responsive_images', false) && !empty($image_data['mobile_src']) && !empty($image_data['desktop_src']);
 		$image = '<img class="ad-dynamic-image' . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '" src="' . esc_url($attachment_src) . '" width="' . esc_attr($attachment_width) . '" height="' . esc_attr($attachment_height) . '" alt="' . esc_attr($attachment_alt) . '" data-image-json="' . esc_attr(json_encode($image_data)) . '"' . (!empty($lazy) ? ' loading="lazy"' : '') . '>';
+		if ($perf_picture) {
+			$image = '<picture class="ad-dynamic-picture" style="display:contents"><source media="(max-width: 767px)" srcset="' . esc_url($image_data['mobile_src']) . '" width="' . esc_attr($image_data['mobile_width']) . '" height="' . esc_attr($image_data['mobile_height']) . '"><source media="(min-width: 768px)" srcset="' . esc_url($image_data['desktop_src']) . '" width="' . esc_attr($image_data['desktop_width']) . '" height="' . esc_attr($image_data['desktop_height']) . '">' . $image . '</picture>';
+		}
 	}
 
 	return $image ?? null;
+}
+
+/**
+ * Responsive images (filter fsn_perf_responsive_images, default off): the images Fusion builds by hand get srcset,
+ * sizes and core's loading rules
+ *
+ * The extensions print their <img> and <source> tags by hand: no srcset, and loading="lazy" forced even on hero images,
+ * so phones download the full chosen size and above-the-fold images start late. With fsn_perf_responsive_images on,
+ * the <img> comes from wp_get_attachment_image() instead, which brings WordPress's srcset and sizes and its loading and
+ * fetchpriority rules (inside the_content, wp_filter_content_tags() applies them), and each <source> gets the same
+ * srcset and sizes for its own size. The srcset stops at the chosen size, so no device downloads more pixels than
+ * before. Classes and alt text stay as they were.
+ */
+
+/**
+ * The srcset filters, added only around our calls (fsn_perf_srcset_filters(true), then false).
+ *
+ * The cap: no candidate wider than the size the tag shows. The generated copy: when a generated size has the same width
+ * and shape as the original, core lists the original at that width (it is often several times heavier, e.g. 99 KB
+ * against 40 KB on blog 188), so the generated copy goes back in its place.
+ */
+
+function fsn_perf_srcset_filters($on)
+{
+	if ($on) {
+		add_filter('max_srcset_image_width', 'fsn_perf_srcset_max_width', 99, 2);
+		add_filter('wp_calculate_image_srcset', 'fsn_perf_srcset_generated_copy', 99, 4);
+	} else {
+		remove_filter('max_srcset_image_width', 'fsn_perf_srcset_max_width', 99);
+		remove_filter('wp_calculate_image_srcset', 'fsn_perf_srcset_generated_copy', 99);
+	}
+}
+
+function fsn_perf_srcset_max_width($max_width, $size_array)
+{
+	return !empty($size_array[0]) ? intval($size_array[0]) : $max_width;
+}
+
+function fsn_perf_srcset_generated_copy($sources, $size_array, $image_src, $image_meta)
+{
+	if (!is_array($sources) || empty($image_meta['file']) || empty($image_meta['width']) || empty($image_meta['height']) || empty($image_meta['sizes'])) {
+		return $sources;
+	}
+	$original = wp_basename($image_meta['file']);
+	foreach ($image_meta['sizes'] as $size) {
+		$width = intval($size['width'] ?? 0);
+		if (empty($size['file']) || !isset($sources[$width]['url']) || wp_basename($sources[$width]['url']) !== $original || !wp_image_matches_ratio($image_meta['width'], $image_meta['height'], $width, intval($size['height'] ?? 0))) {
+			continue;
+		}
+		$sources[$width]['url'] = substr($sources[$width]['url'], 0, -strlen($original)) . $size['file'];
+	}
+	return $sources;
+}
+
+/**
+ * An <img> from wp_get_attachment_image() with the classes and alt text the extension gave it.
+ *
+ * @param int    $image_id The attachment.
+ * @param string $size     The image size the tag shows.
+ * @param string $alt      The alt text, unescaped.
+ * @param string $class    The classes, '' for none (instead of core's attachment-{size} size-{size}).
+ * @param bool   $eager    True when the element's own setting turns lazy loading off.
+ * @return string
+ */
+
+function fsn_perf_attachment_image($image_id, $size, $alt, $class = '', $eager = false)
+{
+	$attr = array('alt' => $alt, 'class' => $class);
+	if ($eager) {
+		$attr['loading'] = 'eager';
+	}
+	fsn_perf_srcset_filters(true);
+	$image = wp_get_attachment_image($image_id, $size, false, $attr);
+	fsn_perf_srcset_filters(false);
+	return $class === '' ? str_replace(' class=""', '', $image) : $image;
+}
+
+/**
+ * Core's loading and fetchpriority attributes for an <img> built by hand, as a string (inside the_content it is '', and
+ * wp_filter_content_tags() adds them later).
+ *
+ * @param int $width  The width the tag gives.
+ * @param int $height The height the tag gives.
+ * @return string
+ */
+
+function fsn_perf_loading_attributes($width, $height)
+{
+	$output = '';
+	foreach (wp_get_loading_optimization_attributes('img', array('width' => $width, 'height' => $height), 'wp_get_attachment_image') as $name => $value) {
+		$output .= ' ' . $name . '="' . esc_attr($value) . '"';
+	}
+	return $output;
+}
+
+/**
+ * The attributes of a <picture> <source> that shows $url: srcset="$url" when the stage is off, else srcset, sizes,
+ * width and height for that image size.
+ *
+ * @param int    $image_id The attachment.
+ * @param string $size     The image size the source shows.
+ * @param string $url      Its URL.
+ * @return string
+ */
+
+function fsn_perf_source_attributes($image_id, $size, $url)
+{
+	if (!apply_filters('fsn_perf_responsive_images', false)) {
+		return ' srcset="' . esc_url($url) . '"';
+	}
+	$attrs = wp_get_attachment_image_src($image_id, $size);
+	fsn_perf_srcset_filters(true);
+	$srcset = wp_get_attachment_image_srcset($image_id, $size);
+	fsn_perf_srcset_filters(false);
+	$sizes = wp_get_attachment_image_sizes($image_id, $size);
+	$output = !empty($srcset) && !empty($sizes) ? ' srcset="' . esc_attr($srcset) . '" sizes="' . esc_attr($sizes) . '"' : ' srcset="' . esc_url($url) . '"';
+	if (is_array($attrs) && !empty($attrs[1]) && !empty($attrs[2])) {
+		$output .= ' width="' . esc_attr($attrs[1]) . '" height="' . esc_attr($attrs[2]) . '"';
+	}
+	return $output;
+}
+
+/**
+ * Row background sized per device (filter fsn_perf_responsive_images, default off)
+ *
+ * A row's background image is an inline style with the 'hi-res' size (2560 px), so phones download it too. On a blog
+ * with fsn_perf_responsive_images on, the inline style stays as it is and phones get the 'large' size instead from a rule
+ * that WordPress's template output buffer (6.9+) puts at the end of the head: `:where(.row){background-image:… !important}`
+ * in a max-width 767px block. Zero specificity and !important rank it exactly where the inline style was: above every
+ * normal rule, below any client !important rule. A row that hides its background on phones needs nothing
+ * (.background-image-hidden-xs already does that). The first row with a background gets a preload when it is likely
+ * above the fold (a header component row, or one of the first four rows in the loop, which can start with empty 1 px
+ * rows; never a footer row), unless the blog's custom CSS replaces background images with !important (the preload could
+ * be wasted; a colour-only `background: #fff !important` on a button doesn't count). A hero preloaded on every screen
+ * takes core's one fetchpriority=high slot (wp_high_priority_element_flag), so an image inside it doesn't compete with
+ * it. Without the buffer nothing changes.
+ *
+ * @param string $style_params_class The row's classes from fsn_style_params_class(); the first one is unique.
+ * @param int    $image_id           The background image.
+ * @param string $desktop_src        Its 'hi-res' URL (the inline style).
+ * @param bool   $hide_xs            The row hides its background on phones.
+ * @param int    $row_number         The row's position in the page content (the loop), counting from 1; 0 outside it.
+ */
+
+function fsn_perf_row_background($style_params_class, $image_id, $desktop_src, $hide_xs, $row_number)
+{
+	global $fsn_perf_row_backgrounds;
+	$selector = strtok((string) $style_params_class, ' ');
+	if (empty($selector) || empty($desktop_src) || !did_action('wp_template_enhancement_output_buffer_started')) {
+		return;
+	}
+	$mobile_attrs = wp_get_attachment_image_src($image_id, 'large');
+	$mobile_src = is_array($mobile_attrs) && !empty($mobile_attrs[0]) ? $mobile_attrs[0] : $desktop_src;
+	if (!is_array($fsn_perf_row_backgrounds)) {
+		$fsn_perf_row_backgrounds = array();
+		add_filter('wp_template_enhancement_output_buffer', 'fsn_perf_hoist_row_backgrounds', 20);
+	}
+	$preload = empty($fsn_perf_row_backgrounds) && (in_the_loop() ? $row_number <= 4 : !did_action('get_footer')) && !fsn_perf_custom_css_overrides_backgrounds();
+	$fsn_perf_row_backgrounds[] = array(
+		'selector' => '.' . $selector,
+		'desktop' => esc_url_raw($desktop_src),
+		'mobile' => $hide_xs ? '' : esc_url_raw($mobile_src),
+		'preload' => $preload
+	);
+	//a hero preloaded on every screen is the page's high-priority image, so core gives fetchpriority=high to no later <img>
+	if ($preload && !$hide_xs && function_exists('wp_high_priority_element_flag')) {
+		wp_high_priority_element_flag(false);
+	}
+}
+
+/**
+ * Whether the blog's custom CSS (Customizer or Simple Custom CSS) sets a background image (or none) with !important.
+ */
+
+function fsn_perf_custom_css_overrides_backgrounds()
+{
+	$sccss = get_option('sccss_settings');
+	$css = wp_get_custom_css() . (is_array($sccss) && isset($sccss['sccss-content']) ? $sccss['sccss-content'] : '');
+	return (bool) preg_match('/background-image\s*:[^;}]*!important|background\s*:[^;}]*(url\(|none)[^;}]*!important/i', $css);
+}
+
+function fsn_perf_hoist_row_backgrounds($html)
+{
+	global $fsn_perf_row_backgrounds;
+	$head_end = stripos($html, '</head>');
+	if (false === $head_end || empty($fsn_perf_row_backgrounds)) {
+		return $html;
+	}
+	$head = '';
+	$css = '';
+	foreach ($fsn_perf_row_backgrounds as $row) {
+		if (!empty($row['mobile']) && $row['mobile'] !== $row['desktop']) {
+			$css .= ':where(' . $row['selector'] . '){background-image:url("' . $row['mobile'] . '") !important}';
+		}
+		if (empty($row['preload'])) {
+			continue;
+		}
+		if (empty($row['mobile'])) {
+			$head .= '<link rel="preload" as="image" href="' . esc_url($row['desktop']) . '" media="(min-width: 768px)" fetchpriority="high">' . "\n";
+		} elseif ($row['mobile'] === $row['desktop']) {
+			$head .= '<link rel="preload" as="image" href="' . esc_url($row['desktop']) . '" fetchpriority="high">' . "\n";
+		} else {
+			$head .= '<link rel="preload" as="image" href="' . esc_url($row['mobile']) . '" media="(max-width: 767px)" fetchpriority="high">' . "\n";
+			$head .= '<link rel="preload" as="image" href="' . esc_url($row['desktop']) . '" media="(min-width: 768px)" fetchpriority="high">' . "\n";
+		}
+	}
+	if ($css !== '') {
+		$head .= '<style id="fsn-perf-row-backgrounds">@media (max-width: 767px){' . $css . '}</style>' . "\n";
+	}
+	return substr($html, 0, $head_end) . $head . substr($html, $head_end);
 }
 
 /**
