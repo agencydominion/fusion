@@ -704,7 +704,7 @@ class FusionCore
 			//background image
 			if (!empty($background_image)) {
 				$image_attrs = wp_get_attachment_image_src($background_image, 'hi-res');
-				$style .= 'background-image:url(' . $image_attrs[0] . ');';
+				$style .= 'background-image:url(' . (is_array($image_attrs) ? $image_attrs[0] : '') . ');';
 			}
 			//background repeat
 			if (!empty($background_repeat)) {

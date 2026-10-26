@@ -237,26 +237,26 @@ function fsn_get_dynamic_image($image_id, $classes, $desktop_size = 'hi-res', $m
 		$attachment_alt = get_post_meta($image_id, '_wp_attachment_image_alt', true);
 		$image_data = array(
 			'id' => $image_id,
-			'mobile_src' => $attachment_attrs_mobile[0],
-			'mobile_width' => $attachment_attrs_mobile[1],
-			'mobile_height' => $attachment_attrs_mobile[2],
-			'desktop_src' => $attachment_attrs_desktop[0],
-			'desktop_width' => $attachment_attrs_desktop[1],
-			'desktop_height' => $attachment_attrs_desktop[2]
+			'mobile_src' => $attachment_attrs_mobile[0] ?? null,
+			'mobile_width' => $attachment_attrs_mobile[1] ?? null,
+			'mobile_height' => $attachment_attrs_mobile[2] ?? null,
+			'desktop_src' => $attachment_attrs_desktop[0] ?? null,
+			'desktop_width' => $attachment_attrs_desktop[1] ?? null,
+			'desktop_height' => $attachment_attrs_desktop[2] ?? null
 		);
 		if ($desktop_init === true) {
-			$attachment_src = $attachment_attrs_desktop[0];
-			$attachment_width = $attachment_attrs_desktop[1];
-			$attachment_height = $attachment_attrs_desktop[2];
+			$attachment_src = $attachment_attrs_desktop[0] ?? null;
+			$attachment_width = $attachment_attrs_desktop[1] ?? null;
+			$attachment_height = $attachment_attrs_desktop[2] ?? null;
 		} else {
-			$attachment_src = $attachment_attrs_mobile[0];
-			$attachment_width = $attachment_attrs_mobile[1];
-			$attachment_height = $attachment_attrs_mobile[2];
+			$attachment_src = $attachment_attrs_mobile[0] ?? null;
+			$attachment_width = $attachment_attrs_mobile[1] ?? null;
+			$attachment_height = $attachment_attrs_mobile[2] ?? null;
 		}
 		$image = '<img class="ad-dynamic-image' . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '" src="' . esc_url($attachment_src) . '" width="' . esc_attr($attachment_width) . '" height="' . esc_attr($attachment_height) . '" alt="' . esc_attr($attachment_alt) . '" data-image-json="' . esc_attr(json_encode($image_data)) . '"' . (!empty($lazy) ? ' loading="lazy"' : '') . '>';
 	}
 
-	return $image;
+	return $image ?? null;
 }
 
 /**
