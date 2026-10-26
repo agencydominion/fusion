@@ -7,7 +7,7 @@
  * Plugin Name: Fusion : Plugin
  * Plugin URI: https://www.agencydominion.com/fusion/
  * Description: Create layouts for your page content in a rich visual editor.
- * Version: 1.6.4
+ * Version: 1.7.0
  * Author: Agency Dominion
  * Author URI: https://www.agencydominion.com
  * Text Domain: fusion
@@ -15,7 +15,7 @@
  * License: GPL2
  */
 
-define('FSN_VERSION', '1.6.4');
+define('FSN_VERSION', '1.7.0');
 
 /**
  * Fusion class.
@@ -194,10 +194,10 @@ class FusionCore
 			wp_enqueue_script('wp-color-picker');
 			wp_enqueue_style('wp-color-picker');
 			//plugin
-			wp_enqueue_script('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-admin.js', array('jquery'), '1.3.0', true);
-			wp_enqueue_style('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/css/fusion-core-admin.css', false, '1.3.0');
+			wp_enqueue_script('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-admin.js', array('jquery'), FSN_VERSION, true);
+			wp_enqueue_style('fsn_core_admin', plugin_dir_url(__FILE__) . 'includes/css/fusion-core-admin.css', false, FSN_VERSION);
 			if ($user_admin_color != 'fresh') {
-				wp_enqueue_style('fsn_core_admin_color_scheme', plugin_dir_url(__FILE__) . 'includes/css/colors/' . $user_admin_color . '/colors.css', false, '1.3.0');
+				wp_enqueue_style('fsn_core_admin_color_scheme', plugin_dir_url(__FILE__) . 'includes/css/colors/' . $user_admin_color . '/colors.css', false, FSN_VERSION);
 			}
 			wp_localize_script(
 				'fsn_core_admin',
@@ -269,7 +269,7 @@ class FusionCore
 			wp_localize_script('fsn_core_admin', 'fsnL10n', $translation_array);
 		}
 		//fusion core query
-		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.0', true);
+		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), FSN_VERSION, true);
 		wp_localize_script(
 			'fsn_core_query',
 			'fsnQuery',
@@ -299,16 +299,16 @@ class FusionCore
 		if (!empty($bootstrap_enable)) {
 			wp_enqueue_script('bootstrap', plugin_dir_url(__FILE__) . 'includes/bootstrap/front/js/bootstrap.min.js', false, '3.3.5', true);
 			wp_enqueue_style('bootstrap', plugin_dir_url(__FILE__) . 'includes/bootstrap/front/css/bootstrap.min.css', false, '3.3.5');
-			wp_enqueue_style('fsn_bootstrap', plugin_dir_url(__FILE__) . 'includes/css/fusion-bootstrap.css', 'bootstrap', '1.3.0');
+			wp_enqueue_style('fsn_bootstrap', plugin_dir_url(__FILE__) . 'includes/css/fusion-bootstrap.css', 'bootstrap', FSN_VERSION);
 		}
 		//modernizr
 		wp_enqueue_script('modernizr', plugin_dir_url(__FILE__) . 'includes/js/modernizr-3.3.1-respond-1.4.2.min.js', false, '3.3.1', true);
 		//imagesLoaded
 		wp_enqueue_script('images_loaded', plugin_dir_url(__FILE__) . 'includes/utilities/imagesloaded/imagesloaded.pkgd.min.js', array('jquery'), '3.1.8', true);
 		//plugin
-		wp_enqueue_script('fsn_core', plugin_dir_url(__FILE__) . 'includes/js/fusion-core.js', array('jquery', 'modernizr', 'images_loaded'), '1.3.6', true);
+		wp_enqueue_script('fsn_core', plugin_dir_url(__FILE__) . 'includes/js/fusion-core.js', array('jquery', 'modernizr', 'images_loaded'), FSN_VERSION, true);
 		wp_enqueue_style('material-icons', plugin_dir_url(__FILE__) . 'includes/css/material-icons.css', '', '1.5.4');
-		wp_enqueue_style('fsn_core', plugin_dir_url(__FILE__) . 'includes/css/fusion-core.css', array('bootstrap'), '1.3.6');
+		wp_enqueue_style('fsn_core', plugin_dir_url(__FILE__) . 'includes/css/fusion-core.css', array('bootstrap'), FSN_VERSION);
 
 		//setup front end script for use with AJAX
 		wp_localize_script(
@@ -320,7 +320,7 @@ class FusionCore
 			)
 		);
 		//fusion core query
-		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), '1.3.6', true);
+		wp_register_script('fsn_core_query', plugin_dir_url(__FILE__) . 'includes/js/fusion-core-query.js', array('jquery'), FSN_VERSION, true);
 		wp_localize_script(
 			'fsn_core_query',
 			'fsnQuery',
@@ -701,10 +701,21 @@ class FusionCore
 			//build style
 			$style = '';
 
+			//fsn_perf_responsive_images (default off): phones get a smaller copy of the row background, from a rule in the head (fsn_perf_row_background)
+			$perf_images = apply_filters('fsn_perf_responsive_images', false) && function_exists('fsn_perf_row_background');
+			$perf_row_class = '';
+			if ($perf_images && in_the_loop()) {
+				$GLOBALS['fsn_perf_row_count'] = ($GLOBALS['fsn_perf_row_count'] ?? 0) + 1;
+			}
+
 			//background image
 			if (!empty($background_image)) {
 				$image_attrs = wp_get_attachment_image_src($background_image, 'hi-res');
-				$style .= 'background-image:url(' . $image_attrs[0] . ');';
+				$style .= 'background-image:url(' . (is_array($image_attrs) ? $image_attrs[0] : '') . ');';
+				if ($perf_images && is_array($image_attrs)) {
+					$perf_row_class = fsn_style_params_class($atts);
+					fsn_perf_row_background($perf_row_class, $background_image, $image_attrs[0], $background_image_xs == 'hide', $GLOBALS['fsn_perf_row_count'] ?? 0);
+				}
 			}
 			//background repeat
 			if (!empty($background_repeat)) {
@@ -764,7 +775,7 @@ class FusionCore
 
 			//open row container
 			if ($row_width == 'container') {
-				$output .= '<div ' . (!empty($id) ? 'id="' . esc_attr($id) . '" ' : '') . 'class="fsn-row full-width-row ' . fsn_style_params_class($atts) . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '"' . (!empty($style) ? ' style="' . esc_attr($style) . '"' : '') . '>';
+				$output .= '<div ' . (!empty($id) ? 'id="' . esc_attr($id) . '" ' : '') . 'class="fsn-row full-width-row ' . (!empty($perf_row_class) ? $perf_row_class : fsn_style_params_class($atts)) . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '"' . (!empty($style) ? ' style="' . esc_attr($style) . '"' : '') . '>';
 				//action executed before the front-end row shortcode container output
 				ob_start();
 				do_action('fsn_before_row_container', $atts);
@@ -777,7 +788,7 @@ class FusionCore
 					$output .= '<div class="container-fluid">';
 				}
 			} elseif ($row_width == 'full-width') {
-				$output .= '<div ' . (!empty($id) ? 'id="' . esc_attr($id) . '" ' : '') . ' class="fsn-row full-width-container ' . fsn_style_params_class($atts) . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '"' . (!empty($style) ? ' style="' . esc_attr($style) . '"' : '') . '>';
+				$output .= '<div ' . (!empty($id) ? 'id="' . esc_attr($id) . '" ' : '') . ' class="fsn-row full-width-container ' . (!empty($perf_row_class) ? $perf_row_class : fsn_style_params_class($atts)) . (!empty($classes) ? ' ' . esc_attr($classes) : '') . '"' . (!empty($style) ? ' style="' . esc_attr($style) . '"' : '') . '>';
 			}
 
 			//action executed before the front-end row shortcode output
