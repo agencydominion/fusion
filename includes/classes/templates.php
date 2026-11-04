@@ -275,10 +275,11 @@ class FusionCoreTemplate
 		if (!current_user_can('edit_post', intval($_POST['post_id'])))
 			die('-1');
 
-		$template_id = intval($_POST['template_id']);
+		$template_id = !empty($_POST['template_id']) ? intval($_POST['template_id']) : 0;
 		$template = get_post($template_id);
 
-		if (!empty($template) && $template->post_status == 'publish') {
+		//only load published posts of the template post type
+		if (!empty($template) && $template->post_type == 'template' && $template->post_status == 'publish') {
 			echo do_shortcode($template->post_content);
 		}
 
@@ -300,11 +301,16 @@ class FusionCoreTemplate
 		if (!current_user_can('edit_post', intval($_POST['post_id'])))
 			die('-1');
 
-		$template_id = intval($_POST['template_id']);
+		$template_id = !empty($_POST['template_id']) ? intval($_POST['template_id']) : 0;
+		$template = get_post($template_id);
+
+		//only templates can be deleted here, and only by users allowed to delete that template
+		if (empty($template) || $template->post_type != 'template' || !current_user_can('delete_post', $template->ID))
+			die('-1');
 
 		header('Content-type: application/json');
 
-		$deleted_template = wp_trash_post($template_id);
+		$deleted_template = wp_trash_post($template->ID);
 
 		if (!empty($deleted_template)) {
 			$response_array['status'] = 'success';
