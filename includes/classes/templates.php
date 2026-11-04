@@ -45,7 +45,7 @@ class FusionCoreTemplate
 			'name_admin_bar'     => _x('Template', 'add new on admin bar', 'fusion'),
 			'add_new'            => _x('Add New', 'template', 'fusion'),
 			'add_new_item'       => __('Add New Template', 'fusion'),
-			'new_item'           => __('New Temaplte', 'fusion'),
+			'new_item'           => __('New Template', 'fusion'),
 			'edit_item'          => __('Edit Template', 'fusion'),
 			'view_item'          => __('View Template', 'fusion'),
 			'all_items'          => __('All Templates', 'fusion'),
